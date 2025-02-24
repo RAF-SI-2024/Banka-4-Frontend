@@ -24,7 +24,7 @@ const data = {
     {
       name: 'RAFeisen Bank',
       logo: Landmark,
-      url: '/home',
+      url: '/',
     },
   ],
   navMain: [
@@ -36,7 +36,7 @@ const data = {
       items: [
         {
           title: 'Overview',
-          url: '#',
+          url: 'employee/overview',
           icon: List,
         },
         {
