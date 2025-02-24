@@ -1,6 +1,5 @@
 'use client';
 
-//ikonice
 import { UserPlus, BriefcaseBusiness, List, Landmark } from 'lucide-react';
 
 import {
@@ -14,7 +13,7 @@ import {
 import { NavMain } from '@/components/ui/sidebar/nav-main-sidebar';
 import { HeaderSidebar } from './header-sidebar';
 import { FooterSidebar } from './footer-sidebar';
-//data za prikaz elemenata u sidebar-u
+
 const data = {
   user: {
     name: 'shadcn',
@@ -25,12 +24,13 @@ const data = {
     {
       name: 'RAFeisen Bank',
       logo: Landmark,
+      url: '/home',
     },
   ],
   navMain: [
     {
       title: 'Employees',
-      url: '#',
+      url: '/employee',
       icon: BriefcaseBusiness,
       isActive: true,
       items: [
@@ -41,7 +41,7 @@ const data = {
         },
         {
           title: 'New',
-          url: '#',
+          url: '/employee/new',
           icon: UserPlus,
         },
       ],
@@ -57,7 +57,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <FooterSidebar user={data.user} />
