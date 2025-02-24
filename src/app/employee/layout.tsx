@@ -21,8 +21,7 @@ export default function SidebarLayout({
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
-        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-            {children}</main>
+        <main className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
