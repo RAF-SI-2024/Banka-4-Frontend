@@ -43,7 +43,9 @@ export default function PasswordPage() {
   });
 
   const onSubmit = () => {
-    alert(isReset ? 'Password reset successfully!' : 'Password set successfully!');
+    alert(
+        isReset ? 'Password reset successfully!' : 'Password set successfully!'
+    );
   };
 
   return (
@@ -69,6 +71,7 @@ export default function PasswordPage() {
                 <Input
                     type="password"
                     id="password"
+                    placeholder="**************"
                     {...register('password')}
                     className="mt-1 text-sm"
                 />
@@ -85,6 +88,7 @@ export default function PasswordPage() {
                 <Input
                     type="password"
                     id="confirmPassword"
+                    placeholder="**************"
                     {...register('confirmPassword')}
                     className="mt-1 text-sm"
                 />
