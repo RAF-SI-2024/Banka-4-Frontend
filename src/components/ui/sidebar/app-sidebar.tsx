@@ -11,8 +11,8 @@ import {
     SidebarRail,
   } from "@/components/ui/sidebar"
 
-  import { NavMain } from "@/components/ui/sidebar/nav-main"
-  import { HeaderSidebar } from "./header"
+  import { NavMain } from "@/components/ui/sidebar/nav-main-sidebar"
+  import { HeaderSidebar } from "./header-sidebar"
   //data za prikaz elemenata u sidebar-u
   const data = {
     user: {
