@@ -1,3 +1,5 @@
+import SetPasswordPage from '@/app/auth/reset-password/page';
+
 export default function Home() {
-  return <h1>Landing page</h1>;
+  return <SetPasswordPage />;
 }
