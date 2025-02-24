@@ -1,4 +1,3 @@
-
 import { ChevronRight, type LucideIcon } from "lucide-react"
 
 import {
@@ -33,7 +32,7 @@ export function NavMain({
   }) {
     return (
       <SidebarGroup>
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel>Users</SidebarGroupLabel>
         <SidebarMenu>
           {items.map((item) => (
             <Collapsible
@@ -56,6 +55,7 @@ export function NavMain({
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
                           <a href={subItem.url}>
+                            {item.icon && <item.icon />}
                             <span>{subItem.title}</span>
                           </a>
                         </SidebarMenuSubButton>
