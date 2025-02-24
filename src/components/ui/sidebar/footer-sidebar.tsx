@@ -72,9 +72,7 @@ import {
                     <span className="truncate text-xs">{user.email}</span>
                   </div>
                 </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              
+              </DropdownMenuLabel>              
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <LogOut />
