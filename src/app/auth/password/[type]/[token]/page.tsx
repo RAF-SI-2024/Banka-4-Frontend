@@ -3,10 +3,11 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { notFound, useParams } from 'next/navigation';
 
 // Zod password validation
 const passwordSchema = z
@@ -22,7 +23,18 @@ const passwordSchema = z
     path: ['confirmPassword'],
   });
 
+type PasswordParams = {
+  type: string;
+  token: string;
+};
+
 export default function SetPasswordPage() {
+  const params = useParams<PasswordParams>();
+  if (params.type !== 'set' && params.type !== 'reset') notFound();
+
+  console.log(params.type);
+  console.log(params.token);
+
   const {
     register,
     handleSubmit,

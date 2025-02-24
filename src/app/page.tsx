@@ -1,4 +1,4 @@
-import SetPasswordPage from '@/app/auth/reset-password/page';
+import SetPasswordPage from '@/app/auth/password/[type]/[token]/page';
 
 export default function Home() {
   return <SetPasswordPage />;
