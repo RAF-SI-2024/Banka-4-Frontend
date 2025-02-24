@@ -13,6 +13,7 @@ import {
 
   import { NavMain } from "@/components/ui/sidebar/nav-main-sidebar"
   import { HeaderSidebar } from "./header-sidebar"
+  import { FooterSidebar } from "./footer-sidebar"
   //data za prikaz elemenata u sidebar-u
   const data = {
     user: {
@@ -60,7 +61,7 @@ import {
           {/* <NavProjects projects={data.projects} /> */}
         </SidebarContent>
         <SidebarFooter>
-          {/* <NavUser user={data.user} /> */}
+          <FooterSidebar user={data.user} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
