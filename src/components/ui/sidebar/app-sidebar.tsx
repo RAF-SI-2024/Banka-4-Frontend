@@ -41,7 +41,7 @@ import {
             icon: List
           },
           {
-            title: "News",
+            title: "New",
             url: "#",
             icon: UserPlus
           },
