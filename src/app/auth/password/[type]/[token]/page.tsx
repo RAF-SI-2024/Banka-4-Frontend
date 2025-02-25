@@ -55,7 +55,7 @@ export default function PasswordPage() {
   };
 
   return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-[348px] bg-white rounded-lg border border-zinc-200 p-4">
           <CardHeader className="w-full p-4 text-left">
             <h2 className="text-2xl font-semibold text-zinc-950">
