@@ -2,11 +2,12 @@ import {
   BaseException,
   responseIsBaseException,
 } from './response/BaseException';
+import { toast } from 'sonner';
 
 const notifyErrorResponse = async <R>(p: Promise<R | BaseException>) => {
   const ret = await p;
   if (responseIsBaseException(ret)) {
-    alert(`Error: ${ret.code}`);
+    toast.error(`Error: ${ret.code}`);
   }
   return ret;
 };
