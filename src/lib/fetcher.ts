@@ -1,4 +1,4 @@
-const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
+const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE;
 
 export const fetcher = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${BASE_API_URL}${endpoint}`;
@@ -37,7 +37,7 @@ export const fetcher = async (endpoint: string, options: RequestInit = {}) => {
   return response.json();
 };
 
-const refreshAccessToken = async () => {
+export const refreshAccessToken = async () => {
   const refreshToken = sessionStorage.getItem('refresh_token');
 
   if (!refreshToken) {

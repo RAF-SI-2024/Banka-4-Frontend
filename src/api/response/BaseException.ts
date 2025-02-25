@@ -5,4 +5,5 @@ export const responseIsBaseException = (r: any): r is BaseException =>
 export interface BaseException {
   failed: true;
   code: string;
+  extra: unknown; // TODO:
 }

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetcher } from '@/lib/fetcher';
+import { fetcher, refreshAccessToken } from '@/lib/fetcher';
 
 interface User {
   id: string;
@@ -12,9 +12,10 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (accessToken: string, refreshToken: string) => void;
+  login: (accessToken: string, refreshToken: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
+  getToken: () => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,14 +42,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(data || null);
   }, [data]);
 
-  const login = (accessToken: string, refreshToken: string) => {
+  const login = async (accessToken: string, refreshToken: string) => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('access_token', accessToken);
       sessionStorage.setItem('refresh_token', refreshToken);
     }
     setAccessToken(accessToken);
 
-    refetch();
+    await refetch();
   };
 
   const logoutMutation = useMutation({
@@ -73,10 +74,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     },
   });
 
+  const getToken = async () => {
+    const url = `${process.env.BASE_API_URL}auth/me`;
+    let accessToken = sessionStorage.getItem('access_token');
+    let r = await fetch(url, {
+      headers: {
+        Authorization: accessToken ? `Bearer ${accessToken}` : '',
+        'Content-Type': 'application/json',
+      },
+      mode: 'no-cors',
+    });
+
+    if (r.status === 401) {
+      accessToken = await refreshAccessToken();
+
+      if (accessToken) {
+        sessionStorage.setItem('access_token', accessToken);
+
+        r = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+    }
+
+    if (!r.ok) throw new Error(`Error: ${r.statusText}`);
+
+    return accessToken;
+  };
   const logout = () => logoutMutation.mutate();
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading, getToken }}>
       {children}
     </AuthContext.Provider>
   );
