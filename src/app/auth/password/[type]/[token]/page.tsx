@@ -58,17 +58,17 @@ export default function PasswordPage() {
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
         <Card className="w-full max-w-[348px] bg-white rounded-lg border border-zinc-200 p-4">
           <CardHeader className="w-full p-4 text-left">
-            <h2 className="text-2xl font-semibold text-zinc-950 font-inter">
+            <h2 className="text-2xl font-semibold text-zinc-950">
               {isReset ? 'Reset Your Password' : 'Set Your Password'}
             </h2>
-            <p className="text-sm text-zinc-500 mt-3 font-inter">
+            <p className="text-sm text-zinc-500 mt-3">
               {isReset
                   ? 'Forgot your password? No worries — set a new one to regain secure access to your account.'
                   : 'Create a strong, secure password to protect your account and keep your information safe.'}
             </p>
           </CardHeader>
 
-          <CardContent className="px-3 pb-3">
+          <CardContent className="px-4 pb-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 {/* Password Field */}
