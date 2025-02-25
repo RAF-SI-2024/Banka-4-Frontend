@@ -36,7 +36,7 @@ const data = {
       items: [
         {
           title: 'Overview',
-          url: '/employee/overview',
+          url: '/employee',
           icon: List,
         },
         {
