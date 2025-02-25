@@ -20,11 +20,10 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
 }) => {
   const auth = useAuth();
 
-
   const httpClient = useHttpClient();
 
   // Fetch user data (including permissions) via React Query.
-  const { data, isLoading, error } = useQuery<any, any, MeResponseDto>({
+  const { data, isLoading, error } = useQuery<unknown, unknown, MeResponseDto>({
     queryKey: ['employee', 'me'],
     queryFn: async () => {
       const axiosResponse = await getMe(httpClient);
@@ -32,7 +31,6 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
     },
     enabled: !auth.isLoading && auth.isLoggedIn,
   });
-
 
   /*
       useEffect(() => {
@@ -65,7 +63,6 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
   const hasPermissions = requiredPrivileges.every((privilege) =>
     userPrivileges.includes(privilege)
   );
-
 
   // If the user lacks the required privileges, redirect them outside.
   if (!hasPermissions) {
