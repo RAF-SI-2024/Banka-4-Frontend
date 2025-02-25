@@ -37,7 +37,6 @@ const _fetch = async <R>(endpoint: string, init: RequestInit = {}) => {
 
 const unwrapToken = async (getToken?: () => Promise<string | null>) => {
   const token = getToken ? await getToken() : null;
-  console.log(`token = ${token}`);
   const init: RequestInit = token
     ? {
         headers: {
@@ -61,7 +60,6 @@ export const get = async <R>(
   getToken?: () => Promise<string | null>,
   notify: boolean = false
 ): Promise<R> => {
-  console.log(`get:`, endpoint);
   const url = `${process.env.NEXT_PUBLIC_API_BASE}${endpoint}`;
   const init = await unwrapToken(getToken);
   const resp = await (notify
