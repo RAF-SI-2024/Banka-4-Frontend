@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { notFound, useParams } from 'next/navigation';
 import {
   Form,
@@ -34,7 +33,11 @@ type PasswordParams = {
 };
 
 export default function PasswordPage() {
-  const params = useParams() as PasswordParams;
+  const params = useParams<PasswordParams>();
+
+  if (!params?.type || !params?.token) {
+    notFound();
+  }
   if (params.type !== 'set' && params.type !== 'reset') notFound();
 
   const isReset = params.type === 'reset';
