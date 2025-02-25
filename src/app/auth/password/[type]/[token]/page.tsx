@@ -112,7 +112,7 @@ export default function PasswordPage() {
                 <div className="flex justify-end mt-2">
                   <Button
                       type="submit"
-                      className="bg-zinc-900 text-white rounded-md py-1 px-2 w-[120px] h-[40px] text-sm font-medium"
+                      className="bg-zinc-900 text-white rounded-md py-1 px-2 text-sm font-medium"
                   >
                     {isReset ? 'Reset Password' : 'Confirm'}
                   </Button>
