@@ -35,9 +35,6 @@ type PasswordParams = {
 export default function PasswordPage() {
   const params = useParams<PasswordParams>();
 
-  if (!params?.type || !params?.token) {
-    notFound();
-  }
   if (params.type !== 'set' && params.type !== 'reset') notFound();
 
   const isReset = params.type === 'reset';
