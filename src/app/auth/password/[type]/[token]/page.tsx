@@ -56,12 +56,12 @@ export default function PasswordPage() {
 
   return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
-        <Card className="w-full max-w-[348px] bg-white rounded-lg border border-zinc-200 p-3">
-          <CardHeader className="w-full p-3 text-left">
-            <h2 className="text-2xl font-semibold text-[#09090B] font-inter">
+        <Card className="w-full max-w-[348px] bg-white rounded-lg border border-zinc-200 p-4">
+          <CardHeader className="w-full p-4 text-left">
+            <h2 className="text-2xl font-semibold text-zinc-950 font-inter">
               {isReset ? 'Reset Your Password' : 'Set Your Password'}
             </h2>
-            <p className="text-sm text-[#71717A] mt-3 font-inter">
+            <p className="text-sm text-zinc-500 mt-3 font-inter">
               {isReset
                   ? 'Forgot your password? No worries — set a new one to regain secure access to your account.'
                   : 'Create a strong, secure password to protect your account and keep your information safe.'}
@@ -112,7 +112,7 @@ export default function PasswordPage() {
                 <div className="flex justify-end mt-2">
                   <Button
                       type="submit"
-                      className="bg-[#18181B] text-white rounded-md py-1 px-2 w-[120px] h-[40px] text-sm font-medium"
+                      className="bg-zinc-900 text-white rounded-md py-1 px-2 w-[120px] h-[40px] text-sm font-medium"
                   >
                     {isReset ? 'Reset Password' : 'Confirm'}
                   </Button>
