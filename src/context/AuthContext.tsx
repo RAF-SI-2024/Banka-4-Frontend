@@ -1,113 +1,201 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetcher, refreshAccessToken } from '@/lib/fetcher';
+import { assertNever } from '@/types/utils';
+import { createContext, useContext, useEffect, useReducer } from 'react';
+import axios, { isAxiosError } from 'axios';
+import { API_BASE } from '@/lib/utils';
+import { LoginRequestDto, RefreshTokenDto } from '@/api/request/auth';
+import { LoginResponseDto, RefreshTokenResponseDto } from '@/api/response/auth';
 
-interface User {
-  id: string;
-  first_name: string;
-  last_name: string;
+type LoggedInAuthState = {
+  accessToken: Promise<string>;
+  refreshToken: string;
+};
+
+/** Load a previously-stored authentication state from `sessionStorage`.  */
+function loadAuthenticationState(): LoggedInAuthState | undefined {
+  const accessToken = sessionStorage.getItem('b4/accessToken');
+  const refreshToken = sessionStorage.getItem('b4/refreshToken');
+  if (!(accessToken && refreshToken)) return undefined;
+
+  return {
+    accessToken: Promise.resolve(accessToken),
+    refreshToken,
+  };
 }
 
-interface AuthContextType {
-  user: User | null;
-  login: (accessToken: string, refreshToken: string) => Promise<void>;
-  logout: () => void;
-  isLoading: boolean;
-  getToken: () => Promise<string | null>;
+/** Serialize authentication state into `sessionStorage`.  */
+async function storeAuthenticationState(state: LoggedInAuthState | undefined) {
+  if (!state) {
+    sessionStorage.removeItem('b4/accessToken');
+    sessionStorage.removeItem('b4/refreshToken');
+    return;
+  }
+
+  try {
+    const { accessToken, refreshToken } = state;
+    const accessToken_ = await accessToken;
+    sessionStorage.setItem('b4/accessToken', accessToken_);
+    sessionStorage.setItem('b4/refreshToken', refreshToken);
+  } catch (_err) {
+    // TODO(arsen): Indicates a failed refresh and save.  The refresh error
+    // should be handled elsewhere.  Should we ignore it here?  There's no way
+    // to recover local to this site, and an attempt at redoing would raise an
+    // error again.
+  }
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+/* State management.  */
+type AuthAction =
+  | { type: 'invalidateAccessToken'; newToken: Promise<string> }
+  | { type: 'completeLogin'; data: LoggedInAuthState }
+  | { type: 'loadState' }
+  | { type: 'logout' };
+
+function reduceAuth(
+  oldState: LoggedInAuthState | undefined,
+  action: AuthAction
+): LoggedInAuthState | undefined {
+  if (action.type === 'invalidateAccessToken') {
+    if (!oldState) return oldState;
+    const ns = {
+      ...oldState,
+      accessToken: action.newToken,
+    };
+    storeAuthenticationState(ns);
+    return ns;
+  } else if (action.type === 'completeLogin') {
+    const ns = {
+      isLoggedIn: true,
+      ...action.data,
+    };
+    storeAuthenticationState(ns);
+    return ns;
+  } else if (action.type === 'loadState') {
+    return loadAuthenticationState();
+  } else if (action.type === 'logout') {
+    storeAuthenticationState(undefined);
+    return undefined;
+  }
+  assertNever(action);
+}
+
+type AuthContextT =
+  | {
+      isLoggedIn: false;
+      /** Attempts to log in.
+       * @throws Underlying error, if login fails.
+       */
+      login: (
+        type: 'employee' | 'customer',
+        username: string,
+        password: string
+      ) => Promise<void>;
+    }
+  | ({
+      isLoggedIn: true;
+      /** Attempts to refresh the current access token.
+       *
+       * Side effect: Updates the auth state with the new access token.
+       * @returns New access token.
+       */
+      refreshAccessToken: () => Promise<string>;
+      /** Throws out the current session and logs out.  */
+      logout: () => void;
+    } & LoggedInAuthState);
+const AuthContext = createContext<AuthContextT | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = useQueryClient();
-  const [accessToken, setAccessToken] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('access_token');
-    }
-    return null;
-  });
-
-  const [user, setUser] = useState<User | null>(null);
-
-  const { data, isLoading, refetch } = useQuery<User | null>({
-    queryKey: ['auth', 'user'],
-    queryFn: () => fetcher('/auth/me'),
-    enabled: !!accessToken,
-    retry: false,
-  });
+  const [authState, dispatch] = useReducer<
+    LoggedInAuthState | undefined,
+    [AuthAction]
+  >(reduceAuth, undefined);
 
   useEffect(() => {
-    setUser(data || null);
-  }, [data]);
-
-  const login = async (accessToken: string, refreshToken: string) => {
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('access_token', accessToken);
-      sessionStorage.setItem('refresh_token', refreshToken);
-    }
-    setAccessToken(accessToken);
-
-    await refetch();
-  };
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const refreshToken =
-        typeof window !== 'undefined'
-          ? sessionStorage.getItem('refresh_token')
-          : null;
-      return fetcher('/auth/logout', {
-        method: 'POST',
-        body: JSON.stringify({ refresh_token: refreshToken }),
-      });
-    },
-    onSuccess: () => {
-      if (typeof window !== 'undefined') {
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('refresh_token');
-      }
-      setAccessToken(null);
-      setUser(null);
-      queryClient.setQueryData(['auth', 'user'], null);
-    },
-  });
-
-  const getToken = async () => {
-    const url = `${process.env.BASE_API_URL}auth/me`;
-    let accessToken = sessionStorage.getItem('access_token');
-    let r = await fetch(url, {
-      headers: {
-        Authorization: accessToken ? `Bearer ${accessToken}` : '',
-        'Content-Type': 'application/json',
-      },
-      mode: 'no-cors',
-    });
-
-    if (r.status === 401) {
-      accessToken = await refreshAccessToken();
-
-      if (accessToken) {
-        sessionStorage.setItem('access_token', accessToken);
-
-        r = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-      }
-    }
-
-    if (!r.ok) throw new Error(`Error: ${r.statusText}`);
-
-    return accessToken;
-  };
-  const logout = () => logoutMutation.mutate();
+    dispatch({ type: 'loadState' });
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading, getToken }}>
+    <AuthContext.Provider
+      value={
+        authState
+          ? {
+              isLoggedIn: true,
+              ...authState,
+
+              refreshAccessToken: () => {
+                const captureAuthState = authState;
+                const newATP = (async () => {
+                  try {
+                    return (
+                      await axios.post<RefreshTokenResponseDto>(
+                        '/auth/refresh-token',
+                        {
+                          refresh_token: captureAuthState.refreshToken,
+                        } satisfies RefreshTokenDto,
+                        {
+                          baseURL: API_BASE,
+                        }
+                      )
+                    ).data.access_token;
+                  } catch (err) {
+                    /* Detect expired refresh tokens.  */
+                    if (
+                      isAxiosError(err) &&
+                      /* If we got a response...  */
+                      err.response &&
+                      /* ... and it was Unauthorized or Conflict... */
+                      (err.response.status === 409 ||
+                        err.response.status === 401) &&
+                      /* ... and the response body exists and is an object... */
+                      typeof err.response.data === 'object' &&
+                      /* ... and it tells us the refresh token expired or was
+                       * revoked... */
+                      (err.response.data.data === 'ExpiredJwt' ||
+                        err.response.data.data === 'RefreshTokenRevoked')
+                    )
+                      /* ... then, the session is over.  */
+                      dispatch({ type: 'logout' });
+                    throw err;
+                  }
+                })();
+                dispatch({ type: 'invalidateAccessToken', newToken: newATP });
+                return newATP;
+              },
+
+              logout: () => dispatch({ type: 'logout' }),
+            }
+          : {
+              isLoggedIn: false,
+
+              login: async (type, email, password) => {
+                const { access_token, refresh_token } = (
+                  await axios.post<LoginResponseDto>(
+                    `/auth/${type}/login`,
+                    {
+                      email,
+                      password,
+                    } satisfies LoginRequestDto,
+                    {
+                      baseURL: API_BASE,
+                    }
+                  )
+                ).data;
+                console.log({
+                  accessToken: access_token,
+                  refreshToken: refresh_token,
+                });
+                dispatch({
+                  type: 'completeLogin',
+                  data: {
+                    accessToken: Promise.resolve(access_token),
+                    refreshToken: refresh_token,
+                  },
+                });
+              },
+            }
+      }
+    >
       {children}
     </AuthContext.Provider>
   );

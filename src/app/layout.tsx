@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/context/AuthContext';
 import { ClientProvider } from '@/components/ClientProvider';
 import { Toaster } from '@/components/ui/sonner';
+import HttpClientProvider from '@/context/HttpClientContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,7 +39,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ClientProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              <HttpClientProvider>{children}</HttpClientProvider>
+            </AuthProvider>
           </ClientProvider>
           <Toaster />
         </ThemeProvider>
