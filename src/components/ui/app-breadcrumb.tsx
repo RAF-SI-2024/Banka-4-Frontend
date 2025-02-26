@@ -1,11 +1,11 @@
 'use client';
 
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
-  BreadcrumbPage,
   BreadcrumbList,
 } from './breadcrumb';
 
@@ -16,14 +16,16 @@ export function AppBreadcrumb() {
 
   return (
     <Breadcrumb>
-    <BreadcrumbList>
-    {state.items.map((item, index) => (
-      <BreadcrumbItem key={index} >
-        <BreadcrumbLink href={item.url}>{item.title}</BreadcrumbLink>
-        {index < state.items.length - 1 && <BreadcrumbSeparator />}
-      </BreadcrumbItem>
-    ))}
-    </BreadcrumbList>
-  </Breadcrumb>
+      <BreadcrumbList>
+        {state.items.map((item, index) => (
+          <React.Fragment key={index}>
+            <BreadcrumbItem>
+              <BreadcrumbLink href={item.url}>{item.title}</BreadcrumbLink>
+            </BreadcrumbItem>
+            {index < state.items.length - 1 && <BreadcrumbSeparator />}
+          </React.Fragment>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
