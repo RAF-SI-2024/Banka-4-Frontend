@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
-import { Moon, Sun, Landmark, Monitor } from 'lucide-react';
+import { Landmark, Monitor, Moon, Sun } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +15,9 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import Link from 'next/link';
 
 function ModeToggle() {
   const { setTheme, theme, systemTheme } = useTheme();
@@ -54,34 +56,27 @@ function ModeToggle() {
 export function AppNavigationMenu() {
   return (
     <div className="border-b w-full">
-      <div className="flex items-center justify-between px-4 md:px-6">
+      <div className="flex items-center justify-between py-3 px-4 md:px-6">
         <div className="flex items-center space-x-[10px]">
-          <div className="size-8 flex items-center justify-center bg-[#0F172A] rounded-lg p-2 border border-white">
-            <Landmark className="size-4 text-white" />
+          <div className="size-9 flex items-center justify-center bg-slate-900 dark:bg-zinc-950 rounded-lg p-2">
+            <Landmark className="size-5 text-white" />
           </div>
-          <span className="font-sans font-medium text-sm leading-5 tracking-[0%]">
+          <span className="font-sans font-medium text-lg leading-5 tracking-[0%]">
             RAFeisen Bank
           </span>
         </div>
         <div className="flex items-center space-x-4">
           <NavigationMenu>
-            <NavigationMenuList className="hidden md:flex">
+            <NavigationMenuList>
               <NavigationMenuItem>
-                <div className="gap-1 flex items-center">
-                  <NavigationMenuLink
-                    href="#"
-                    className="px-4 py-2 min-h-[40px] rounded-[6px]"
-                  >
+                <Link href="/auth/login" legacyBehavior passHref>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                     Login Now
                   </NavigationMenuLink>
-
-                  <NavigationMenuLink
-                    href="#"
-                    className="px-4 py-2 min-h-[40px] rounded-[6px]"
-                  >
-                    Create your Account
-                  </NavigationMenuLink>
-                </div>
+                </Link>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Create your Account
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
