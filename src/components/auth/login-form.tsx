@@ -27,7 +27,13 @@ const formSchema = z.object({
   password: z.string().nonempty(),
 });
 
-export default function LoginForm() {
+export type LoginFormData = z.infer<typeof formSchema>;
+
+export interface LoginFormProps {
+  onSubmitAction: (values: LoginFormData) => void;
+}
+
+export default function LoginForm({ onSubmitAction }: LoginFormProps) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,10 +41,6 @@ export default function LoginForm() {
       password: '',
     },
   });
-
-  const onSubmit = (values: { email: string; password: string }) => {
-    console.log('Logging in with:', values);
-  };
 
   return (
     <Card className="w-[348px] shadow-md">
@@ -51,7 +53,10 @@ export default function LoginForm() {
 
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmitAction)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="email"
