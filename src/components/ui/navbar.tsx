@@ -18,13 +18,17 @@ import {
 } from '@/components/ui/navigation-menu';
 
 function ModeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme, systemTheme } = useTheme();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          {theme === 'dark' ? (
+        <Button variant="ghost" size="icon">
+          {theme === 'light' ? (
+            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+          ) : theme === 'dark' ? (
+            <Moon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+          ) : systemTheme === 'dark' ? (
             <Moon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
           ) : (
             <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
