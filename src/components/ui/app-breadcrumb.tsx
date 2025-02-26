@@ -1,27 +1,29 @@
-import{
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbSeparator,
-    BreadcrumbPage,
-}from './breadcrumb';
+'use client';
 
-import{ useBreadcrumb } from '../../context/BreadcrumbContext';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+  BreadcrumbList,
+} from './breadcrumb';
 
-export function AppBreadcrumb(){
-    const {state} = useBreadcrumb();
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 
-    return(
-        <Breadcrumb>
-            {state.items.map((item, index) => (
-                <BreadcrumbItem key={index}>
-                    <BreadcrumbLink href={item.url}>
-                        {item.title}
-                    </BreadcrumbLink>
-                    {index < state.items.length - 1 && <BreadcrumbSeparator />}
-                </BreadcrumbItem>
-            ))}
-            <BreadcrumbPage>{state.items[state.items.length - 1].title}</BreadcrumbPage>
-        </Breadcrumb>
-    );
+export function AppBreadcrumb() {
+  const { state } = useBreadcrumb();
+
+  return (
+    <Breadcrumb>
+    <BreadcrumbList>
+    {state.items.map((item, index) => (
+      <BreadcrumbItem key={index} >
+        <BreadcrumbLink href={item.url}>{item.title}</BreadcrumbLink>
+        {index < state.items.length - 1 && <BreadcrumbSeparator />}
+      </BreadcrumbItem>
+    ))}
+    </BreadcrumbList>
+  </Breadcrumb>
+  );
 }
