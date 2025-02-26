@@ -60,7 +60,7 @@ export function AppNavigationMenu() {
             <Landmark className="size-4 text-white" />
           </div>
           <span className="font-sans font-medium text-sm leading-5 tracking-[0%]">
-            Raiffeisen Bank
+            RAFeisen Bank
           </span>
         </div>
         <div className="flex items-center space-x-4">
