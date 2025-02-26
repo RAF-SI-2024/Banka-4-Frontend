@@ -51,7 +51,7 @@ function ModeToggle() {
 export function NavigationMenuDemo() {
   return (
     <div className="border-b w-full">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex items-center justify-between px-4 md:px-6">
         <div className="flex items-center space-x-[10px]">
           <div className="size-8 flex items-center justify-center bg-[#0F172A] rounded-lg p-2 border border-white">
             <Landmark className="size-4 text-white" />
