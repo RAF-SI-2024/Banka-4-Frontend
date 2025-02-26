@@ -91,7 +91,7 @@ export const put = async <Dto extends object, Resp = unknown>(
   getToken?: () => Promise<string | null>,
   notify: boolean = false
 ) => {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE}${endpoint}`;
+  const url = `${process.env.NEXT_PUBLIC_API_BASE}${endpoint}/${id}`;
   const init = await unwrapToken(getToken);
   init.method = 'PUT';
   init.body = JSON.stringify(dto);
