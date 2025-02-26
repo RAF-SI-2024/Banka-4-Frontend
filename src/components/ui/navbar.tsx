@@ -51,7 +51,7 @@ function ModeToggle() {
   );
 }
 
-export function NavigationMenuDemo() {
+export function AppNavigationMenu() {
   return (
     <div className="border-b w-full">
       <div className="flex items-center justify-between px-4 md:px-6">
