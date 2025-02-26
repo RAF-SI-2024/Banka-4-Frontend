@@ -50,7 +50,6 @@ function ModeToggle() {
 
 export function NavigationMenuDemo() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="border-b w-full">
         <div className="flex h-16 items-center justify-between px-4 md:px-6">
           <div className="flex items-center space-x-[10px]">
@@ -88,6 +87,5 @@ export function NavigationMenuDemo() {
           </div>
         </div>
       </div>
-    </ThemeProvider>
   );
 }
