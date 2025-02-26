@@ -50,42 +50,42 @@ function ModeToggle() {
 
 export function NavigationMenuDemo() {
   return (
-      <div className="border-b w-full">
-        <div className="flex h-16 items-center justify-between px-4 md:px-6">
-          <div className="flex items-center space-x-[10px]">
-            <div className="h-[32px] w-[32px] flex items-center justify-center bg-[#0F172A] rounded-[8px] p-2 border border-white">
-              <Landmark className="h-[16px] w-[16px] text-white" />
-            </div>
-            <span className="font-sans font-medium text-sm leading-5 tracking-[0%]">
-              Raiffeisen Bank
-            </span>
+    <div className="border-b w-full">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+        <div className="flex items-center space-x-[10px]">
+          <div className="size-8 flex items-center justify-center bg-[#0F172A] rounded-lg p-2 border border-white">
+            <Landmark className="size-4 text-white" />
           </div>
-          <div className="flex items-center space-x-4">
-            <NavigationMenu>
-              <NavigationMenuList className="hidden md:flex">
-                <NavigationMenuItem>
-                  <div className="w-[300px] h-[40px] gap-1 flex items-center">
-                    <NavigationMenuLink
-                      href="#"
-                      className="px-4 py-2 w-[110px] h-[40px] min-h-[40px] rounded-[6px]"
-                    >
-                      Login Now
-                    </NavigationMenuLink>
+          <span className="font-sans font-medium text-sm leading-5 tracking-[0%]">
+            Raiffeisen Bank
+          </span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <NavigationMenu>
+            <NavigationMenuList className="hidden md:flex">
+              <NavigationMenuItem>
+                <div className="w-[300px] h-[40px] gap-1 flex items-center">
+                  <NavigationMenuLink
+                    href="#"
+                    className="px-4 py-2 w-[110px] h-[40px] min-h-[40px] rounded-[6px]"
+                  >
+                    Login Now
+                  </NavigationMenuLink>
 
-                    <NavigationMenuLink
-                      href="#"
-                      className="px-4 py-2 w-[180px] h-[40px] min-h-[40px] rounded-[6px]"
-                    >
-                      Create your Account
-                    </NavigationMenuLink>
-                  </div>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <div className="h-6 border-l border-gray-300"></div>
-            <ModeToggle />
-          </div>
+                  <NavigationMenuLink
+                    href="#"
+                    className="px-4 py-2 w-[180px] h-[40px] min-h-[40px] rounded-[6px]"
+                  >
+                    Create your Account
+                  </NavigationMenuLink>
+                </div>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <div className="h-6 border-l border-gray-300"></div>
+          <ModeToggle />
         </div>
       </div>
+    </div>
   );
 }
