@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { ThemeProvider } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
 import { Moon, Sun, Landmark, Monitor } from 'lucide-react';
@@ -64,17 +63,17 @@ export function NavigationMenuDemo() {
           <NavigationMenu>
             <NavigationMenuList className="hidden md:flex">
               <NavigationMenuItem>
-                <div className="w-[300px] h-[40px] gap-1 flex items-center">
+                <div className="gap-1 flex items-center">
                   <NavigationMenuLink
                     href="#"
-                    className="px-4 py-2 w-[110px] h-[40px] min-h-[40px] rounded-[6px]"
+                    className="px-4 py-2 min-h-[40px] rounded-[6px]"
                   >
                     Login Now
                   </NavigationMenuLink>
 
                   <NavigationMenuLink
                     href="#"
-                    className="px-4 py-2 w-[180px] h-[40px] min-h-[40px] rounded-[6px]"
+                    className="px-4 py-2 min-h-[40px] rounded-[6px]"
                   >
                     Create your Account
                   </NavigationMenuLink>
