@@ -40,7 +40,7 @@ export const BreadcrumbProvider = ({children}: {children: ReactNode}) => {
 
 export const useBreadcrumb = () => {
     const context = useContext(BreadcrumbContext);
-    if(context === undefined){
+    if(!context){
         throw new Error("useBreadcrumb must be used within a BreadcrumbProvider");
     }
     return context;

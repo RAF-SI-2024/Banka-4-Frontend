@@ -21,6 +21,10 @@ import { Button } from '@/components/ui/button';
 
 import { mockEmployees } from './mockDataOverview';
 
+import { BreadcrumbProvider, useBreadcrumb } from "@/context/BreadcrumbContext";
+import { use } from 'chai';
+import { Breadcrumb } from '@/components/ui/breadcrumb';
+
 const employeeSchema = z.object({
   id: z.number(),
   first_name: z.string(),
@@ -89,7 +93,21 @@ const EmployeeOverviewPage: React.FC = () => {
   // Calculate total pages
   const totalPages = Math.ceil(employees.length / rowsPerPage);
 
+  const {dispatch} = useBreadcrumb();
+
+  useEffect(() => {
+    dispatch({
+      type: "SET_BREADCRUMB",
+      items: [
+        {title: "Home", url: "/"},
+        {title: "Employees", url: "/employee"},
+        {title: "Overview"}
+      ]
+    })
+  }, [dispatch]);
+
   return (
+
     <div className="p-8">
       <Card className="max-w-[900px] mx-auto">
         <CardHeader>
