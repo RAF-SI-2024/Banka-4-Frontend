@@ -4,7 +4,7 @@ import LoginForm, { LoginFormData } from '@/components/auth/login-form';
 import { useAuth } from '@/context/AuthContext';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,11 +15,11 @@ export default function LoginPage() {
       if (!auth.isLoggedIn) await auth.login('employee', email, password);
     },
     onError: (err) => toastRequestError(err),
+    onSuccess: () => {
+      router.replace('/employee');
+      toast.success('success');
+    },
   });
-
-  useEffect(() => {
-    if (auth.isLoggedIn) return router.replace('/');
-  }, [router, auth]);
 
   return (
     <div className="flex justify-center items-center pt-16">
