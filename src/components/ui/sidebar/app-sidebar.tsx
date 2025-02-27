@@ -1,6 +1,6 @@
 'use client';
 
-import { UserPlus, BriefcaseBusiness, List, Landmark } from 'lucide-react';
+import { BriefcaseBusiness, Landmark, List, UserPlus } from 'lucide-react';
 
 import {
   Sidebar,
