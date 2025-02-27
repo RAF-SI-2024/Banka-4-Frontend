@@ -30,10 +30,14 @@ const formSchema = z.object({
 export type LoginFormData = z.infer<typeof formSchema>;
 
 export interface LoginFormProps {
+  enabled?: boolean;
   onSubmitAction: (values: LoginFormData) => void;
 }
 
-export default function LoginForm({ onSubmitAction }: LoginFormProps) {
+export default function LoginForm({
+  onSubmitAction,
+  enabled = true,
+}: LoginFormProps) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,7 +98,12 @@ export default function LoginForm({ onSubmitAction }: LoginFormProps) {
             />
 
             <div className="flex justify-end">
-              <Button type="submit" variant="default" className="font-normal">
+              <Button
+                type="submit"
+                variant="default"
+                className="font-normal"
+                disabled={!enabled}
+              >
                 Login
               </Button>
             </div>
