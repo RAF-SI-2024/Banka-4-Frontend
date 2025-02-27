@@ -14,5 +14,3 @@ export interface MeResponseDto {
   department: string;
   privileges: Privilege[];
 }
-
-// Represents
