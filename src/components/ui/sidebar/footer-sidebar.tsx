@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { ChevronsUpDown, LogOut, Monitor, Moon, Sun } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -17,6 +17,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { useTheme } from 'next-themes';
 
 export function FooterSidebar({
   user,
@@ -30,6 +31,7 @@ export function FooterSidebar({
   onLogoutAction: () => void;
 }) {
   const { isMobile } = useSidebar();
+  const theme = useTheme();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -68,6 +70,34 @@ export function FooterSidebar({
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={() => {
+                theme.setTheme('light');
+              }}
+            >
+              <Sun />
+              Light
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={() => {
+                theme.setTheme('dark');
+              }}
+            >
+              <Moon />
+              Dark
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={'cursor-pointer'}
+              onClick={() => {
+                theme.setTheme('system');
+              }}
+            >
+              <Monitor />
+              System
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className={'cursor-pointer'}
