@@ -30,7 +30,7 @@ import { SomePartial } from '@/types/utils';
 
 import { MultiSelect } from '@/components/ui/multi-select';
 import { ALL_PRIVILEGES } from '@/types/privileges';
-import { dirtyValues } from '@/lib/form-utils';
+import { getDirtyValues } from '@/lib/form-utils';
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -99,7 +99,7 @@ export default function EmployeeForm({
     if (isUpdate) {
       onSubmit({
         update: true,
-        data: dirtyValues(form.formState.dirtyFields, data),
+        data: getDirtyValues(form.formState.dirtyFields, data),
       });
     } else {
       onSubmit({
