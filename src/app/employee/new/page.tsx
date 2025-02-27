@@ -7,7 +7,21 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
+import { useEffect } from 'react';
+
 export default function NewEmployeePage() {
+  const { dispatch } = useBreadcrumb();
+  useEffect(() => {
+    dispatch({
+      type: 'SET_BREADCRUMB',
+      items: [
+        { title: 'Home', url: '/' },
+        { title: 'Employees', url: '/employee' },
+        { title: 'New' },
+      ],
+    });
+  }, [dispatch]);
   return (
     <div>
       <div className="flex justify-center items-center pt-16">
