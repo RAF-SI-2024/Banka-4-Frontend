@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button';
 import { mockEmployees } from './mockDataOverview';
 
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
+import GuardBlock from '@/components/GuardBlock';
 
 const employeeSchema = z.object({
   id: z.number(),
@@ -107,104 +108,108 @@ const EmployeeOverviewPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-8">
-      <Card className="max-w-[900px] mx-auto">
-        <CardHeader>
-          <h1 className="text-2xl font-bold">Employees Overview</h1>
-          <p className="text-sm text-zinc-500">
-            This table provides a clear and organized overview of key employee
-            details for quick reference and easy access.
-          </p>
-          <div className="flex mb-4 space-x-2">
-            <Input
-              type="text"
-              name="first_name"
-              placeholder="filter by first name"
-              value={filters.first_name}
-              onChange={handleFilterChange}
-            />
-            <Input
-              type="text"
-              name="last_name"
-              placeholder="filter by last name"
-              value={filters.last_name}
-              onChange={handleFilterChange}
-            />
-            <Input
-              type="text"
-              name="email"
-              placeholder="filter by email"
-              value={filters.email}
-              onChange={handleFilterChange}
-            />
-            <Input
-              type="text"
-              name="position"
-              placeholder="filter by position"
-              value={filters.position}
-              onChange={handleFilterChange}
-            />
-            <Button onClick={handleSearch}>
-              Search
-              <Search className="w-4 h-4 mr-1" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="rounded-lg overflow-hidden">
-          {loading ? (
-            <div className="flex justify-center p-4">
-              <Loader2 className="animate-spin w-6 h-6" />
+    <GuardBlock requiredPrivileges={["ADMIN"]}>
+      <div className="p-8">
+        <Card className="max-w-[900px] mx-auto">
+          <CardHeader>
+            <h1 className="text-2xl font-bold">Employees Overview</h1>
+            <p className="text-sm text-zinc-500">
+              This table provides a clear and organized overview of key employee
+              details for quick reference and easy access.
+            </p>
+            <div className="flex mb-4 space-x-2">
+              <Input
+                type="text"
+                name="first_name"
+                placeholder="filter by first name"
+                value={filters.first_name}
+                onChange={handleFilterChange}
+              />
+              <Input
+                type="text"
+                name="last_name"
+                placeholder="filter by last name"
+                value={filters.last_name}
+                onChange={handleFilterChange}
+              />
+              <Input
+                type="text"
+                name="email"
+                placeholder="filter by email"
+                value={filters.email}
+                onChange={handleFilterChange}
+              />
+              <Input
+                type="text"
+                name="position"
+                placeholder="filter by position"
+                value={filters.position}
+                onChange={handleFilterChange}
+              />
+              <Button onClick={handleSearch}>
+                Search
+                <Search className="w-4 h-4 mr-1" />
+              </Button>
             </div>
-          ) : (
-            <>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>First Name</TableHead>
-                    <TableHead>Last Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Phone Number</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Active</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {currentEmployees.length === 0 ? (
+          </CardHeader>
+          <CardContent className="rounded-lg overflow-hidden">
+            {loading ? (
+              <div className="flex justify-center p-4">
+                <Loader2 className="animate-spin w-6 h-6" />
+              </div>
+            ) : (
+              <>
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        className="text-center p-6 text-zinc-500"
-                      >
-                        There are currently no employees
-                      </TableCell>
+                      <TableHead>First Name</TableHead>
+                      <TableHead>Last Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Phone Number</TableHead>
+                      <TableHead>Position</TableHead>
+                      <TableHead>Active</TableHead>
                     </TableRow>
-                  ) : (
-                    currentEmployees.map((employee) => (
-                      <TableRow key={employee.id}>
-                        <TableCell>{employee.first_name}</TableCell>
-                        <TableCell>{employee.last_name}</TableCell>
-                        <TableCell>{employee.email}</TableCell>
-                        <TableCell>{employee.phone_number}</TableCell>
-                        <TableCell>{employee.position}</TableCell>
-                        <TableCell>{employee.active ? 'Yes' : 'No'}</TableCell>
+                  </TableHeader>
+
+                  <TableBody>
+                    {currentEmployees.length === 0 ? (
+                      <TableRow>
+                        <TableCell
+                          colSpan={6}
+                          className="text-center p-6 text-zinc-500"
+                        >
+                          There are currently no employees
+                        </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-              <PaginationSection
-                pageCount={totalPages}
-                currentPage={currentPage}
-                onChangePage={setCurrentPage}
-                resultsLength={employees.length}
-                pageSize={rowsPerPage}
-              ></PaginationSection>
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                    ) : (
+                      currentEmployees.map((employee) => (
+                        <TableRow key={employee.id}>
+                          <TableCell>{employee.first_name}</TableCell>
+                          <TableCell>{employee.last_name}</TableCell>
+                          <TableCell>{employee.email}</TableCell>
+                          <TableCell>{employee.phone_number}</TableCell>
+                          <TableCell>{employee.position}</TableCell>
+                          <TableCell>
+                            {employee.active ? 'Yes' : 'No'}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+                <PaginationSection
+                  pageCount={totalPages}
+                  currentPage={currentPage}
+                  onChangePage={setCurrentPage}
+                  resultsLength={employees.length}
+                  pageSize={rowsPerPage}
+                ></PaginationSection>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </GuardBlock>
   );
 };
 
