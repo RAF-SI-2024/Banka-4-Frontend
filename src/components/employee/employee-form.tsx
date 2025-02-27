@@ -28,18 +28,36 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SomePartial } from '@/types/utils';
 
+import { MultiSelect } from '@/components/ui/multi-select';
+import { ALL_PRIVILEGES } from '@/types/privileges';
+
 const formSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   dateOfBirth: z.date(),
   email: z.string().email('Invalid email address'),
   address: z.string().min(1),
-  phoneNumber: z.string().regex(/^(\+3816|06)(\d{7,8}|(77|78)\d{5,6})$/),
+  phoneNumber: z
+    .string()
+    .regex(/^(\+3816|06)(\d{7,8}|(77|78)\d{5,6})$/, 'Invalid phone number'),
   position: z.string().min(1),
   username: z.string().min(1),
   department: z.string().min(1),
   gender: z.enum(['male', 'female']),
   isActive: z.boolean().default(true),
+
+  // All selectable privileges
+  privilege: z.array(
+    z.enum([
+      'ADMIN',
+      'FILTER',
+      'SEARCH',
+      'TRADE_STOCKS',
+      'VIEW_STOCKS',
+      'CONTRACTS',
+      'NEW_INSURANCES',
+    ])
+  ),
 });
 
 export type EmployeeFormValues = z.infer<typeof formSchema>;
@@ -59,6 +77,7 @@ export default function EmployeeForm({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
+
   return (
     <Form {...form}>
       <form
@@ -254,7 +273,31 @@ export default function EmployeeForm({
           )}
         />
 
-        <div className="flex items-center space-x-2 ">
+        <FormField
+          control={form.control}
+          name="privilege"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-1.5 col-span-2">
+              <FormLabel>
+                Privileges <span className="text-red-500 text-xl">*</span>
+              </FormLabel>
+              <FormControl>
+                <MultiSelect
+                  options={ALL_PRIVILEGES.map((priv) => ({
+                    label: priv,
+                    value: priv,
+                  }))}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value as string[] | undefined}
+                  placeholder="Select privileges"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex items-center space-x-2 col-span-2">
           <Switch
             id="activeEmployee"
             checked={form.watch('isActive')}
@@ -266,7 +309,7 @@ export default function EmployeeForm({
         <Button
           disabled={isPending}
           type="submit"
-          className="w-min relative -right-60 bottom-0 "
+          className="w-min col-span-2 mt-4"
           onClick={form.handleSubmit(onSubmit)}
         >
           Save Changes

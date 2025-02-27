@@ -55,7 +55,7 @@ export default function NewEmployeePage() {
       email: data.email,
       phone: data.phoneNumber,
       address: data.address,
-      privilege: ['ADMIN'],
+      privilege: data.privilege,
       position: data.position,
       department: data.department,
     });
@@ -88,6 +88,7 @@ export default function NewEmployeePage() {
                 department: '',
                 gender: 'male',
                 isActive: true,
+                privilege: [],
               }}
             />
           </CardContent>
