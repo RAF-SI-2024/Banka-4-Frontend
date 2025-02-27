@@ -37,7 +37,7 @@ const EmployeeOverviewPage: React.FC = () => {
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['employees', currentPage, rowsPerPage],
+    queryKey: ['employee', currentPage, rowsPerPage],
     queryFn: async () => {
       const response = await searchEmployees(
         client,
@@ -59,7 +59,7 @@ const EmployeeOverviewPage: React.FC = () => {
 
   const handleSearch = () => {
     queryClient.invalidateQueries({
-      queryKey: ['employees', currentPage, rowsPerPage],
+      queryKey: ['employee', currentPage, rowsPerPage],
     });
     setCurrentPage(1);
   };

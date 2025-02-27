@@ -18,10 +18,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { verifyPassword } from '@/api/employee';
 import { VerifyPasswordRequest } from '@/api/request/auth';
 import { toastRequestError } from '@/api/errors';
 import { useHttpClient } from '@/context/HttpClientContext';
+import { verifyPassword } from '@/api/auth';
 
 // Zod schema for password validation
 const passwordSchema = z

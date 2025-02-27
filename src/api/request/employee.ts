@@ -1,3 +1,5 @@
+import { Privilege } from '@/types/privileges';
+
 export interface NewEmployeeRequest {
   firstName: string;
   lastName: string;
@@ -7,8 +9,10 @@ export interface NewEmployeeRequest {
   email: string;
   phone: string;
   address: string;
-  privilege: string[];
+  privilege: Privilege[];
   position: string;
   department: string;
-  // TODO(marko): add active once backend implements it
+  active: boolean;
 }
+
+export type EditEmployeeRequest = Partial<NewEmployeeRequest>;

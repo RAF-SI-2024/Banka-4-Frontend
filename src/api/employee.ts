@@ -1,11 +1,21 @@
 import { Axios } from 'axios';
-import { MeResponseDto } from './response/MeResponseDto';
-import { NewEmployeeRequest } from '@/api/request/employee';
-import { EmployeeOverviewResponseDto } from '@/api/response/employee';
-import { VerifyPasswordRequest } from '@/api/request/auth';
+import {
+  EditEmployeeRequest,
+  NewEmployeeRequest,
+} from '@/api/request/employee';
+import {
+  EmployeeOverviewResponseDto,
+  EmployeeResponseDto,
+} from '@/api/response/employee';
 
-export const getMe = async (client: Axios) =>
-  client.get<MeResponseDto>('/employee/me');
+export const getEmployeeById = async (client: Axios, id: string) =>
+  client.get<EmployeeResponseDto>(`/employee/${id}`);
+
+export const updateEmployeeById = async (
+  client: Axios,
+  id: string,
+  data: EditEmployeeRequest
+) => client.put<void>(`/employee/${id}`, data);
 
 export const postNewEmployee = async (
   client: Axios,
@@ -23,18 +33,7 @@ export const searchEmployees = async (
   rowsPerPage: number,
   currentPage: number
 ) => {
-  let url = `/employee/search?size=${rowsPerPage}&page=${currentPage - 1}`;
-  if (filters.firstName) url += `&firstName=${filters.firstName}`;
-  if (filters.lastName) url += `&lastName=${filters.lastName}`;
-  if (filters.email) url += `&email=${filters.email}`;
-  if (filters.position) url += `&position=${filters.position}`;
-  return client.get<EmployeeOverviewResponseDto>(url);
+  return client.get<EmployeeOverviewResponseDto>('/employee/search', {
+    params: { ...filters, rowsPerPage, currentPage },
+  });
 };
-
-export const verifyPassword = async (
-  client: Axios,
-  data: VerifyPasswordRequest
-) => client.post<void>('/auth/verify', data);
-
-export const forgotPassword = async (client: Axios, email: string) =>
-  client.get<void>(`/auth/forgot-password/${email}`);

@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/dialog';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useMutation } from '@tanstack/react-query';
-import { forgotPassword } from '@/api/employee';
 import { toastRequestError } from '@/api/errors';
 import {
   Form,
@@ -26,6 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { forgotPassword } from '@/api/auth';
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),

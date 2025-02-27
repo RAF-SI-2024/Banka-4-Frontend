@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
@@ -30,6 +30,7 @@ import { SomePartial } from '@/types/utils';
 
 import { MultiSelect } from '@/components/ui/multi-select';
 import { ALL_PRIVILEGES } from '@/types/privileges';
+import { dirtyValues } from '@/lib/form-utils';
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -44,28 +45,42 @@ const formSchema = z.object({
   username: z.string().min(1),
   department: z.string().min(1),
   gender: z.enum(['male', 'female']),
-  isActive: z.boolean().default(true),
+  active: z.boolean(),
 
   // All selectable privileges
   // TODO(marko): get this from `/types/privileges.ts`
-  privilege: z.array(
-    z.enum([
-      'ADMIN',
-      'FILTER',
-      'SEARCH',
-      'TRADE_STOCKS',
-      'VIEW_STOCKS',
-      'CONTRACTS',
-      'NEW_INSURANCES',
-    ])
-  ),
+  privilege: z.union([
+    z.tuple([]),
+    z.array(
+      z.enum([
+        'ADMIN',
+        'FILTER',
+        'SEARCH',
+        'TRADE_STOCKS',
+        'VIEW_STOCKS',
+        'CONTRACTS',
+        'NEW_INSURANCES',
+      ])
+    ),
+  ]),
 });
+
+export type SubmitAction =
+  | {
+      update: true;
+      data: Partial<EmployeeFormValues>;
+    }
+  | {
+      update: false;
+      data: EmployeeFormValues;
+    };
 
 export type EmployeeFormValues = z.infer<typeof formSchema>;
 
 export interface EmployeeFormProps {
-  onSubmit: (values: EmployeeFormValues) => void;
+  onSubmit: (values: SubmitAction) => void;
   isPending: boolean;
+  isUpdate: boolean;
   defaultValues: SomePartial<EmployeeFormValues, 'dateOfBirth'>;
 }
 
@@ -73,16 +88,31 @@ export default function EmployeeForm({
   onSubmit,
   isPending,
   defaultValues,
+  isUpdate,
 }: EmployeeFormProps) {
   const form = useForm<EmployeeFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
+  function _onSubmit(data: EmployeeFormValues) {
+    if (isUpdate) {
+      onSubmit({
+        update: true,
+        data: dirtyValues(form.formState.dirtyFields, data),
+      });
+    } else {
+      onSubmit({
+        update: false,
+        data: data,
+      });
+    }
+  }
+
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(_onSubmit)}
         className="grid grid-cols-2 gap-4"
       >
         <FormField
@@ -301,19 +331,25 @@ export default function EmployeeForm({
 
         <div className="flex items-center col-span-2 justify-between w-full">
           <div className="flex items-center gap-2">
-            <Switch
-              id="activeEmployee"
-              checked={form.watch('isActive')}
-              onCheckedChange={(checked) => form.setValue('isActive', checked)}
+            <FormField
+              control={form.control}
+              name="active"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Switch
+                      onCheckedChange={field.onChange}
+                      checked={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <Label htmlFor="activeEmployee">Is this employee active?</Label>
           </div>
 
-          <Button
-            disabled={isPending}
-            type="submit"
-            onClick={form.handleSubmit(onSubmit)}
-          >
+          <Button disabled={isPending} type="submit">
             Save Changes
           </Button>
         </div>
