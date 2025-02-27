@@ -1,3 +1,5 @@
+import {Privilege} from "@/types/privileges";
+
 export interface MeResponseDto {
   id: string;
   firstName: string;
@@ -10,5 +12,7 @@ export interface MeResponseDto {
   username: string;
   position: string;
   department: string;
-  privileges: string[];
+  privileges: Privilege[];
 }
+
+// Represents
