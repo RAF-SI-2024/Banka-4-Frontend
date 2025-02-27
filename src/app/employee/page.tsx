@@ -43,7 +43,7 @@ const EmployeeOverviewPage: React.FC = () => {
         client,
         searchFilters,
         rowsPerPage,
-        currentPage
+        currentPage - 1
       );
       return response.data;
     },
