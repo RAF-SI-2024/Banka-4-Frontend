@@ -185,7 +185,7 @@ const EmployeeOverviewPage: React.FC = () => {
                     onChangePage={(page) => {
                       setCurrentPage(page);
                     }}
-                    resultsLength={data.numberOfElements}
+                    resultsLength={data.totalElements}
                     pageSize={rowsPerPage}
                   ></PaginationSection>
                 )}
