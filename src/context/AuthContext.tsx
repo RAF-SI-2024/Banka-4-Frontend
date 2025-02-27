@@ -144,13 +144,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                       await axios.post<RefreshTokenResponseDto>(
                         '/auth/refresh-token',
                         {
-                          refresh_token: captureAuthState.refreshToken,
+                          refreshToken: captureAuthState.refreshToken,
                         } satisfies RefreshTokenDto,
                         {
                           baseURL: API_BASE,
                         }
                       )
-                    ).data.access_token;
+                    ).data.accessToken;
                   } catch (err) {
                     /* Detect expired refresh tokens.  */
                     if (
@@ -182,7 +182,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               isLoggedIn: false,
               isLoading,
               login: async (type, email, password) => {
-                const { access_token, refresh_token } = (
+                const { accessToken, refreshToken } = (
                   await axios.post<LoginResponseDto>(
                     `/auth/${type}/login`,
                     {
@@ -194,15 +194,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     }
                   )
                 ).data;
-                console.log({
-                  accessToken: access_token,
-                  refreshToken: refresh_token,
-                });
                 dispatch({
                   type: 'completeLogin',
                   data: {
-                    accessToken: Promise.resolve(access_token),
-                    refreshToken: refresh_token,
+                    accessToken: Promise.resolve(accessToken),
+                    refreshToken: refreshToken,
                   },
                 });
               },

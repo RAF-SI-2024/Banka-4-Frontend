@@ -1,6 +1,6 @@
 /** `POST /auth/refresh-token` body.  */
 export interface RefreshTokenDto {
-  refresh_token: string;
+  refreshToken: string;
 }
 
 /** `POST /auth/login` request body.  */
