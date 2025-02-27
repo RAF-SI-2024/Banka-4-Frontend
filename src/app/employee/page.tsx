@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/table';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { Loader2, Search } from 'lucide-react';
-import { PaginationSection } from '@/components/ui/pagination';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
@@ -21,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { searchEmployees } from '@/api/employee';
 import { EmployeeResponseDto } from '@/api/response/employee';
+import PaginationWrapper from '@/components/ui/pagination-wrapper';
 
 const EmployeeOverviewPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -179,15 +179,11 @@ const EmployeeOverviewPage: React.FC = () => {
                   </TableBody>
                 </Table>
                 {data !== undefined && (
-                  <PaginationSection
-                    pageCount={data.totalPages}
+                  <PaginationWrapper
+                    totalPages={data.totalPages}
                     currentPage={currentPage}
-                    onChangePage={(page) => {
-                      setCurrentPage(page);
-                    }}
-                    resultsLength={data.totalElements}
-                    pageSize={rowsPerPage}
-                  ></PaginationSection>
+                    onPageChange={setCurrentPage}
+                  />
                 )}
               </>
             )}

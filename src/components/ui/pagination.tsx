@@ -116,110 +116,6 @@ const PaginationEllipsis = ({
 );
 PaginationEllipsis.displayName = 'PaginationEllipsis';
 
-interface PaginationProps {
-  pageCount: number;
-  currentPage: number;
-  resultsLength: number;
-  pageSize: number;
-  onChangePage?: (currentPage: number) => void;
-}
-
-const PaginationSection = ({
-  pageCount,
-  currentPage,
-  onChangePage,
-}: PaginationProps) => {
-  const handlePreviousPage = () => {
-    if (onChangePage && currentPage > 1) {
-      onChangePage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (onChangePage && currentPage < pageCount) {
-      onChangePage(currentPage + 1);
-    }
-  };
-
-  return (
-    <div className="flex mt-5 justify-between items-center">
-      {pageCount >= 2 && (
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                variant={'secondary'}
-                onClick={() => handlePreviousPage()}
-              />
-            </PaginationItem>
-            {pageCount > 6 && (
-              <PaginationItem key={1}>
-                {pageCount < 7 || currentPage < 4 ? (
-                  <PaginationLink
-                    onClick={() => onChangePage && onChangePage(1)}
-                  >
-                    1
-                  </PaginationLink>
-                ) : (
-                  <PaginationEllipsis
-                    onClick={() => onChangePage && onChangePage(1)}
-                  ></PaginationEllipsis>
-                )}
-              </PaginationItem>
-            )}
-
-            {Array.from({ length: pageCount > 7 ? 5 : pageCount }, (_, i) => {
-              let page: number;
-              if (pageCount < 7) {
-                page = i + 1;
-              } else if (currentPage <= 3) {
-                page = i + 2;
-              } else if (currentPage > pageCount - 3) {
-                page = pageCount - 5 + i;
-              } else {
-                page = currentPage - 2 + i;
-              }
-
-              return (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    isActive={currentPage === page}
-                    onClick={() => onChangePage && onChangePage(page)}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            })}
-            {pageCount > 6 && (
-              <PaginationItem key={7}>
-                {pageCount < 7 || currentPage + 3 >= pageCount ? (
-                  <PaginationLink
-                    isActive={currentPage === 7}
-                    onClick={() => onChangePage && onChangePage(pageCount)}
-                  >
-                    {pageCount}
-                  </PaginationLink>
-                ) : (
-                  <PaginationEllipsis
-                    onClick={() => onChangePage && onChangePage(pageCount)}
-                  ></PaginationEllipsis>
-                )}
-              </PaginationItem>
-            )}
-
-            <PaginationItem>
-              <PaginationNext
-                variant={'default'}
-                onClick={() => handleNextPage()}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
-    </div>
-  );
-};
 export {
   Pagination,
   PaginationContent,
@@ -228,5 +124,4 @@ export {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-  PaginationSection,
 };
