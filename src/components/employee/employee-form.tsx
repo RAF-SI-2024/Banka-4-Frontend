@@ -46,11 +46,13 @@ export type EmployeeFormValues = z.infer<typeof formSchema>;
 
 export interface EmployeeFormProps {
   onSubmit: (values: EmployeeFormValues) => void;
+  isPending: boolean;
   defaultValues: SomePartial<EmployeeFormValues, 'dateOfBirth'>;
 }
 
 export default function EmployeeForm({
   onSubmit,
+  isPending,
   defaultValues,
 }: EmployeeFormProps) {
   const form = useForm<EmployeeFormValues>({
@@ -262,6 +264,7 @@ export default function EmployeeForm({
         </div>
 
         <Button
+          disabled={isPending}
           type="submit"
           className="w-min relative -right-60 bottom-0 "
           onClick={form.handleSubmit(onSubmit)}

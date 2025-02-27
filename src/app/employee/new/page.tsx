@@ -1,5 +1,7 @@
 'use client';
-import EmployeeForm from '@/components/employee/employee-form';
+import EmployeeForm, {
+  EmployeeFormValues,
+} from '@/components/employee/employee-form';
 import {
   Card,
   CardContent,
@@ -9,9 +11,19 @@ import {
 } from '@/components/ui/card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useEffect } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { postNewEmployee } from '@/api/employee';
+import { useHttpClient } from '@/context/HttpClientContext';
+import { NewEmployeeRequest } from '@/api/request/employee';
+import { toastRequestError } from '@/api/errors';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function NewEmployeePage() {
   const { dispatch } = useBreadcrumb();
+  const client = useHttpClient();
+  const router = useRouter();
+
   useEffect(() => {
     dispatch({
       type: 'SET_BREADCRUMB',
@@ -22,6 +34,33 @@ export default function NewEmployeePage() {
       ],
     });
   }, [dispatch]);
+
+  const { isPending, mutate: doNewEmployee } = useMutation({
+    mutationFn: async (data: NewEmployeeRequest) =>
+      postNewEmployee(client, data),
+    onError: (error) => toastRequestError(error),
+    onSuccess: () => {
+      toast.success('Employee created successfully');
+      router.replace('/employee');
+    },
+  });
+
+  function onSubmit(data: EmployeeFormValues) {
+    doNewEmployee({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      username: data.username,
+      dateOfBirth: data.dateOfBirth.toISOString(),
+      gender: data.gender,
+      email: data.email,
+      phone: data.phoneNumber,
+      address: data.address,
+      privilege: ['ADMIN'],
+      position: data.position,
+      department: data.department,
+    });
+  }
+
   return (
     <div>
       <div className="flex justify-center items-center pt-16">
@@ -35,7 +74,8 @@ export default function NewEmployeePage() {
           </CardHeader>
           <CardContent>
             <EmployeeForm
-              onSubmit={(data) => console.log('Creating Employee:', data)}
+              isPending={isPending}
+              onSubmit={onSubmit}
               defaultValues={{
                 firstName: '',
                 lastName: '',

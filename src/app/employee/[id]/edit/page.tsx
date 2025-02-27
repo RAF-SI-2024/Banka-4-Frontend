@@ -38,6 +38,7 @@ export default function EditEmployeePage() {
           </CardHeader>
           <CardContent>
             <EmployeeForm
+              isPending={false}
               onSubmit={(data) => console.log('Editing Employee:', data)}
               defaultValues={employee}
             />
