@@ -283,6 +283,7 @@ export default function EmployeeForm({
               </FormLabel>
               <FormControl>
                 <MultiSelect
+                  maxCount={5}
                   options={ALL_PRIVILEGES.map((priv) => ({
                     label: priv,
                     value: priv,
