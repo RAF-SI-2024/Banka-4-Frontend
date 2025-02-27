@@ -13,4 +13,5 @@ export interface MeResponseDto {
   position: string;
   department: string;
   privileges: Privilege[];
+  active: boolean;
 }
