@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -101,7 +101,7 @@ const EmployeeOverviewPage: React.FC = () => {
       items: [
         { title: 'Home', url: '/' },
         { title: 'Employees', url: '/employee' },
-        { title: 'Overview', url: '/employee' },
+        { title: 'Overview' },
       ],
     });
   }, [dispatch]);
