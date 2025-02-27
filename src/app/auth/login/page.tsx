@@ -1,9 +1,9 @@
 'use client';
+import { toastRequestError } from '@/api/errors';
 import LoginForm, { LoginFormData } from '@/components/auth/login-form';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,9 +17,7 @@ export default function LoginPage() {
     try {
       await auth.login('employee', email, password);
     } catch (err) {
-      // TODO(arsen): error handlin'
-      toast('Login failed!');
-      console.log(err);
+      toastRequestError(err);
     }
   }
 
