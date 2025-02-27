@@ -47,6 +47,7 @@ const formSchema = z.object({
   isActive: z.boolean().default(true),
 
   // All selectable privileges
+  // TODO(marko): get this from `/types/privileges.ts`
   privilege: z.array(
     z.enum([
       'ADMIN',
