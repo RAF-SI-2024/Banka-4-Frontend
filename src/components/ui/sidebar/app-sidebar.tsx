@@ -17,7 +17,6 @@ import { useAuth } from '@/context/AuthContext';
 import { useMe } from '@/hooks/use-me';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 const data = {
   teams: [
@@ -52,7 +51,6 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const queryClient = useQueryClient();
   const httpClient = useHttpClient();
-  const router = useRouter();
   const auth = useAuth();
   const me = useMe(httpClient);
 
@@ -62,7 +60,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       queryClient.invalidateQueries({
         queryKey: ['employee', 'me'],
       });
-      router.replace('/');
     }
   };
 
