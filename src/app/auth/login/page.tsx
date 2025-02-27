@@ -22,7 +22,7 @@ export default function LoginPage() {
   }, [router, auth]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex justify-center items-center pt-16">
       <LoginForm enabled={!isPending} onSubmitAction={doLogin} />
     </div>
   );
