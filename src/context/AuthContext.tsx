@@ -1,7 +1,13 @@
 'use client';
 
 import { assertNever } from '@/types/utils';
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 import axios, { isAxiosError } from 'axios';
 import { API_BASE } from '@/lib/utils';
 import { LoginRequestDto, RefreshTokenDto } from '@/api/request/auth';
@@ -83,6 +89,7 @@ function reduceAuth(
 type AuthContextT =
   | {
       isLoggedIn: false;
+      isLoading: boolean;
       /** Attempts to log in.
        * @throws Underlying error, if login fails.
        */
@@ -93,6 +100,7 @@ type AuthContextT =
       ) => Promise<void>;
     }
   | ({
+      isLoading: false;
       isLoggedIn: true;
       /** Attempts to refresh the current access token.
        *
@@ -111,8 +119,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     [AuthAction]
   >(reduceAuth, undefined);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    setIsLoading(true);
     dispatch({ type: 'loadState' });
+    setIsLoading(false);
   }, []);
 
   return (
@@ -121,6 +133,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         authState
           ? {
               isLoggedIn: true,
+              isLoading: false,
               ...authState,
 
               refreshAccessToken: () => {
@@ -167,7 +180,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
           : {
               isLoggedIn: false,
-
+              isLoading,
               login: async (type, email, password) => {
                 const { access_token, refresh_token } = (
                   await axios.post<LoginResponseDto>(
