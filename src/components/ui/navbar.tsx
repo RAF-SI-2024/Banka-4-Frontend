@@ -1,15 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { useTheme } from 'next-themes';
-import { Landmark, Monitor, Moon, Sun } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Landmark } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuItem,

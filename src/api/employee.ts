@@ -34,6 +34,6 @@ export const searchEmployees = async (
   currentPage: number
 ) => {
   return client.get<EmployeeOverviewResponseDto>('/employee/search', {
-    params: { ...filters, size: rowsPerPage, page: currentPage  },
+    params: { ...filters, size: rowsPerPage, page: currentPage },
   });
 };
