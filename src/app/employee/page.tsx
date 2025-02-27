@@ -108,7 +108,7 @@ const EmployeeOverviewPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <GuardBlock requiredPrivileges={["ADMIN"]}>
+    <GuardBlock requiredPrivileges={['ADMIN']}>
       <div className="p-8">
         <Card className="max-w-[900px] mx-auto">
           <CardHeader>

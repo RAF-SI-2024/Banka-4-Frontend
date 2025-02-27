@@ -1,4 +1,4 @@
-import {Privilege} from "@/types/privileges";
+import { Privilege } from '@/types/privileges';
 
 export interface MeResponseDto {
   id: string;
