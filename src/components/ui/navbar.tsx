@@ -18,7 +18,7 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
-import {ModeToggle} from "@/components/ui/mode-toggle";
+import { ModeToggle } from '@/components/ui/mode-toggle';
 
 export function AppNavigationMenu() {
   return (
@@ -41,9 +41,6 @@ export function AppNavigationMenu() {
                     Login Now
                   </NavigationMenuLink>
                 </Link>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Create your Account
-                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
