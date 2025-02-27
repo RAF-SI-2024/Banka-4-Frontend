@@ -13,13 +13,13 @@ import {
 import { NavMain } from '@/components/ui/sidebar/nav-main-sidebar';
 import { HeaderSidebar } from './header-sidebar';
 import { FooterSidebar } from './footer-sidebar';
+import { useAuth } from '@/context/AuthContext';
+import { useMe } from '@/hooks/use-me';
+import { useHttpClient } from '@/context/HttpClientContext';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
   teams: [
     {
       name: 'RAFeisen Bank',
@@ -50,6 +50,22 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const queryClient = useQueryClient();
+  const httpClient = useHttpClient();
+  const router = useRouter();
+  const auth = useAuth();
+  const me = useMe(httpClient);
+
+  const onLogout = () => {
+    if (auth.isLoggedIn) {
+      auth.logout();
+      queryClient.invalidateQueries({
+        queryKey: ['employee', 'me'],
+      });
+      router.replace('/');
+    }
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -58,9 +74,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        <FooterSidebar user={data.user} />
-      </SidebarFooter>
+      {me.isSuccess && (
+        <SidebarFooter>
+          <FooterSidebar
+            onLogoutAction={onLogout}
+            user={{
+              name: me.data.username,
+              email: me.data.email,
+              avatar: '',
+            }}
+          />
+        </SidebarFooter>
+      )}
       <SidebarRail />
     </Sidebar>
   );
