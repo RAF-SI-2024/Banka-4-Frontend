@@ -23,7 +23,7 @@ export default function EditEmployeePage() {
     department: 'IT',
     gender: 'male',
     isActive: true,
-    privilege: []
+    privilege: [],
   };
 
   return (
