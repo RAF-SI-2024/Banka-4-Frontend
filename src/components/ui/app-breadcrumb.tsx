@@ -9,22 +9,24 @@ import {
   BreadcrumbList,
 } from './breadcrumb';
 
-import { useBreadcrumb } from '../../context/BreadcrumbContext';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
 export function AppBreadcrumb() {
   const { state } = useBreadcrumb();
 
+  const last = state.items.at(-1);
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {state.items.map((item, index) => (
+        {state.items.slice(0, -1).map((item, index) => (
           <React.Fragment key={index}>
             <BreadcrumbItem>
               <BreadcrumbLink href={item.url}>{item.title}</BreadcrumbLink>
             </BreadcrumbItem>
-            {index < state.items.length - 1 && <BreadcrumbSeparator />}
+            <BreadcrumbSeparator />
           </React.Fragment>
         ))}
+        {last && <BreadcrumbItem>{last.title}</BreadcrumbItem>}
       </BreadcrumbList>
     </Breadcrumb>
   );
