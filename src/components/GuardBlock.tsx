@@ -3,11 +3,9 @@
 import React, { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { useQuery } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
-import { getMe } from '@/api/employee';
-import { MeResponseDto } from '@/api/response/MeResponseDto';
 import { Privilege } from '@/types/privileges';
+import { useMe } from '@/hooks/use-me';
 
 interface GuardBlockProps {
   requiredPrivileges: Privilege[];
@@ -23,14 +21,7 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
   const httpClient = useHttpClient();
 
   // Fetch user data (including permissions) via React Query.
-  const { data, isLoading, error } = useQuery<unknown, unknown, MeResponseDto>({
-    queryKey: ['employee', 'me'],
-    queryFn: async () => {
-      const axiosResponse = await getMe(httpClient);
-      return axiosResponse.data;
-    },
-    enabled: !auth.isLoading && auth.isLoggedIn,
-  });
+  const { data, isLoading, error } = useMe(httpClient);
 
   /*
       useEffect(() => {
