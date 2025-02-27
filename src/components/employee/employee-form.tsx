@@ -298,23 +298,24 @@ export default function EmployeeForm({
           )}
         />
 
-        <div className="flex items-center space-x-2 col-span-2">
-          <Switch
-            id="activeEmployee"
-            checked={form.watch('isActive')}
-            onCheckedChange={(checked) => form.setValue('isActive', checked)}
-          />
-          <Label htmlFor="activeEmployee">Is this employee active?</Label>
-        </div>
+        <div className="flex items-center col-span-2 justify-between w-full">
+          <div className="flex items-center gap-2">
+            <Switch
+              id="activeEmployee"
+              checked={form.watch('isActive')}
+              onCheckedChange={(checked) => form.setValue('isActive', checked)}
+            />
+            <Label htmlFor="activeEmployee">Is this employee active?</Label>
+          </div>
 
-        <Button
-          disabled={isPending}
-          type="submit"
-          className="w-min col-span-2 mt-4"
-          onClick={form.handleSubmit(onSubmit)}
-        >
-          Save Changes
-        </Button>
+          <Button
+            disabled={isPending}
+            type="submit"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            Save Changes
+          </Button>
+        </div>
       </form>
     </Form>
   );
