@@ -2,8 +2,6 @@
 
 import React, { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
-import { useHttpClient } from '@/context/HttpClientContext';
 import { Privilege } from '@/types/privileges';
 import { useMe } from '@/hooks/use-me';
 
@@ -16,12 +14,8 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
   requiredPrivileges,
   children,
 }) => {
-  const auth = useAuth();
-
-  const httpClient = useHttpClient();
-
   // Fetch user data (including permissions) via React Query.
-  const { data, isLoading, error } = useMe(httpClient);
+  const me = useMe();
 
   /*
       useEffect(() => {
@@ -29,26 +23,18 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
           console.log("LoggedIn: " + auth.isLoggedIn);
       }, [auth]);*/
 
-  // If auth is not processed yet, show loading
-  if (auth.isLoading) return <div>Loading...</div>;
-
-  // If the user is not logged in, redirect to login.
-  if (!auth.isLoggedIn) {
-    redirect('/auth/login');
-  }
-
   // Display a loading indicator while loading user.
-  if (isLoading) {
-    return <div>Loading user...</div>;
+  if (me.state === 'loading') {
+    return <div>Loading...</div>;
   }
 
-  // If loading user fails, redirect to login
-  if (error) {
+  // If loading the user fails, or there is no user, redirect to login
+  if (me.state === 'error' || me.state === 'logged-out') {
     redirect('/auth/login');
   }
 
   // Privileges of current user
-  const userPrivileges: Privilege[] = data?.privileges || [];
+  const userPrivileges = me.me.privileges;
 
   // Check if the user has all required privileges.
   const hasPermissions = requiredPrivileges.every((privilege) =>

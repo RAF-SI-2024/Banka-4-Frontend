@@ -15,8 +15,6 @@ import { HeaderSidebar } from './header-sidebar';
 import { FooterSidebar } from './footer-sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { useMe } from '@/hooks/use-me';
-import { useHttpClient } from '@/context/HttpClientContext';
-import { useQueryClient } from '@tanstack/react-query';
 
 const data = {
   teams: [
@@ -49,18 +47,11 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const queryClient = useQueryClient();
-  const httpClient = useHttpClient();
   const auth = useAuth();
-  const me = useMe(httpClient);
+  const me = useMe();
 
   const onLogout = () => {
-    if (auth.isLoggedIn) {
-      auth.logout();
-      queryClient.invalidateQueries({
-        queryKey: ['employee', 'me'],
-      });
-    }
+    if (auth.isLoggedIn) auth.logout();
   };
 
   return (
@@ -71,13 +62,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      {me.isSuccess && (
+      {me.state === 'logged-in' && (
         <SidebarFooter>
           <FooterSidebar
             onLogoutAction={onLogout}
             user={{
-              name: me.data.username,
-              email: me.data.email,
+              name: me.me.username,
+              email: me.me.email,
               avatar: '',
             }}
           />
