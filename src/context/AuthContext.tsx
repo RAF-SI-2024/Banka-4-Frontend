@@ -80,6 +80,21 @@ function reduceAuth(
   } else if (action.type === 'loadState') {
     return loadAuthenticationState();
   } else if (action.type === 'logout') {
+    /* Fire and forget.  */
+    (async () => {
+      try {
+        if (!oldState) return;
+        await axios.post<void>(
+          '/auth/logout',
+          {
+            refreshToken: oldState.refreshToken,
+          } satisfies RefreshTokenDto,
+          {
+            baseURL: API_BASE,
+          }
+        );
+      } catch (_err) {}
+    })();
     storeAuthenticationState(undefined);
     return undefined;
   }
