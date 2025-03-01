@@ -6,6 +6,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import { ClientProvider } from '@/components/ClientProvider';
 import { Toaster } from '@/components/ui/sonner';
 import HttpClientProvider from '@/context/HttpClientContext';
+import { NuqsAdapter } from 'nuqs/adapters/react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,12 +39,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClientProvider>
-            <AuthProvider>
-              <HttpClientProvider>{children}</HttpClientProvider>
-            </AuthProvider>
-          </ClientProvider>
-          <Toaster />
+          <NuqsAdapter>
+            <ClientProvider>
+              <AuthProvider>
+                <HttpClientProvider>{children}</HttpClientProvider>
+              </AuthProvider>
+            </ClientProvider>
+            <Toaster />
+          </NuqsAdapter>
         </ThemeProvider>
       </body>
     </html>
