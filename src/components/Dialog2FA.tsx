@@ -44,7 +44,6 @@ export const Dialog2FA = ({
         </DialogHeader>
 
         <InputOTP
-          className={`!border-red-500`}
           maxLength={6}
           ref={inputRef}
           inputMode="numeric"
