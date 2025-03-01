@@ -12,37 +12,46 @@ import axios, { isAxiosError } from 'axios';
 import { API_BASE } from '@/lib/utils';
 import { LoginRequestDto, RefreshTokenDto } from '@/api/request/auth';
 import { LoginResponseDto, RefreshTokenResponseDto } from '@/api/response/auth';
+import { UserType } from '../api/auth';
 
 type LoggedInAuthState = {
   accessToken: Promise<string>;
   refreshToken: string;
+  userType: UserType;
 };
 
 /** Load a previously-stored authentication state from `sessionStorage`.  */
 function loadAuthenticationState(): LoggedInAuthState | undefined {
   const accessToken = sessionStorage.getItem('b4/accessToken');
   const refreshToken = sessionStorage.getItem('b4/refreshToken');
-  if (!(accessToken && refreshToken)) return undefined;
+  const userType_ = sessionStorage.getItem('b4/userType');
+  if (!(accessToken && refreshToken && userType_)) return undefined;
+
+  const userType: UserType =
+    userType_ === ('client' satisfies UserType) ? 'client' : 'employee';
 
   return {
     accessToken: Promise.resolve(accessToken),
     refreshToken,
+    userType,
   };
 }
 
 /** Serialize authentication state into `sessionStorage`.  */
 async function storeAuthenticationState(state: LoggedInAuthState | undefined) {
   if (!state) {
+    sessionStorage.removeItem('b4/userType');
     sessionStorage.removeItem('b4/accessToken');
     sessionStorage.removeItem('b4/refreshToken');
     return;
   }
 
   try {
-    const { accessToken, refreshToken } = state;
+    const { accessToken, refreshToken, userType } = state;
     const accessToken_ = await accessToken;
     sessionStorage.setItem('b4/accessToken', accessToken_);
     sessionStorage.setItem('b4/refreshToken', refreshToken);
+    sessionStorage.setItem('b4/userType', userType);
   } catch (_err) {
     // TODO(arsen): Indicates a failed refresh and save.  The refresh error
     // should be handled elsewhere.  Should we ignore it here?  There's no way
@@ -109,7 +118,7 @@ type AuthContextT =
        * @throws Underlying error, if login fails.
        */
       login: (
-        type: 'employee' | 'customer',
+        type: UserType,
         username: string,
         password: string
       ) => Promise<void>;
@@ -196,10 +205,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           : {
               isLoggedIn: false,
               isLoading,
-              login: async (type, email, password) => {
+              login: async (userType, email, password) => {
                 const { accessToken, refreshToken } = (
                   await axios.post<LoginResponseDto>(
-                    `/auth/${type}/login`,
+                    `/auth/${userType}/login`,
                     {
                       email,
                       password,
@@ -214,6 +223,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                   data: {
                     accessToken: Promise.resolve(accessToken),
                     refreshToken: refreshToken,
+                    userType,
                   },
                 });
               },

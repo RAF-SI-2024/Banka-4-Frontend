@@ -2,6 +2,8 @@ import { Axios } from 'axios';
 import { VerifyPasswordRequest } from '@/api/request/auth';
 import { MeResponseDto } from '@/api/response/MeResponseDto';
 
+export type UserType = 'employee' | 'client';
+
 export const getMe = async (client: Axios) =>
   client.get<MeResponseDto>('/employee/me');
 
