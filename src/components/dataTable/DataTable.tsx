@@ -29,7 +29,7 @@ interface DataTableProps<TData> {
   data: TData[] | null;
   pagination: { page: number; pageSize: number };
   onPaginationChange: (pagination: { page: number; pageSize: number }) => void;
-  rowCount: number;
+  totalRowCount: number;
   selectable?: boolean;
 
   //  sort: SortProperty[];
@@ -52,7 +52,7 @@ export function DataTable<TData>({
   data,
   pagination,
   onPaginationChange,
-  rowCount,
+  totalRowCount,
   // sort,
   // onSortChange,
   selectable,
@@ -93,7 +93,7 @@ export function DataTable<TData>({
     manualSorting: true,
 
     manualPagination: true,
-    rowCount: rowCount,
+    rowCount: totalRowCount,
 
     enableRowSelection: selectable ?? false,
     getFilteredRowModel: getFilteredRowModel(),
@@ -214,7 +214,7 @@ export function DataTable<TData>({
         <div className="flex items-center justify-end pt-6">
           <PaginationWrapper
             currentPage={pagination.page + 1} // Convert from 0-index to 1-index
-            totalPages={Math.ceil(rowCount / pagination.pageSize)}
+            totalPages={Math.ceil(totalRowCount / pagination.pageSize)}
             onPageChange={(page) => {
               // Convert back from 1-index to 0-index
               onPaginationChange({

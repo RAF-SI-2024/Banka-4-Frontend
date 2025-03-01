@@ -154,7 +154,7 @@ export default function MockPage() {
         columns={columns}
         data={mockDataRender}
         isLoading={false}
-        rowCount={mockData.length}
+        totalRowCount={mockData.length}
         pagination={{ page, pageSize }}
         onPaginationChange={(newPagination) => {
           setPage(newPagination.page);
