@@ -66,7 +66,7 @@ const EmployeeOverviewPage: React.FC = () => {
     queryClient.invalidateQueries({
       queryKey: ['employee', page, rowsPerPage],
     });
-    setPage(1);
+    setPage(0);
   };
 
   const { dispatch } = useBreadcrumb();
@@ -137,7 +137,7 @@ const EmployeeOverviewPage: React.FC = () => {
               columns={employeesColumns}
               data={data?.content ?? []}
               isLoading={isLoading}
-              rowCount={data?.totalElements ?? 0}
+              rowCount={data?.numberOfElements ?? 0}
               pagination={{ page: page, pageSize }}
               onPaginationChange={(newPagination) => {
                 setPage(newPagination.page);
