@@ -137,7 +137,7 @@ const EmployeeOverviewPage: React.FC = () => {
               columns={employeesColumns}
               data={data?.content ?? []}
               isLoading={isLoading}
-              totalRowCount={data?.numberOfElements ?? 0}
+              totalRowCount={data?.totalElements ?? 0}
               pagination={{ page: page, pageSize }}
               onPaginationChange={(newPagination) => {
                 setPage(newPagination.page);
