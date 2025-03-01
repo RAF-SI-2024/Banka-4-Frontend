@@ -17,9 +17,15 @@ export type Dialog2FAProps = {
   open: boolean;
   onSubmit: (otp: string) => MaybePromise<unknown>;
   onCancel?: () => MaybePromise<unknown>;
+  errorMessage?: string;
 };
 
-export const Dialog2FA = ({ open, onSubmit, onCancel }: Dialog2FAProps) => {
+export const Dialog2FA = ({
+  open,
+  onSubmit,
+  onCancel,
+  errorMessage,
+}: Dialog2FAProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -38,21 +44,28 @@ export const Dialog2FA = ({ open, onSubmit, onCancel }: Dialog2FAProps) => {
         </DialogHeader>
 
         <InputOTP
+          className={`!border-red-500`}
           maxLength={6}
           ref={inputRef}
           inputMode="numeric"
           pattern={REGEXP_ONLY_DIGITS}
         >
           <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
+            {[...new Array(6)].map((_, idx) => (
+              <InputOTPSlot
+                key={idx}
+                index={idx}
+                className={`${errorMessage != null ? 'border-red-500 dark:border-red-400' : ''}`}
+              />
+            ))}
           </InputOTPGroup>
         </InputOTP>
-        <DialogFooter>
+        {errorMessage && (
+          <p className="-mt-2 text-red-500 dark:text-red-400 text-sm">
+            {errorMessage}
+          </p>
+        )}
+        <DialogFooter className="flex flex-col gap-2 sm:gap-0 sm:flex-row">
           <Button
             onClick={() => onSubmit(inputRef?.current?.value ?? '')}
             type="submit"
