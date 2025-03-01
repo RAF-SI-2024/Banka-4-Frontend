@@ -211,7 +211,7 @@ export function DataTable<TData>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end mt-4">
+        <div className="flex items-center justify-end pt-6">
           <PaginationWrapper
             currentPage={pagination.page + 1} // Convert from 0-index to 1-index
             totalPages={Math.ceil(rowCount / pagination.pageSize)}

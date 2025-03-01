@@ -21,9 +21,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { searchEmployees } from '@/api/employee';
 import { EmployeeResponseDto } from '@/api/response/employee';
 import PaginationWrapper from '@/components/ui/pagination-wrapper';
+import { DataTable } from '@/components/dataTable/DataTable';
+import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
+import useTablePageParams from '@/hooks/useTablePageParams';
 
 const EmployeeOverviewPage: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { page, pageSize, setPage, setPageSize } =
+    useTablePageParams('employees');
+
   const [searchFilters, setSearchFilters] = useState({
     firstName: '',
     lastName: '',
@@ -37,13 +42,13 @@ const EmployeeOverviewPage: React.FC = () => {
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['employee', currentPage, rowsPerPage],
+    queryKey: ['employee', page, rowsPerPage],
     queryFn: async () => {
       const response = await searchEmployees(
         client,
         searchFilters,
         rowsPerPage,
-        currentPage - 1
+        page
       );
       return response.data;
     },
@@ -59,9 +64,9 @@ const EmployeeOverviewPage: React.FC = () => {
 
   const handleSearch = () => {
     queryClient.invalidateQueries({
-      queryKey: ['employee', currentPage, rowsPerPage],
+      queryKey: ['employee', page, rowsPerPage],
     });
-    setCurrentPage(1);
+    setPage(1);
   };
 
   const { dispatch } = useBreadcrumb();
@@ -128,66 +133,17 @@ const EmployeeOverviewPage: React.FC = () => {
             </form>
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
-            {isLoading ? (
-              <div className="flex justify-center p-4">
-                <Loader2 className="animate-spin w-6 h-6" />
-              </div>
-            ) : (
-              <>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>First Name</TableHead>
-                      <TableHead>Last Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone Number</TableHead>
-                      <TableHead>Position</TableHead>
-                      <TableHead>Active</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {data === undefined || data.empty ? (
-                      <TableRow>
-                        <TableCell
-                          colSpan={6}
-                          className="text-center p-6 text-muted-foreground"
-                        >
-                          There are currently no employees
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      data.content.map((employee: EmployeeResponseDto) => (
-                        <TableRow
-                          className={'cursor-pointer'}
-                          key={employee.id}
-                          onClick={() =>
-                            router.push(`/employee/${employee.id}/edit`)
-                          }
-                        >
-                          <TableCell>{employee.firstName}</TableCell>
-                          <TableCell>{employee.lastName}</TableCell>
-                          <TableCell>{employee.email}</TableCell>
-                          <TableCell>{employee.phone}</TableCell>
-                          <TableCell>{employee.position}</TableCell>
-                          <TableCell>
-                            {employee.active ? 'Yes' : 'No'}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-                {data !== undefined && (
-                  <PaginationWrapper
-                    className={'mt-6'}
-                    totalPages={data.totalPages}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                  />
-                )}
-              </>
-            )}
+            <DataTable
+              columns={employeesColumns}
+              data={data?.content ?? []}
+              isLoading={isLoading}
+              rowCount={data?.totalElements ?? 0}
+              pagination={{ page: page, pageSize }}
+              onPaginationChange={(newPagination) => {
+                setPage(newPagination.page);
+                setPageSize(newPagination.pageSize);
+              }}
+            />
           </CardContent>
         </Card>
       </div>
