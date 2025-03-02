@@ -2,16 +2,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { useHttpClient } from '@/context/HttpClientContext';
-import { Loader2, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
@@ -19,8 +11,6 @@ import GuardBlock from '@/components/GuardBlock';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { searchEmployees } from '@/api/employee';
-import { EmployeeResponseDto } from '@/api/response/employee';
-import PaginationWrapper from '@/components/ui/pagination-wrapper';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
