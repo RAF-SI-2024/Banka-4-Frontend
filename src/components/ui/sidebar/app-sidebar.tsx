@@ -16,35 +16,6 @@ import { FooterSidebar } from './footer-sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { useMe } from '@/hooks/use-me';
 
-const data = {
-  teams: [
-    {
-      name: 'RAFeisen Bank',
-      logo: Landmark,
-      url: '/',
-    },
-  ],
-  navMain: [
-    {
-      title: 'Employees',
-      url: '/e/employee',
-      icon: BriefcaseBusiness,
-      isActive: true,
-      items: [
-        {
-          title: 'Overview',
-          url: '/e/employee',
-          icon: List,
-        },
-        {
-          title: 'New',
-          url: '/e/employee/new',
-          icon: UserPlus,
-        },
-      ],
-    },
-  ],
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const auth = useAuth();
@@ -54,13 +25,41 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     if (auth.isLoggedIn) auth.logout();
   };
 
+  const hasAdminPrivileges =
+    me.isSuccess && me.data.privileges.includes('ADMIN');
+
+  const navMain = [
+    hasAdminPrivileges
+      ? {
+          title: 'Employees',
+          url: '/employee',
+          icon: BriefcaseBusiness,
+          isActive: true,
+          items: [
+            {
+              title: 'Overview',
+              url: '/employee',
+              icon: List,
+            },
+            {
+              title: 'New',
+              url: '/employee/new',
+              icon: UserPlus,
+            },
+          ],
+        }
+      : null,
+  ].filter((item): item is NonNullable<typeof item> => item !== null);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <HeaderSidebar teams={data.teams} />
+        <HeaderSidebar
+          teams={[{ name: 'RAFeisen Bank', logo: Landmark, url: '/' }]}
+        />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
       </SidebarContent>
       {me.state === 'logged-in' && (
         <SidebarFooter>

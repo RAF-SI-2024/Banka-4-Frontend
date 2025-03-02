@@ -34,11 +34,15 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const visibleItems = items.filter(Boolean);
+
+  if (visibleItems.length === 0) return null;
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Users</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {visibleItems.map((item) => (
           <Collapsible
             key={item.title}
             asChild
