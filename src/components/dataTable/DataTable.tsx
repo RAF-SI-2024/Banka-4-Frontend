@@ -35,7 +35,6 @@ interface DataTableProps<TData> {
 
   //  sort: SortProperty[];
   //  onSortChange: (sort: SortProperty[]) => void;
-
 }
 
 const ColumnSkeleton = () => (
@@ -52,7 +51,6 @@ export function DataTable<TData>({
   totalRowCount,
   // sort,
   // onSortChange,
-
 }: DataTableProps<TData>) {
   const tableColumns = React.useMemo(
     () =>
@@ -128,14 +126,11 @@ export function DataTable<TData>({
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow
                   key={headerGroup.id}
-                  className="border-y border-gray-200 dark:border-gray-800"
                 >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className={cn(
-                        'whitespace-nowrap py-1 text-sm sm:text-xs'
-                      )}
+
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -151,22 +146,13 @@ export function DataTable<TData>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    onClick={onRowClick != null ? () => onRowClick(row) : undefined}
-                    className="group select-none hover:bg-gray-50 hover:dark:bg-gray-900"
+                    onClick={
+                      onRowClick != null ? () => onRowClick(row) : undefined
+                    }
+                    className={'cursor-pointer'}
                   >
-                    {row.getVisibleCells().map((cell, index) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          row.getIsSelected()
-                            ? 'bg-gray-50 dark:bg-gray-900'
-                            : '',
-                          'relative whitespace-nowrap py-1 text-gray-600 first:w-10 dark:text-gray-400'
-                        )}
-                      >
-                        {index === 0 && row.getIsSelected() && (
-                          <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600 dark:bg-indigo-500" />
-                        )}
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -188,7 +174,7 @@ export function DataTable<TData>({
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end pt-6">
+        <div className="pt-6">
           <PaginationWrapper
             currentPage={pagination.page + 1} // Convert from 0-index to 1-index
             totalPages={Math.ceil(totalRowCount / pagination.pageSize)}
