@@ -26,6 +26,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SomePartial } from '@/types/utils';
+import { MultiSelect } from '@/components/ui/multi-select';
 import { getDirtyValues } from '@/lib/form-utils';
 
 const CLIENT_PRIVILEGES = [
@@ -249,6 +250,32 @@ export default function ClientForm({
                     <Label htmlFor="r2">Female</Label>
                   </div>
                 </RadioGroup>
+              </FormControl>
+              <FormMessage className="text-red-500" />
+            </FormItem>
+          )}
+        />
+
+        {/* Privileges */}
+        <FormField
+          control={form.control}
+          name="privilege"
+          render={({ field }) => (
+            <FormItem className="col-span-2">
+              <FormLabel>
+                Privileges <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <MultiSelect
+                  maxCount={5}
+                  options={CLIENT_PRIVILEGES.map((priv) => ({
+                    label: priv,
+                    value: priv,
+                  }))}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value as string[] | undefined}
+                  placeholder="Select privileges"
+                />
               </FormControl>
               <FormMessage className="text-red-500" />
             </FormItem>
