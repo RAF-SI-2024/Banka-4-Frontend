@@ -23,79 +23,64 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SomePartial } from '@/types/utils';
-
 import { MultiSelect } from '@/components/ui/multi-select';
-import { ALL_PRIVILEGES } from '@/types/privileges';
 import { getDirtyValues } from '@/lib/form-utils';
 
+const CLIENT_PRIVILEGES = [
+  'FILTER',
+  'SEARCH',
+  'TRADE_STOCKS',
+  'VIEW_STOCKS',
+] as const;
+
 const formSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  dateOfBirth: z.date(),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  dateOfBirth: z.date({ required_error: 'Date of birth is required' }),
   email: z.string().email('Invalid email address'),
-  address: z.string().min(1),
   phoneNumber: z
     .string()
     .regex(/^(\+3816|06)(\d{7,8}|(77|78)\d{5,6})$/, 'Invalid phone number'),
-  position: z.string().min(1),
-  username: z.string().min(1),
-  department: z.string().min(1),
-  gender: z.enum(['male', 'female']),
-  active: z.boolean(),
-
-  // All selectable privileges
-  // TODO(marko): get this from `/types/privileges.ts`
-  privilege: z.union([
-    z.tuple([]),
-    z.array(
-      z.enum([
-        'ADMIN',
-        'FILTER',
-        'SEARCH',
-        'TRADE_STOCKS',
-        'VIEW_STOCKS',
-        'CONTRACTS',
-        'NEW_INSURANCES',
-      ])
-    ),
-  ]),
+  address: z.string().min(1, 'Address is required'),
+  gender: z.enum(['male', 'female'], { required_error: 'Gender is required' }),
+  privilege: z.union([z.tuple([]), z.array(z.enum(CLIENT_PRIVILEGES))]),
 });
 
-export type EmployeeFormAction =
+export type ClientFormAction =
   | {
       update: true;
-      data: Partial<EmployeeFormValues>;
+      data: Partial<ClientFormValues>;
     }
   | {
       update: false;
-      data: EmployeeFormValues;
+      data: ClientFormValues;
     };
 
-export type EmployeeFormValues = z.infer<typeof formSchema>;
+export type ClientFormValues = z.infer<typeof formSchema>;
 
-export interface EmployeeFormProps {
-  onSubmit: (values: EmployeeFormAction) => void;
+export interface ClientFormProps {
+  onSubmit: (values: ClientFormAction) => void;
   isPending: boolean;
   isUpdate: boolean;
-  defaultValues: SomePartial<EmployeeFormValues, 'dateOfBirth'>;
+  defaultValues: SomePartial<ClientFormValues, 'dateOfBirth'>;
 }
 
-export default function EmployeeForm({
+export default function ClientForm({
   onSubmit,
   isPending,
   defaultValues,
   isUpdate,
-}: EmployeeFormProps) {
-  const form = useForm<EmployeeFormValues>({
+}: ClientFormProps) {
+  const form = useForm<ClientFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
+    mode: 'onBlur',
   });
 
-  function _onSubmit(data: EmployeeFormValues) {
+  function _onSubmit(data: ClientFormValues) {
     if (isUpdate) {
       onSubmit({
         update: true,
@@ -104,7 +89,7 @@ export default function EmployeeForm({
     } else {
       onSubmit({
         update: false,
-        data: data,
+        data,
       });
     }
   }
@@ -115,43 +100,48 @@ export default function EmployeeForm({
         onSubmit={form.handleSubmit(_onSubmit)}
         className="grid grid-cols-2 gap-4"
       >
+        {/* First Name */}
         <FormField
           control={form.control}
           name="firstName"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                First Name <span className="text-red-500 text-xl">*</span>
+                First Name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} placeholder="John" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
+
+        {/* Last Name */}
         <FormField
           control={form.control}
           name="lastName"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Last Name <span className="text-red-500 text-xl">*</span>
+                Last Name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Doe" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
+
+        {/* Date of Birth */}
         <FormField
           control={form.control}
           name="dateOfBirth"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Date of Birth <span className="text-red-500 text-xl">*</span>
+                Date of Birth <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Popover>
@@ -176,112 +166,74 @@ export default function EmployeeForm({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
+
+        {/* Email */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Email <span className="text-red-500 text-xl">*</span>
+                Email <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} placeholder="john@example.com" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
-              <FormLabel>
-                Address <span className="text-red-500 text-xl">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Trg Republike 5" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+        {/* Phone Number */}
         <FormField
           control={form.control}
           name="phoneNumber"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Phone Number <span className="text-red-500 text-xl">*</span>
+                Phone Number <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} placeholder="+381" />
+                <Input {...field} placeholder="+3816..." />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
+
+        {/* Address */}
         <FormField
           control={form.control}
-          name="position"
+          name="address"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Position <span className="text-red-500 text-xl">*</span>
+                Address <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Manager" />
+                <Input {...field} placeholder="Street 123, City" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
-              <FormLabel>
-                Username <span className="text-red-500 text-xl">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="jdoe" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="department"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
-              <FormLabel>
-                Department <span className="text-red-500 text-xl">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Finance" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+
+        {/* Gender */}
         <FormField
           control={form.control}
           name="gender"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5">
+            <FormItem>
               <FormLabel>
-                Gender <span className="text-red-500 text-xl">*</span>
+                Gender <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <RadioGroup
@@ -299,23 +251,24 @@ export default function EmployeeForm({
                   </div>
                 </RadioGroup>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
 
+        {/* Privileges */}
         <FormField
           control={form.control}
           name="privilege"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5 col-span-2">
+            <FormItem className="col-span-2">
               <FormLabel>
-                Privileges <span className="text-red-500 text-xl">*</span>
+                Privileges <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
                 <MultiSelect
                   maxCount={5}
-                  options={ALL_PRIVILEGES.map((priv) => ({
+                  options={CLIENT_PRIVILEGES.map((priv) => ({
                     label: priv,
                     value: priv,
                   }))}
@@ -324,33 +277,19 @@ export default function EmployeeForm({
                   placeholder="Select privileges"
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
 
-        <div className="flex items-center col-span-2 justify-between w-full">
-          <div className="flex items-center gap-2">
-            <FormField
-              control={form.control}
-              name="active"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Switch
-                      onCheckedChange={field.onChange}
-                      checked={field.value}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Label htmlFor="activeEmployee">Is this employee active?</Label>
-          </div>
-
-          <Button disabled={isPending} type="submit">
-            Save Changes
+        {/* Submit Button */}
+        <div className="flex justify-end w-full col-span-2">
+          <Button
+            disabled={isPending}
+            type="submit"
+            className="px-3 py-1 text-sm"
+          >
+            {isPending ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
       </form>

@@ -1,6 +1,6 @@
 'use client';
 import EmployeeForm, {
-  SubmitAction,
+  EmployeeFormAction,
 } from '@/components/employee/employee-form';
 import {
   Card,
@@ -51,7 +51,7 @@ export default function NewEmployeePage() {
     },
   });
 
-  function onSubmit(data: SubmitAction) {
+  function onSubmit(data: EmployeeFormAction) {
     if (!data.update) {
       doNewEmployee({
         firstName: data.data.firstName,
