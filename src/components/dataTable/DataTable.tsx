@@ -204,7 +204,7 @@ export function DataTable<TData>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    Nema rezultata.
+                    No results.
                   </TableCell>
                 </TableRow>
               )}
