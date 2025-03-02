@@ -5,16 +5,13 @@ import FilterInput from './FilterInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
-export interface BaseFilter {
-  [key: string]: string;
-}
 
-interface FilterBarProps<TFilter extends BaseFilter> {
+interface FilterBarProps<TFilter extends { [K in keyof TFilter]: string }> {
   onSearch: (filters: TFilter) => void;
   filters: TFilter;
 }
 
-export function FilterBar<TFilter extends BaseFilter>({
+export function FilterBar<TFilter extends { [K in keyof TFilter]: string }>({
   onSearch,
   filters,
 }: FilterBarProps<TFilter>) {
