@@ -27,7 +27,6 @@ import { Switch } from '@/components/ui/switch';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SomePartial } from '@/types/utils';
-import { MultiSelect } from '@/components/ui/multi-select';
 import { getDirtyValues } from '@/lib/form-utils';
 
 const CLIENT_PRIVILEGES = [
@@ -38,15 +37,15 @@ const CLIENT_PRIVILEGES = [
 ] as const;
 
 const formSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  dateOfBirth: z.date(),
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  dateOfBirth: z.date({ required_error: 'Date of birth is required' }),
   email: z.string().email('Invalid email address'),
   phoneNumber: z
     .string()
     .regex(/^(\+3816|06)(\d{7,8}|(77|78)\d{5,6})$/, 'Invalid phone number'),
-  address: z.string().min(1),
-  gender: z.enum(['male', 'female']),
+  address: z.string().min(1, 'Address is required'),
+  gender: z.enum(['male', 'female'], { required_error: 'Gender is required' }),
   privilege: z.union([z.tuple([]), z.array(z.enum(CLIENT_PRIVILEGES))]),
   linkedAccounts: z.array(z.string()).optional().default([]),
   active: z.boolean().default(true),
@@ -80,6 +79,7 @@ export default function ClientForm({
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
+    mode: 'onBlur',
   });
 
   function _onSubmit(data: ClientFormValues) {
@@ -112,7 +112,7 @@ export default function ClientForm({
               <FormControl>
                 <Input {...field} placeholder="John" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -127,7 +127,7 @@ export default function ClientForm({
               <FormControl>
                 <Input {...field} placeholder="Doe" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -166,7 +166,7 @@ export default function ClientForm({
                   </PopoverContent>
                 </Popover>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -181,7 +181,7 @@ export default function ClientForm({
               <FormControl>
                 <Input {...field} placeholder="john@example.com" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -196,7 +196,7 @@ export default function ClientForm({
               <FormControl>
                 <Input {...field} placeholder="+3816..." />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -211,7 +211,7 @@ export default function ClientForm({
               <FormControl>
                 <Input {...field} placeholder="Street 123, City" />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -239,28 +239,7 @@ export default function ClientForm({
                   </div>
                 </RadioGroup>
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Linked Accounts */}
-        <FormField
-          control={form.control}
-          name="linkedAccounts"
-          render={({ field }) => (
-            <FormItem className="col-span-2">
-              <FormLabel>Linked Accounts</FormLabel>
-              <FormControl>
-                <MultiSelect
-                  maxCount={5}
-                  options={[]}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  placeholder="Select accounts"
-                />
-              </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-500" />
             </FormItem>
           )}
         />
@@ -279,7 +258,7 @@ export default function ClientForm({
                       checked={field.value}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
