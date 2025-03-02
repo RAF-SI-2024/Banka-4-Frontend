@@ -28,38 +28,45 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const hasAdminPrivileges =
     me.isSuccess && me.data.privileges.includes('ADMIN');
 
-  const navMain = [
-    hasAdminPrivileges
-      ? {
-          title: 'Employees',
-          url: '/employee',
-          icon: BriefcaseBusiness,
-          isActive: true,
-          items: [
-            {
-              title: 'Overview',
-              url: '/employee',
-              icon: List,
-            },
-            {
-              title: 'New',
-              url: '/employee/new',
-              icon: UserPlus,
-            },
-          ],
-        }
-      : null,
-  ].filter((item): item is NonNullable<typeof item> => item !== null);
+  const data = {
+    teams: [
+      {
+        name: 'RAFeisen Bank',
+        logo: Landmark,
+        url: '/',
+      },
+    ],
+    navMain: [
+      hasAdminPrivileges
+        ? {
+            title: 'Employees',
+            url: '/employee',
+            icon: BriefcaseBusiness,
+            isActive: true,
+            items: [
+              {
+                title: 'Overview',
+                url: '/employee',
+                icon: List,
+              },
+              {
+                title: 'New',
+                url: '/employee/new',
+                icon: UserPlus,
+              },
+            ],
+          }
+        : null,
+    ].filter((item): item is NonNullable<typeof item> => item !== null),
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <HeaderSidebar
-          teams={[{ name: 'RAFeisen Bank', logo: Landmark, url: '/' }]}
-        />
+        <HeaderSidebar teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <NavMain items={data.navMain} />
       </SidebarContent>
       {me.state === 'logged-in' && (
         <SidebarFooter>
