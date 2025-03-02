@@ -40,9 +40,8 @@ export default function NewClientPage() {
               address: '',
               phoneNumber: '',
               gender: 'male',
-              privilege: [],
-              linkedAccounts: [],
-              active: true,
+              privilege: []
+
             }}
           />
           {formData && (
