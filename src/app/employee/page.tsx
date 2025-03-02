@@ -14,17 +14,39 @@ import { searchEmployees } from '@/api/employee';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
+import FilterBar from '@/components/filters/FilterBar';
+
+interface EmployeeFilter {
+  firstName: string;
+  lastName: string;
+  email: string;
+  position: string;
+}
+
+const employeeFilterKeyToName = (key: keyof EmployeeFilter): string => {
+  switch (key) {
+    case 'firstName':
+      return 'first name';
+    case 'lastName':
+      return 'last name';
+    case 'email':
+      return 'email';
+    case 'position':
+      return 'position';
+  }
+};
 
 const EmployeeOverviewPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } =
     useTablePageParams('employees');
 
-  const [searchFilters, setSearchFilters] = useState({
+  const [searchFilters, setSearchFilters] = useState<EmployeeFilter>({
     firstName: '',
     lastName: '',
     email: '',
     position: '',
   });
+
   const router = useRouter();
   const rowsPerPage = 8;
 
@@ -54,7 +76,7 @@ const EmployeeOverviewPage: React.FC = () => {
 
   const handleSearch = () => {
     queryClient.invalidateQueries({
-      queryKey: ['employee', page, rowsPerPage],
+      queryKey: ['employee'],
     });
     setPage(0);
   };
@@ -81,46 +103,11 @@ const EmployeeOverviewPage: React.FC = () => {
               This table provides a clear and organized overview of key employee
               details for quick reference and easy access.
             </p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSearch();
-              }}
-              className="flex mb-4 space-x-2"
-            >
-              <Input
-                type="text"
-                name="firstName"
-                placeholder="filter by first name"
-                value={searchFilters.firstName}
-                onChange={handleInputChange}
-              />
-              <Input
-                type="text"
-                name="lastName"
-                placeholder="filter by last name"
-                value={searchFilters.lastName}
-                onChange={handleInputChange}
-              />
-              <Input
-                type="text"
-                name="email"
-                placeholder="filter by email"
-                value={searchFilters.email}
-                onChange={handleInputChange}
-              />
-              <Input
-                type="text"
-                name="position"
-                placeholder="filter by position"
-                value={searchFilters.position}
-                onChange={handleInputChange}
-              />
-              <Button type={'submit'} onClick={handleSearch}>
-                Search
-                <Search className="w-4 h-4 mr-1" />
-              </Button>
-            </form>
+            <FilterBar<EmployeeFilter>
+              filterKeyToName={employeeFilterKeyToName}
+              onSearch={handleSearch}
+              filter={searchFilters}
+            />
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable
