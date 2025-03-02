@@ -1,5 +1,5 @@
 'use client';
-import ClientForm, { SubmitAction } from '@/components/client/client-form';
+import ClientForm, { ClientFormAction } from '@/components/client/client-form';
 import {
   Card,
   CardContent,
@@ -10,9 +10,9 @@ import {
 import { useState } from 'react';
 
 export default function NewClientPage() {
-  const [formData, setFormData] = useState<SubmitAction | null>(null);
+  const [formData, setFormData] = useState<ClientFormAction | null>(null);
 
-  function onSubmit(data: SubmitAction) {
+  function onSubmit(data: ClientFormAction) {
     console.log('Form Submitted:', data);
     setFormData(data);
   }

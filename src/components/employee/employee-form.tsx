@@ -65,7 +65,7 @@ const formSchema = z.object({
   ]),
 });
 
-export type SubmitAction =
+export type EmployeeFormAction =
   | {
       update: true;
       data: Partial<EmployeeFormValues>;
@@ -78,7 +78,7 @@ export type SubmitAction =
 export type EmployeeFormValues = z.infer<typeof formSchema>;
 
 export interface EmployeeFormProps {
-  onSubmit: (values: SubmitAction) => void;
+  onSubmit: (values: EmployeeFormAction) => void;
   isPending: boolean;
   isUpdate: boolean;
   defaultValues: SomePartial<EmployeeFormValues, 'dateOfBirth'>;

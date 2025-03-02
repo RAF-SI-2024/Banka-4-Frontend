@@ -1,7 +1,7 @@
 'use client';
 import EmployeeForm, {
   EmployeeFormValues,
-  SubmitAction,
+  EmployeeFormAction,
 } from '@/components/employee/employee-form';
 import {
   Card,
@@ -98,7 +98,7 @@ export default function EditEmployeePage() {
     privilege: data.privileges,
   };
 
-  function onSubmit(data: SubmitAction) {
+  function onSubmit(data: EmployeeFormAction) {
     if (data.update) {
       doUpdate({
         ...data.data,

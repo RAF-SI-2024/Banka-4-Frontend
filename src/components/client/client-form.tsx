@@ -51,7 +51,7 @@ const formSchema = z.object({
   active: z.boolean().default(true),
 });
 
-export type SubmitAction =
+export type ClientFormAction =
   | {
       update: true;
       data: Partial<ClientFormValues>;
@@ -64,7 +64,7 @@ export type SubmitAction =
 export type ClientFormValues = z.infer<typeof formSchema>;
 
 export interface ClientFormProps {
-  onSubmit: (values: SubmitAction) => void;
+  onSubmit: (values: ClientFormAction) => void;
   isPending: boolean;
   isUpdate: boolean;
   defaultValues: SomePartial<ClientFormValues, 'dateOfBirth'>;
