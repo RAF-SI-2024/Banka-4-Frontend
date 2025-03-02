@@ -54,7 +54,7 @@ const EmployeeOverviewPage: React.FC = () => {
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['employee', page, rowsPerPage],
+    queryKey: ['employee', page, rowsPerPage, searchFilters],
     queryFn: async () => {
       const response = await searchEmployees(
         client,
@@ -105,7 +105,9 @@ const EmployeeOverviewPage: React.FC = () => {
             </p>
             <FilterBar<EmployeeFilter>
               filterKeyToName={employeeFilterKeyToName}
-              onSearch={handleSearch}
+              onSearch={(filter) => {
+                setSearchFilters(filter);
+              }}
               filter={searchFilters}
             />
           </CardHeader>
