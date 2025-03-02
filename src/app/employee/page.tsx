@@ -66,20 +66,6 @@ const EmployeeOverviewPage: React.FC = () => {
     },
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSearchFilter((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-  };
-
-  const handleSearch = () => {
-    queryClient.invalidateQueries({
-      queryKey: ['employee'],
-    });
-    setPage(0);
-  };
 
   const { dispatch } = useBreadcrumb();
   useEffect(() => {
@@ -106,6 +92,7 @@ const EmployeeOverviewPage: React.FC = () => {
             <FilterBar<EmployeeFilter>
               filterKeyToName={employeeFilterKeyToName}
               onSearch={(filter) => {
+                setPage(0);
                 setSearchFilter(filter);
               }}
               filter={searchFilter}
