@@ -47,7 +47,6 @@ const formSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   gender: z.enum(['male', 'female'], { required_error: 'Gender is required' }),
   privilege: z.union([z.tuple([]), z.array(z.enum(CLIENT_PRIVILEGES))]),
-  linkedAccounts: z.array(z.string()).optional().default([]),
   active: z.boolean().default(true),
 });
 
