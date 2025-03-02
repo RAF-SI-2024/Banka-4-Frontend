@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FilterInput from './FilterInput';
 import {Button} from '@/components/ui/button';
 import {Search} from 'lucide-react';
@@ -17,6 +17,10 @@ export function FilterBar<TFilter extends { [K in keyof TFilter]: string }>({
                                                                                 filter,
                                                                                 filterKeyToName
                                                                             }: FilterBarProps<TFilter>) {
+    useEffect(() => {
+        setFilterState(filter);
+    }, [filter]);
+
     const [filterState, setFilterState] = useState<TFilter>(filter);
 
     const handleFilterChange = (propertyName: string, newValue: string) => {
@@ -37,7 +41,7 @@ export function FilterBar<TFilter extends { [K in keyof TFilter]: string }>({
                 <FilterInput
                     key={key}
                     propertyName={key}
-                    value={filter[key as keyof TFilter]}
+                    value={filterState[key as keyof TFilter]}
                     onChange={handleFilterChange}
                     placeholder={`Filter by ${filterKeyToName(key as keyof TFilter)}`}
                 />
