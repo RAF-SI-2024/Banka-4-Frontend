@@ -7,7 +7,6 @@ import {
   TableHead,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 import {
@@ -21,7 +20,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { TableHeader } from '@/components/ui/table';
-import { Pagination } from '../ui/pagination';
 import PaginationWrapper from '@/components/ui/pagination-wrapper';
 
 interface DataTableProps<TData> {
@@ -124,14 +122,9 @@ export function DataTable<TData>({
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={headerGroup.id}
-                >
+                <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-
-                    >
+                    <TableHead key={header.id}>
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
