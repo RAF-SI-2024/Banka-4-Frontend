@@ -7,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import Link from "next/link";
 
 export function HeaderSidebar({
   teams,
@@ -21,7 +22,7 @@ export function HeaderSidebar({
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <a href={activeTeam.url}>
+        <Link href={activeTeam.url}>
           <SidebarMenuButton
             size="lg"
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -33,7 +34,7 @@ export function HeaderSidebar({
               <span className="truncate font-semibold">{activeTeam.name}</span>
             </div>
           </SidebarMenuButton>
-        </a>
+        </Link>
       </SidebarMenuItem>
     </SidebarMenu>
   );
