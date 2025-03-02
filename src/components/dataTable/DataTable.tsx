@@ -31,17 +31,11 @@ interface DataTableProps<TData> {
   pagination: { page: number; pageSize: number };
   onPaginationChange: (pagination: { page: number; pageSize: number }) => void;
   totalRowCount: number;
-  selectable?: boolean;
   onRowClick?: (row: Row<TData>) => void;
 
   //  sort: SortProperty[];
   //  onSortChange: (sort: SortProperty[]) => void;
 
-  onCreateButtonClick?: () => void;
-  onExportButtonClick?: () => void;
-
-  //   columnOrder: string[];
-  // onColumnOrderChange: (columnOrder: string[]) => void;
 }
 
 const ColumnSkeleton = () => (
@@ -58,12 +52,7 @@ export function DataTable<TData>({
   totalRowCount,
   // sort,
   // onSortChange,
-  selectable,
 
-  onCreateButtonClick,
-  onExportButtonClick,
-  //  onColumnOrderChange,
-  //     columnOrder
 }: DataTableProps<TData>) {
   const tableColumns = React.useMemo(
     () =>
@@ -88,31 +77,19 @@ export function DataTable<TData>({
       },
       // sorting: sort.map((x) => ({ id: x.id, desc: x.order == 'DESC' })),
       columnFilters: [],
-      //   columnOrder: columnOrder,
     },
-    enableMultiSort: true,
-    maxMultiSortColCount: 5,
+
     enableSorting: true,
     manualSorting: true,
 
     manualPagination: true,
     rowCount: totalRowCount,
 
-    enableRowSelection: selectable ?? false,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-
-    // Different behavior from onPaginatioChange.. weird
-    //         onColumnOrderChange: (newState) => {
-    //             // make sure updater is callable (to avoid typescript warning)
-    // //console.log(updater);
-    //             // const newColumnOrder = updater(table.getState().columnOrder);
-    //             //  console.log(newColumnOrder);
-    //             onColumnOrderChange(newState as string[]);
-    //         },
 
     onSortingChange: (updater) => {
       // make sure updater is callable (to avoid typescript warning)
@@ -139,7 +116,6 @@ export function DataTable<TData>({
       if (typeof updater !== 'function') return;
       const newFilters = updater(table.getState().columnFilters);
       console.log(newFilters);
-      // onPaginationChange({page: newPagination.pageIndex, pageSize: newPagination.pageSize});
     },
   });
 
@@ -159,7 +135,6 @@ export function DataTable<TData>({
                       key={header.id}
                       className={cn(
                         'whitespace-nowrap py-1 text-sm sm:text-xs'
-                        // header.column.columnDef.meta?.className,
                       )}
                     >
                       {flexRender(
@@ -187,7 +162,6 @@ export function DataTable<TData>({
                             ? 'bg-gray-50 dark:bg-gray-900'
                             : '',
                           'relative whitespace-nowrap py-1 text-gray-600 first:w-10 dark:text-gray-400'
-                          // cell.column.columnDef.meta?.className,
                         )}
                       >
                         {index === 0 && row.getIsSelected() && (
