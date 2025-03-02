@@ -40,8 +40,7 @@ export default function NewClientPage() {
               address: '',
               phoneNumber: '',
               gender: 'male',
-              privilege: []
-
+              privilege: [],
             }}
           />
           {formData && (
