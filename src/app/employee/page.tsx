@@ -40,7 +40,7 @@ const EmployeeOverviewPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } =
     useTablePageParams('employees');
 
-  const [searchFilters, setSearchFilters] = useState<EmployeeFilter>({
+  const [searchFilter, setSearchFilter] = useState<EmployeeFilter>({
     firstName: '',
     lastName: '',
     email: '',
@@ -54,11 +54,11 @@ const EmployeeOverviewPage: React.FC = () => {
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['employee', page, rowsPerPage, searchFilters],
+    queryKey: ['employee', page, rowsPerPage, searchFilter],
     queryFn: async () => {
       const response = await searchEmployees(
         client,
-        searchFilters,
+        searchFilter,
         rowsPerPage,
         page
       );
@@ -68,7 +68,7 @@ const EmployeeOverviewPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSearchFilters((prevFilters) => ({
+    setSearchFilter((prevFilters) => ({
       ...prevFilters,
       [name]: value,
     }));
@@ -106,9 +106,9 @@ const EmployeeOverviewPage: React.FC = () => {
             <FilterBar<EmployeeFilter>
               filterKeyToName={employeeFilterKeyToName}
               onSearch={(filter) => {
-                setSearchFilters(filter);
+                setSearchFilter(filter);
               }}
-              filter={searchFilters}
+              filter={searchFilter}
             />
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
