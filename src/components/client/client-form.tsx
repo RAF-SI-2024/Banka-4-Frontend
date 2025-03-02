@@ -62,14 +62,14 @@ export type ClientFormAction =
 export type ClientFormValues = z.infer<typeof formSchema>;
 
 export interface ClientFormProps {
-  onSubmit: (values: ClientFormAction) => void;
+  onSubmitAction: (values: ClientFormAction) => void;
   isPending: boolean;
   isUpdate: boolean;
   defaultValues: SomePartial<ClientFormValues, 'dateOfBirth'>;
 }
 
 export default function ClientForm({
-  onSubmit,
+  onSubmitAction,
   isPending,
   defaultValues,
   isUpdate,
@@ -82,12 +82,12 @@ export default function ClientForm({
 
   function _onSubmit(data: ClientFormValues) {
     if (isUpdate) {
-      onSubmit({
+      onSubmitAction({
         update: true,
         data: getDirtyValues(form.formState.dirtyFields, data),
       });
     } else {
-      onSubmit({
+      onSubmitAction({
         update: false,
         data,
       });
