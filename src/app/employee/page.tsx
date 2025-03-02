@@ -63,7 +63,6 @@ const EmployeeOverviewPage: React.FC = () => {
     },
   });
 
-
   const { dispatch } = useBreadcrumb();
   useEffect(() => {
     dispatch({
