@@ -17,6 +17,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  Row,
   useReactTable,
 } from '@tanstack/react-table';
 import { TableHeader } from '@/components/ui/table';
@@ -31,6 +32,7 @@ interface DataTableProps<TData> {
   onPaginationChange: (pagination: { page: number; pageSize: number }) => void;
   totalRowCount: number;
   selectable?: boolean;
+  onRowClick?: (row: Row<TData>) => void;
 
   //  sort: SortProperty[];
   //  onSortChange: (sort: SortProperty[]) => void;
@@ -52,6 +54,7 @@ export function DataTable<TData>({
   data,
   pagination,
   onPaginationChange,
+  onRowClick,
   totalRowCount,
   // sort,
   // onSortChange,
@@ -173,7 +176,7 @@ export function DataTable<TData>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    onClick={() => row.toggleSelected(!row.getIsSelected())}
+                    onClick={onRowClick != null ? () => onRowClick(row) : undefined}
                     className="group select-none hover:bg-gray-50 hover:dark:bg-gray-900"
                   >
                     {row.getVisibleCells().map((cell, index) => (

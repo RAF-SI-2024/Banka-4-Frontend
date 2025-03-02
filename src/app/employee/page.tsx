@@ -134,6 +134,7 @@ const EmployeeOverviewPage: React.FC = () => {
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable
+              onRowClick={(row) => console.log(row)}
               columns={employeesColumns}
               data={data?.content ?? []}
               isLoading={isLoading}
