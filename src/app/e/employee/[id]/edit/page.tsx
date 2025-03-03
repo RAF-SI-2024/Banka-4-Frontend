@@ -46,7 +46,7 @@ export default function EditEmployeePage() {
       type: 'SET_BREADCRUMB',
       items: [
         { title: 'Home', url: '/' },
-        { title: 'Employees', url: '/employee' },
+        { title: 'Employees', url: '/e/employee' },
         { title: 'Edit' },
       ],
     });
@@ -62,7 +62,7 @@ export default function EditEmployeePage() {
         exact: false,
       });
       toast('Employee updated successfully');
-      router.push('/employee');
+      router.push('/e/employee');
     },
     onError: (error) => toastRequestError(error),
   });

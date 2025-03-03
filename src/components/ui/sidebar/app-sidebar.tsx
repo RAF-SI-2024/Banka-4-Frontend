@@ -27,18 +27,18 @@ const data = {
   navMain: [
     {
       title: 'Employees',
-      url: '/employee',
+      url: '/e/employee',
       icon: BriefcaseBusiness,
       isActive: true,
       items: [
         {
           title: 'Overview',
-          url: '/employee',
+          url: '/e/employee',
           icon: List,
         },
         {
           title: 'New',
-          url: '/employee/new',
+          url: '/e/employee/new',
           icon: UserPlus,
         },
       ],

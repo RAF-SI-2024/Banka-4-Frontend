@@ -6,7 +6,7 @@ import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
 import { useRouter } from 'next/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { searchEmployees } from '@/api/employee';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
@@ -69,7 +69,7 @@ const EmployeeOverviewPage: React.FC = () => {
       type: 'SET_BREADCRUMB',
       items: [
         { title: 'Home', url: '/' },
-        { title: 'Employees', url: '/employee' },
+        { title: 'Employees', url: '/e/employee' },
         { title: 'Overview' },
       ],
     });
@@ -97,7 +97,7 @@ const EmployeeOverviewPage: React.FC = () => {
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable
               onRowClick={(row) =>
-                router.push(`/employee/${row.original.id}/edit`)
+                router.push(`/e/employee/${row.original.id}/edit`)
               }
               columns={employeesColumns}
               data={data?.content ?? []}

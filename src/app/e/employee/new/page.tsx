@@ -31,7 +31,7 @@ export default function NewEmployeePage() {
       type: 'SET_BREADCRUMB',
       items: [
         { title: 'Home', url: '/' },
-        { title: 'Employees', url: '/employee' },
+        { title: 'Employees', url: '/e/employee' },
         { title: 'New' },
       ],
     });
@@ -47,7 +47,7 @@ export default function NewEmployeePage() {
         exact: false,
       });
       toast.success('Employee created successfully');
-      router.replace('/employee');
+      router.push('/e/employee');
     },
   });
 

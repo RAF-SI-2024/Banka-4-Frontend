@@ -16,7 +16,7 @@ export default function LoginPage() {
     },
     onError: (err) => toastRequestError(err),
     onSuccess: () => {
-      router.replace('/employee');
+      router.replace('/e/employee');
       toast.success('Success!');
     },
   });
