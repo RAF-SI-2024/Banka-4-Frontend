@@ -53,10 +53,11 @@ async function storeAuthenticationState(state: LoggedInAuthState | undefined) {
     sessionStorage.setItem('b4/refreshToken', refreshToken);
     sessionStorage.setItem('b4/userType', userType);
   } catch (_err) {
-    // TODO(arsen): Indicates a failed refresh and save.  The refresh error
-    // should be handled elsewhere.  Should we ignore it here?  There's no way
-    // to recover local to this site, and an attempt at redoing would raise an
-    // error again.
+    /*
+     * Indicates a failed refresh and save.  The refresh error should be handled
+     * elsewhere.  There's no way to recover local to this site, and an attempt
+     * at redoing would raise an error again.
+     */
   }
 }
 
