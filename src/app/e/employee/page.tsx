@@ -34,8 +34,10 @@ const employeeFilterKeyToName = (key: keyof EmployeeFilter): string => {
 };
 
 const EmployeeOverviewPage: React.FC = () => {
-  const { page, pageSize, setPage, setPageSize } =
-    useTablePageParams('employees');
+  const { page, pageSize, setPage, setPageSize } = useTablePageParams(
+    'employees',
+    { pageSize: 8, page: 0 }
+  );
 
   const [searchFilter, setSearchFilter] = useState<EmployeeFilter>({
     firstName: '',
@@ -45,18 +47,16 @@ const EmployeeOverviewPage: React.FC = () => {
   });
 
   const router = useRouter();
-  const rowsPerPage = 8;
 
-  const queryClient = useQueryClient();
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['employee', page, rowsPerPage, searchFilter],
+    queryKey: ['employee', page, pageSize, searchFilter],
     queryFn: async () => {
       const response = await searchEmployees(
         client,
         searchFilter,
-        rowsPerPage,
+        pageSize,
         page
       );
       return response.data;
