@@ -15,12 +15,9 @@ import { HeaderSidebar } from './header-sidebar';
 import { FooterSidebar } from './footer-sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { useMe } from '@/hooks/use-me';
-import { useHttpClient } from '@/context/HttpClientContext';
-import { useQueryClient } from '@tanstack/react-query';
 import { Privilege, isValidPrivilege } from '@/types/privileges';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
   const auth = useAuth();
   const me = useMe();
 
