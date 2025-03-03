@@ -20,17 +20,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Privilege, isValidPrivilege } from '@/types/privileges';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const queryClient = useQueryClient();
-  const httpClient = useHttpClient();
+
   const auth = useAuth();
   const me = useMe();
 
   const onLogout = () => {
     if (auth.isLoggedIn) {
       auth.logout();
-      queryClient.invalidateQueries({
-        queryKey: ['employee', 'me'],
-      });
     }
   };
 
