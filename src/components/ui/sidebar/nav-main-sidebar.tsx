@@ -34,7 +34,9 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const visibleItems = items.filter(Boolean);
+  const visibleItems = items.filter(
+    (item) => item.items && item.items.length > 0
+  );
 
   if (visibleItems.length === 0) return null;
 
