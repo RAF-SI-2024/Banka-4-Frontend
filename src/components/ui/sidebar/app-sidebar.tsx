@@ -67,7 +67,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <FooterSidebar
             onLogoutAction={onLogout}
             user={{
-              name: me.me.username,
+              name:
+                me.type === 'employee'
+                  ? me.me.username
+                  : `${me.me.firstName} ${me.me.lastName}`,
               email: me.me.email,
               avatar: '',
             }}

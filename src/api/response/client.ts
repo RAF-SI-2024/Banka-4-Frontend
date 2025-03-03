@@ -1,6 +1,6 @@
 import { Privilege } from '@/types/privileges';
 
-export interface MeResponseDto {
+export interface ClientResponseDto {
   id: string;
   firstName: string;
   lastName: string;
@@ -9,9 +9,6 @@ export interface MeResponseDto {
   email: string;
   phone: string;
   address: string;
-  username: string;
-  position: string;
-  department: string;
   privileges: Privilege[];
-  active: boolean;
+  // TODO(marko): add accounts field
 }

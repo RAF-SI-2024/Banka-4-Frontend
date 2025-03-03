@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getMe } from '@/api/auth';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useAuth } from '@/context/AuthContext';
-import { MeResponseDto as EmployeeMeDto } from '@/api/response/MeResponseDto';
+import { EmployeeResponseDto } from '@/api/response/employee';
+import { ClientResponseDto } from '@/api/response/client';
+import { getMe } from '@/api/auth';
+import { assertNever } from '@/types/utils';
 
 type UseMeResult =
   | {
@@ -18,12 +20,13 @@ type UseMeResult =
   | {
       state: 'logged-in';
       type: 'employee';
-      me: EmployeeMeDto;
-    }; /* TODO: | {
-  state: 'logged-in',
-  type: 'client',
-  me: ClientMeDto
-} */
+      me: EmployeeResponseDto;
+    }
+  | {
+      state: 'logged-in';
+      type: 'client';
+      me: ClientResponseDto;
+    };
 
 export function useMe(): UseMeResult {
   const client = useHttpClient();
@@ -37,7 +40,11 @@ export function useMe(): UseMeResult {
       /* isLoggedIn check is redundant with check above, I fear.  */
       auth.isLoggedIn && auth.refreshToken,
     ],
-    queryFn: async () => (await getMe(client)).data,
+    queryFn: async () => {
+      if (!auth.isLoggedIn) throw Error('impossible (never say never)');
+
+      return (await getMe(client, auth.userType)).data;
+    },
   });
 
   if (auth.isLoading) return { state: 'loading' };
@@ -47,11 +54,6 @@ export function useMe(): UseMeResult {
       state: 'logged-out',
     };
 
-  if (auth.userType !== 'employee')
-    throw new Error(
-      'TODO(arsen): please add client UserType, with a DU-case above'
-    );
-
   /* Separate from the above loading, since we can tell whether we're logged in
    * here, but not above.
    */
@@ -59,9 +61,25 @@ export function useMe(): UseMeResult {
 
   if (fetchUs.isError) return { state: 'error', error: fetchUs.error };
 
-  return {
-    state: 'logged-in',
-    me: fetchUs.data,
-    type: 'employee',
-  };
+  if (auth.userType === 'employee') {
+    return {
+      state: 'logged-in',
+      /* calling getMe with employee userType
+       * will always return EmployeeResponseDto
+       */
+      me: fetchUs.data as EmployeeResponseDto,
+      type: 'employee',
+    };
+  } else if (auth.userType === 'client') {
+    return {
+      state: 'logged-in',
+      /* calling getMe with client userType
+       * will always return ClientResponseDto
+       */
+      me: fetchUs.data as ClientResponseDto,
+      type: 'client',
+    };
+  } else {
+    assertNever(auth.userType);
+  }
 }
