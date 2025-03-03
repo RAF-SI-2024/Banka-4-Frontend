@@ -12,7 +12,7 @@ import axios, { isAxiosError } from 'axios';
 import { API_BASE } from '@/lib/utils';
 import { LoginRequestDto, RefreshTokenDto } from '@/api/request/auth';
 import { LoginResponseDto, RefreshTokenResponseDto } from '@/api/response/auth';
-import { UserType } from '../api/auth';
+import { UserType } from '@/api/auth';
 
 type LoggedInAuthState = {
   accessToken: Promise<string>;
