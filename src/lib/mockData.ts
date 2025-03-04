@@ -1,4 +1,4 @@
-import { AccountDto } from "@/api/response/account";
+import { AccountDto } from '@/api/response/account';
 
 export const mockAccounts: AccountDto[] = [
   {
@@ -17,7 +17,7 @@ export const mockAccounts: AccountDto[] = [
       id: '1',
       name: 'US Dollar',
       code: 'USD',
-      symbol: '$'
+      symbol: '$',
     },
     client: {
       id: 'client-123',
@@ -28,7 +28,7 @@ export const mockAccounts: AccountDto[] = [
       email: 'john.doe@example.com',
       phone: '123-456-7890',
       address: '123 Main St, Anytown, USA',
-      privileges: []
+      privileges: [],
     },
     employee: {
       id: 'employee-123',
@@ -43,15 +43,15 @@ export const mockAccounts: AccountDto[] = [
       position: 'Account Manager',
       department: 'Finance',
       active: true,
-      privileges: []
+      privileges: [],
     },
     company: {
       companyId: 'company-123',
       name: 'Acme Corp',
       address: '789 Oak St, Anytown, USA',
       taxNumber: '123456789',
-      registrationNumber: '987654321'
-    }
+      registrationNumber: '987654321',
+    },
   },
   {
     id: '87654321-4321-4321-4321-210987654321',
@@ -69,7 +69,7 @@ export const mockAccounts: AccountDto[] = [
       id: '2',
       name: 'Euro',
       code: 'EUR',
-      symbol: '€'
+      symbol: '€',
     },
     client: {
       id: 'client-456',
@@ -80,7 +80,7 @@ export const mockAccounts: AccountDto[] = [
       email: 'alice.johnson@example.com',
       phone: '321-654-9870',
       address: '321 Pine St, Anytown, USA',
-      privileges: []
+      privileges: [],
     },
     employee: {
       id: 'employee-456',
@@ -95,14 +95,14 @@ export const mockAccounts: AccountDto[] = [
       position: 'Branch Manager',
       department: 'Operations',
       active: true,
-      privileges: []
+      privileges: [],
     },
     company: {
       companyId: 'company-456',
       name: 'Tech Solutions',
       address: '987 Birch St, Anytown, USA',
       taxNumber: '987654321',
-      registrationNumber: '123456789'
-    }
-  }
+      registrationNumber: '123456789',
+    },
+  },
 ];

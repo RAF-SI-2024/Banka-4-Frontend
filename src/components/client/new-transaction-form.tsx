@@ -41,13 +41,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import { PAYMENT_CODE_MAP } from '@/lib/payment-utils';
 import { RecipientDto } from '@/api/response/recipient';
 import { AccountDto } from '@/api/response/account';
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
-
 
 const PAYMENT_CODES = Object.keys(PAYMENT_CODE_MAP) as [
   keyof typeof PAYMENT_CODE_MAP,
@@ -96,9 +95,7 @@ export default function NewTransactionForm({
     ...recepients,
   ];
 
-  const handleRecipientChange = (
-    value: string
-  ) => {
+  const handleRecipientChange = (value: string) => {
     const selectedRecipient = updatedRecipients.find(
       (recipient) => recipient.name === value
     );
@@ -111,7 +108,7 @@ export default function NewTransactionForm({
     }
   };
 
-  const handleAccountChange = (value:string) => {
+  const handleAccountChange = (value: string) => {
     form.setValue('payerAccount', value);
   };
 
@@ -121,16 +118,13 @@ export default function NewTransactionForm({
         <h3 className="text-xl font-semibold">Saved recipients</h3>
         <div className="flex flex-wrap gap-4">
           <Select onValueChange={handleRecipientChange}>
-            <SelectTrigger className='min-w-[200px]'>
+            <SelectTrigger className="min-w-[200px]">
               <SelectValue placeholder="Select a recipient" />
             </SelectTrigger>
             <SelectContent>
               {updatedRecipients.map(
                 (recipient: { name: string }, index: number) => (
-                  <SelectItem
-                    key={index}
-                    value={recipient.name}
-                  >
+                  <SelectItem key={index} value={recipient.name}>
                     {recipient.name}
                   </SelectItem>
                 )
@@ -273,7 +267,11 @@ export default function NewTransactionForm({
 
                   <SelectContent>
                     {Object.keys(PAYMENT_CODE_MAP).map((code) => (
-                      <SelectItem key={code} value={code} className='max-w-[600px] whitespace-normal'>
+                      <SelectItem
+                        key={code}
+                        value={code}
+                        className="max-w-[600px] whitespace-normal"
+                      >
                         {code}
                         {' - '}
                         {PAYMENT_CODE_MAP[code]}
