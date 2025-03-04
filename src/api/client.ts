@@ -13,3 +13,22 @@ export const updateClientById = async (
 
 export const postNewClient = async (client: Axios, data: NewClientRequest) =>
   client.post<void>('/client', data);
+
+export const searchClients = async (
+  client: Axios,
+  filters: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  },
+  rowsPerPage: number,
+  currentPage: number
+) => {
+  return client.get<{ content: ClientResponseDto[]; totalElements: number }>(
+    '/client/search',
+    {
+      params: { ...filters, size: rowsPerPage, page: currentPage },
+    }
+  );
+};
