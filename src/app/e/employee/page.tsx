@@ -13,8 +13,6 @@ import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar from '@/components/filters/FilterBar';
 import { AccountCarousel } from '@/components/ui/account-carousel/carousel';
-import { List } from 'lucide-react';
-import { InternalModifier } from 'react-day-picker';
 
 interface EmployeeFilter {
   firstName: string;
@@ -80,11 +78,15 @@ const EmployeeOverviewPage: React.FC = () => {
 
   const items = [
     { accountNumber: '123456', balance: 1000000, valuta: 'USD' },
-    {  accountNumber: '789012', balance: 5000000, valuta: 'RSD' },
+    { accountNumber: '789012', balance: 5000000, valuta: 'RSD' },
   ];
 
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
-  
+  const [selectedAccount, setSelectedAccount] = useState<string | null>(
+    items[0].accountNumber
+  );
+
+  console.log(selectedAccount);
+
   return (
     <div className="p-8">
       <div className="flex justify-center py-8">
