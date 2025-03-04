@@ -45,7 +45,7 @@ interface TransferFormProps {
 const transferSchema = z.object({
   fromAccount: z.string().min(1, 'Please select an account'),
   toAccount: z.string().min(1, 'Please select an account'),
-  amount: z.coerce.number({ invalid_type_error: 'Invalid amount' }),
+  amount: z.string().regex(/^\d+(\.\d{1,2})?$/, 'Invalid amount'),
 });
 
 export default function TransferForm({
@@ -57,12 +57,11 @@ export default function TransferForm({
     defaultValues: {
       fromAccount: '',
       toAccount: '',
-      amount: 0,
+      amount: '',
     },
   });
 
   const fromAccount = form.watch('fromAccount');
-  const amount = form.watch('amount');
   const selectedFromAccount = accounts.find((acc) => acc.id === fromAccount);
 
   const filteredToAccounts = accounts.filter(
@@ -74,21 +73,20 @@ export default function TransferForm({
   function handleSubmit(data: {
     fromAccount: string;
     toAccount: string;
-    amount: number;
+    amount: string;
   }) {
-    onSubmit(data);
+    onSubmit({
+      fromAccount: data.fromAccount,
+      toAccount: data.toAccount,
+      amount: parseFloat(data.amount),
+    });
   }
 
-  const adjustedBalance =
-    selectedFromAccount && amount
-      ? Math.max(selectedFromAccount.availableBalance - amount, 0)
-      : selectedFromAccount?.availableBalance;
-
   return (
-    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800">
-      <Card className="w-[500px] shadow-2xl border border-gray-200 dark:border-gray-700 backdrop-blur-lg bg-white/80 dark:bg-black/50 rounded-lg p-6 transition-all hover:shadow-xl">
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl font-semibold text-gray-800 dark:text-white">
+    <div className="flex justify-center items-center pt-16">
+      <Card className="w-[500px] shadow-lg border bg-white p-6 transition-all hover:shadow-xl">
+        <CardHeader>
+          <CardTitle className="text-center text-xl font-semibold text-gray-800">
             Transfer Funds
           </CardTitle>
         </CardHeader>
@@ -104,9 +102,7 @@ export default function TransferForm({
                 name="fromAccount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
-                      From Account
-                    </FormLabel>
+                    <FormLabel>From Account</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange}>
                         <SelectTrigger>
@@ -123,10 +119,10 @@ export default function TransferForm({
                       </Select>
                     </FormControl>
                     {selectedFromAccount && (
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                      <p className="text-sm text-gray-600 mt-1">
                         Available:{' '}
                         <span className="font-semibold">
-                          {adjustedBalance?.toLocaleString()}
+                          {selectedFromAccount.availableBalance}
                         </span>{' '}
                         {selectedFromAccount.currency.code}
                       </p>
@@ -142,9 +138,7 @@ export default function TransferForm({
                 name="toAccount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
-                      To Account
-                    </FormLabel>
+                    <FormLabel>To Account</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
@@ -162,7 +156,7 @@ export default function TransferForm({
                               </SelectItem>
                             ))
                           ) : (
-                            <p className="p-2 text-sm text-gray-500 dark:text-gray-400">
+                            <p className="text-gray-500 p-2 text-sm">
                               No available accounts
                             </p>
                           )}
@@ -180,17 +174,15 @@ export default function TransferForm({
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 dark:text-gray-300">
-                      Amount
-                    </FormLabel>
+                    <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2">
+                      <div className="flex items-center border rounded-md px-3 py-2">
                         <Input
-                          className="flex-1 border-none focus:ring-0 bg-transparent text-lg font-semibold text-gray-800 dark:text-white"
+                          className="flex-1 border-none focus:ring-0 text-lg font-semibold"
                           placeholder="Enter amount"
                           {...field}
                         />
-                        <span className="ml-2 font-medium text-gray-500 dark:text-gray-400">
+                        <span className="ml-2 text-gray-500 font-medium">
                           {selectedFromAccount
                             ? selectedFromAccount.currency.code
                             : 'RSD'}
@@ -202,16 +194,14 @@ export default function TransferForm({
                 )}
               />
 
-              {/* Submit Button aligned right */}
-              <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  className="px-3 py-1 text-sm"
-                  disabled={!fromAccount || !filteredToAccounts.length}
-                >
-                  Continue
-                </Button>
-              </div>
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="px-3 py-1 text-sm"
+                disabled={!fromAccount || !filteredToAccounts.length}
+              >
+                Continue
+              </Button>
             </form>
           </Form>
         </CardContent>
