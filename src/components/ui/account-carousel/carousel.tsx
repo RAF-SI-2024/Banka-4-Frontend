@@ -22,6 +22,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
+import { MoreInfoDialog } from '@/components/ui/acc-info/view-account-form';
 
 export function AccountCarousel({
   items,
@@ -31,6 +32,10 @@ export function AccountCarousel({
     accountNumber: string;
     balance: number;
     valuta: string;
+    owner: string;
+    type: string;
+    availableResources: number;
+    reservedResources: number;
   }[];
   onSelect: (accountNumber: string) => void;
 }) {
@@ -66,11 +71,11 @@ export function AccountCarousel({
                   </CardContent>
                   <CardFooter className="flex justify-center space-x-4">
                     <Button variant="outline">
-                        <Link href={`#`}>
-                          <span>New Payment</span>
-                          </Link>
+                      <Link href={`#`}>
+                        <span>New Payment</span>
+                      </Link>
                     </Button>
-                    <Button>More Information</Button>
+                    <MoreInfoDialog item={item} />
                   </CardFooter>
                 </Card>
               </div>
