@@ -1,7 +1,7 @@
 export interface CompanyResponseDto {
-    companyId: string;
-    name: string;
-    address: string;
-    taxNumber: string;
-    registrationNumber: string;
+  companyId: string;
+  name: string;
+  address: string;
+  taxNumber: string;
+  registrationNumber: string;
 }
