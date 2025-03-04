@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@radix-ui/react-dropdown-menu';
+import Link from 'next/link';
 
 export function AccountCarousel({
   items,
@@ -64,7 +65,11 @@ export function AccountCarousel({
                     </Label>
                   </CardContent>
                   <CardFooter className="flex justify-center space-x-4">
-                    <Button variant="outline">New Payment</Button>
+                    <Button variant="outline">
+                        <Link href={`#`}>
+                          <span>New Payment</span>
+                          </Link>
+                    </Button>
                     <Button>More Information</Button>
                   </CardFooter>
                 </Card>
@@ -75,13 +80,6 @@ export function AccountCarousel({
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      {/*  <div className="mt-4">*/}
-      {/*    <h2>Trenutno prikazani račun:</h2>*/}
-      {/*    <p>Broj računa: {selectedAccountNumber}</p>*/}
-      {/*    <p>*/}
-      {/*      Stanje: {currentItem.balance.toLocaleString()} {currentItem.valuta}*/}
-      {/*    </p>*/}
-      {/*  </div>*/}
     </div>
   );
 }
