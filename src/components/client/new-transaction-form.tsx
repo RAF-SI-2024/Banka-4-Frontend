@@ -45,8 +45,8 @@ import {
 import { PAYMENT_CODE_MAP } from '@/lib/payment-utils';
 import { RecipientDto } from '@/api/response/recipient';
 import { AccountDto } from '@/api/response/account';
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
 
@@ -270,7 +270,10 @@ export default function NewTransactionForm({
                 <FormLabel>
                   Payment Code <span className="text-red-500">*</span>
                 </FormLabel>
-                <Select onValueChange={handlePaymentCodeChange} value={field.value}>
+                <Select
+                  onValueChange={handlePaymentCodeChange}
+                  value={field.value}
+                >
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a recipient" />
