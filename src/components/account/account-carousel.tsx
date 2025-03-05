@@ -12,17 +12,11 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Label } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
-import { MoreInfoDialog } from '@/components/ui/acc-info/view-account-form';
+import { formatAccountNumber } from '@/lib/account-utils';
+import { AccountInfoDialog } from '@/components/account/account-info-dialog';
 
 export function AccountCarousel({
   items,
@@ -60,23 +54,21 @@ export function AccountCarousel({
               <div className="p-4">
                 <Card className="text-center">
                   <CardHeader>
-                    <CardTitle className="font-normal text-m text-muted-foreground">
-                      {item.accountNumber}
+                    <CardTitle className="font-normal text-md text-muted-foreground">
+                      {formatAccountNumber(item.accountNumber)}
                     </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Label className="text-2xl font-bold">
+                    <span className="text-4xl font-bold">
                       {item.balance.toLocaleString()} {item.valuta}
-                    </Label>
-                  </CardContent>
-                  <CardFooter className="flex justify-center space-x-4">
-                    <Button variant="outline">
+                    </span>
+                  </CardHeader>
+                  <CardContent className="flex justify-center space-x-4">
+                    <Button variant="default">
                       <Link href={`#`}>
                         <span>New Payment</span>
                       </Link>
                     </Button>
-                    <MoreInfoDialog item={item} />
-                  </CardFooter>
+                    <AccountInfoDialog item={item} />
+                  </CardContent>
                 </Card>
               </div>
             </CarouselItem>
