@@ -11,12 +11,13 @@ import { DataTable } from '@/components/dataTable/DataTable';
 import { clientsColumns } from '@/ui/dataTables/client/clientColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar from '@/components/filters/FilterBar';
+import { ClientResponseDto } from '@/api/response/client';
 
 interface ClientFilter {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
 }
 
 const clientFilterKeyToName = (key: keyof ClientFilter): string => {
@@ -37,7 +38,6 @@ const ClientOverviewPage: React.FC = () => {
     'clients',
     { pageSize: 8, page: 0 }
   );
-
   const [searchFilter, setSearchFilter] = useState<ClientFilter>({
     firstName: '',
     lastName: '',
@@ -51,21 +51,19 @@ const ClientOverviewPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['client', page, pageSize, searchFilter],
     queryFn: async () => {
-      // Osiguravamo da `searchClients` dobije validne string vrednosti
-      const sanitizedFilters: Required<ClientFilter> = {
+      const sanitizedFilters = {
         firstName: searchFilter.firstName || '',
         lastName: searchFilter.lastName || '',
         email: searchFilter.email || '',
         phone: searchFilter.phone || '',
       };
-
       const response = await searchClients(
         client,
         sanitizedFilters,
         pageSize,
         page
       );
-      return response.data ?? { content: [], totalElements: 0 };
+      return response.data;
     },
     staleTime: 5000,
   });
@@ -76,11 +74,15 @@ const ClientOverviewPage: React.FC = () => {
       type: 'SET_BREADCRUMB',
       items: [
         { title: 'Home', url: '/' },
-        { title: 'Clients', url: '/c/client' },
+        { title: 'Clients', url: '/e/client' },
         { title: 'Overview' },
       ],
     });
   }, [dispatch]);
+
+  // Izračunavanje ukupnog broja stranica
+  const totalElements = data?.totalElements || 0;
+  const pageCount = Math.ceil(totalElements / pageSize);
 
   return (
     <div className="p-8">
@@ -101,12 +103,12 @@ const ClientOverviewPage: React.FC = () => {
           />
         </CardHeader>
         <CardContent className="rounded-lg overflow-hidden">
-          <DataTable
-            onRowClick={(row) => router.push(`/c/client/${row.original.id}`)}
+          <DataTable<ClientResponseDto>
+            onRowClick={(row) => router.push(`/e/client/${row.original.id}`)} //TODO()  i guess
             columns={clientsColumns}
-            data={data?.content ?? []} // Sigurno vraća prazan niz ako nema podataka
+            data={data?.content ?? []}
             isLoading={isLoading}
-            totalRowCount={data?.totalElements ?? 0} // Sigurno vraća 0 ako API ne da podatke
+            pageCount={pageCount}
             pagination={{ page: page, pageSize }}
             onPaginationChange={(newPagination) => {
               setPage(newPagination.page);
