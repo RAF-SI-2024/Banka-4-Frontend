@@ -99,10 +99,8 @@ export default function NewTransactionForm({
     mode: 'onBlur',
   });
 
-  const [saveRecipient, setSaveRecipient] = React.useState(false);
-
   function _onSubmit(data: NewTransactionFormValues) {
-    onSubmitAction({ ...data, saveRecipient });
+    onSubmitAction(data);
   }
 
   const updatedRecipients = [
@@ -151,15 +149,6 @@ export default function NewTransactionForm({
               )}
             </SelectContent>
           </Select>
-        </div>
-        {/* Save as recipient switch */}
-        <div className="flex items-center space-x-2 ml-4">
-          <Switch
-            id="save-recipient"
-            checked={saveRecipient}
-            onCheckedChange={setSaveRecipient}
-          />
-          <Label htmlFor="save-recipient">Save recipient</Label>
         </div>
       </div>
       <Form {...form}>
@@ -316,8 +305,23 @@ export default function NewTransactionForm({
             )}
           />
 
-          {/* Submit button */}
-          <div className="flex items-end justify-end w-full col-span-1">
+          <div className="flex items-end justify-between w-full col-span-2">
+            <FormField
+              control={form.control}
+              name="saveRecipient"
+              render={({ field }) => (
+                <FormItem className={'flex gap-4 items-center'}>
+                  <Switch
+                    id={'saveRecipient'}
+                    onCheckedChange={field.onChange}
+                    checked={field.value}
+                  />
+                  <FormLabel htmlFor={'saveRecipient'} className={'!mt-0'}>
+                    Save as new recipient
+                  </FormLabel>
+                </FormItem>
+              )}
+            />
             <Button
               disabled={isPending}
               type="submit"
