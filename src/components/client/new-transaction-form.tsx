@@ -65,7 +65,7 @@ const formSchema = z.object({
   }),
   paymentPurpose: z.string().min(1, 'Payment purpose is required'),
   payerAccount: z.string().min(1, 'Payer account is required'),
-  saveRecipient: z.boolean().optional(),
+  saveRecipient: z.boolean(),
 });
 
 export interface NewTransactionFormProps {
