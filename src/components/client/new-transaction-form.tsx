@@ -13,7 +13,7 @@
 //     paymentPurpose: '',
 //     payerAccount: '',
 //   }}
-//   recepients={[
+//   recipients={[
 //     { name: 'John Doe', account: '11111111-2222-3333-4444-555555555555' },
 //     { name: 'Jane Smith', account: '11111111-2222-3333-4444-555555555555' },
 //     { name: 'Acme Corp', account: '11111111-2222-3333-4444-555555555555' },
@@ -45,6 +45,8 @@ import {
 import { PAYMENT_CODE_MAP } from '@/lib/payment-utils';
 import { RecipientDto } from '@/api/response/recipient';
 import { AccountDto } from '@/api/response/account';
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
 
@@ -69,7 +71,7 @@ export interface NewTransactionFormProps {
   onSubmitAction: (values: NewTransactionFormValues) => void;
   isPending: boolean;
   defaultValues: Partial<NewTransactionFormValues>;
-  recepients: Array<RecipientDto>;
+  recipients: Array<RecipientDto>;
   accounts: Array<AccountDto>;
 }
 
@@ -77,7 +79,7 @@ export default function NewTransactionForm({
   onSubmitAction,
   isPending,
   defaultValues,
-  recepients,
+  recipients,
   accounts,
 }: NewTransactionFormProps) {
   const form = useForm<NewTransactionFormValues>({
@@ -92,7 +94,7 @@ export default function NewTransactionForm({
 
   const updatedRecipients = [
     { name: 'New recipient', account: '' },
-    ...recepients,
+    ...recipients,
   ];
 
   const handleRecipientChange = (value: string) => {
@@ -112,10 +114,15 @@ export default function NewTransactionForm({
     form.setValue('payerAccount', value);
   };
 
+  const handlePaymentCodeChange = (value: string) => {
+    form.setValue('paymentCode', value);
+  };
+
   return (
-    <div className="w-full h-content flex flex-col gap-8 items-start justify-center">
+    <div className="w-full h-content flex flex-col gap-4 items-start justify-center">
       <div className="flex gap-5 items-center">
-        <h3 className="text-xl font-semibold">Saved recipients</h3>
+        {/* Choose from saved recipients select*/}
+        <h5 className="text-xl font-semibold">Saved recipients</h5>
         <div className="flex flex-wrap gap-4">
           <Select onValueChange={handleRecipientChange}>
             <SelectTrigger className="min-w-[200px]">
@@ -131,6 +138,11 @@ export default function NewTransactionForm({
               )}
             </SelectContent>
           </Select>
+        </div>
+        {/* Save as recipient switch */}
+        <div className="flex items-center space-x-2 ml-4">
+          <Switch id="airplane-mode" />
+          <Label htmlFor="airplane-mode">Save recipient</Label>
         </div>
       </div>
       <Form {...form}>
@@ -150,7 +162,7 @@ export default function NewTransactionForm({
                 <Select {...field} onValueChange={handleAccountChange}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a recipient" />
+                      <SelectValue placeholder="Select your account" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -258,7 +270,7 @@ export default function NewTransactionForm({
                 <FormLabel>
                   Payment Code <span className="text-red-500">*</span>
                 </FormLabel>
-                <Select {...field}>
+                <Select onValueChange={handlePaymentCodeChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a recipient" />
