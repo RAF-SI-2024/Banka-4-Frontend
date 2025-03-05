@@ -47,6 +47,7 @@ import { RecipientDto } from '@/api/response/recipient';
 import { AccountDto } from '@/api/response/account';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import {SomePartial} from "@/types/utils";
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
 
@@ -71,7 +72,7 @@ const formSchema = z.object({
 export interface NewTransactionFormProps {
   onSubmitAction: (values: NewTransactionFormValues) => void;
   isPending: boolean;
-  defaultValues: Partial<NewTransactionFormValues>;
+  defaultValues?: SomePartial<NewTransactionFormValues, 'paymentCode'>;
   recipients: Array<RecipientDto>;
   accounts: Array<AccountDto>;
 }
@@ -79,9 +80,18 @@ export interface NewTransactionFormProps {
 export default function NewTransactionForm({
   onSubmitAction,
   isPending,
-  defaultValues,
   recipients,
   accounts,
+  defaultValues = {
+    recipientName: '',
+    recipientAccount: '',
+    amount: 0,
+    referenceNumber: '',
+    paymentCode: undefined,
+    paymentPurpose: '',
+    payerAccount: '',
+    saveRecipient: true,
+  },
 }: NewTransactionFormProps) {
   const form = useForm<NewTransactionFormValues>({
     resolver: zodResolver(formSchema),
