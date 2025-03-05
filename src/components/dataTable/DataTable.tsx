@@ -28,7 +28,7 @@ interface DataTableProps<TData> {
   data: TData[] | null;
   pagination: { page: number; pageSize: number };
   onPaginationChange: (pagination: { page: number; pageSize: number }) => void;
-  totalRowCount: number;
+  pageCount: number;
   onRowClick?: (row: Row<TData>) => void;
 
   //  sort: SortProperty[];
@@ -46,7 +46,7 @@ export function DataTable<TData>({
   pagination,
   onPaginationChange,
   onRowClick,
-  totalRowCount,
+  pageCount,
   // sort,
   // onSortChange,
 }: DataTableProps<TData>) {
@@ -79,7 +79,7 @@ export function DataTable<TData>({
     manualSorting: true,
 
     manualPagination: true,
-    rowCount: totalRowCount,
+    pageCount: pageCount,
 
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -111,7 +111,6 @@ export function DataTable<TData>({
       // make sure updater is callable (to avoid typescript warning)
       if (typeof updater !== 'function') return;
       const newFilters = updater(table.getState().columnFilters);
-      console.log(newFilters);
     },
   });
 
@@ -170,7 +169,7 @@ export function DataTable<TData>({
         <div className="pt-6">
           <PaginationWrapper
             currentPage={pagination.page + 1} // Convert from 0-index to 1-index
-            totalPages={Math.ceil(totalRowCount / pagination.pageSize)}
+            totalPages={pageCount}
             onPageChange={(page) => {
               // Convert back from 1-index to 0-index
               onPaginationChange({

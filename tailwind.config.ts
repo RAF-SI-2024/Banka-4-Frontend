@@ -62,8 +62,12 @@ const config: Config = {
         },
         keyframes: {
           'caret-blink': {
-            '0%,70%,100%': { opacity: '1' },
-            '20%,50%': { opacity: '0' },
+            '0%,70%,100%': {
+              opacity: '1',
+            },
+            '20%,50%': {
+              opacity: '0',
+            },
           },
           animation: {
             'caret-blink': 'caret-blink 1.25s ease-out infinite',
@@ -76,7 +80,7 @@ const config: Config = {
         },
       },
     },
-    plugins: [require('tailwindcss-animate')],
+    plugins: ['require(', 'tailwindcss-animate', ')'],
   },
 };
 

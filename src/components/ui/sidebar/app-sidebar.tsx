@@ -15,43 +15,65 @@ import { HeaderSidebar } from './header-sidebar';
 import { FooterSidebar } from './footer-sidebar';
 import { useAuth } from '@/context/AuthContext';
 import { useMe } from '@/hooks/use-me';
-
-const data = {
-  teams: [
-    {
-      name: 'RAFeisen Bank',
-      logo: Landmark,
-      url: '/',
-    },
-  ],
-  navMain: [
-    {
-      title: 'Employees',
-      url: '/e/employee',
-      icon: BriefcaseBusiness,
-      isActive: true,
-      items: [
-        {
-          title: 'Overview',
-          url: '/e/employee',
-          icon: List,
-        },
-        {
-          title: 'New',
-          url: '/e/employee/new',
-          icon: UserPlus,
-        },
-      ],
-    },
-  ],
-};
+import { Privilege, isValidPrivilege } from '@/types/privileges';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const auth = useAuth();
   const me = useMe();
 
   const onLogout = () => {
-    if (auth.isLoggedIn) auth.logout();
+    if (auth.isLoggedIn) {
+      auth.logout();
+    }
+  };
+
+  const userPrivileges: Privilege[] =
+    me.state === 'logged-in' ? me.me.privileges.filter(isValidPrivilege) : [];
+
+  const hasRequiredPrivileges = (requiredPrivileges: Privilege[]) => {
+    return requiredPrivileges.every((priv) => userPrivileges.includes(priv));
+  };
+
+  const data = {
+    teams: [
+      {
+        name: 'RAFeisen Bank',
+        logo: Landmark,
+        url: '/',
+      },
+    ],
+    navMain: [
+      {
+        title: 'Employees',
+        url: '/employee',
+        icon: BriefcaseBusiness,
+        isActive: true,
+        items: [
+          {
+            title: 'Overview',
+            url: '/employee',
+            icon: List,
+            privileges: ['ADMIN', 'SEARCH', 'FILTER'],
+          },
+          {
+            title: 'New',
+            url: '/employee/new',
+            icon: UserPlus,
+            privileges: ['ADMIN', 'CREATE'],
+          },
+        ],
+      },
+    ]
+      .map((section) => {
+        const filteredItems = section.items.filter((item) =>
+          hasRequiredPrivileges(item.privileges as Privilege[])
+        );
+
+        return filteredItems.length > 0
+          ? { ...section, items: filteredItems }
+          : null;
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null),
   };
 
   return (
@@ -67,10 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <FooterSidebar
             onLogoutAction={onLogout}
             user={{
-              name:
-                me.type === 'employee'
-                  ? me.me.username
-                  : `${me.me.firstName} ${me.me.lastName}`,
+              name: me.me.firstName,
               email: me.me.email,
               avatar: '',
             }}
