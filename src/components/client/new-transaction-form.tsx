@@ -118,6 +118,7 @@ export default function NewTransactionForm({
         selectedRecipient.name == 'New recipient' ? '' : selectedRecipient.name
       );
       form.setValue('recipientAccount', selectedRecipient.account);
+      form.clearErrors(['recipientName', 'recipientAccount']);
     }
   };
 
