@@ -1,26 +1,5 @@
 'use client';
 
-// For mock data
-//   <NewTransactionForm
-//   onSubmitAction={() => console.log('Form submitted with values:')}
-//   isPending={false}
-//   defaultValues={{
-//     recipientName: '',
-//     recipientAccount: '',
-//     amount: 0,
-//     referenceNumber: '',
-//     paymentCode: '222',
-//     paymentPurpose: '',
-//     payerAccount: '',
-//   }}
-//   recipients={[
-//     { name: 'John Doe', account: '11111111-2222-3333-4444-555555555555' },
-//     { name: 'Jane Smith', account: '11111111-2222-3333-4444-555555555555' },
-//     { name: 'Acme Corp', account: '11111111-2222-3333-4444-555555555555' },
-//   ]}
-//   accounts={mockAccounts}
-// />
-
 import * as React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -46,8 +25,7 @@ import { PAYMENT_CODE_MAP } from '@/lib/payment-utils';
 import { RecipientDto } from '@/api/response/recipient';
 import { AccountDto } from '@/api/response/account';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import {SomePartial} from "@/types/utils";
+import { SomePartial } from '@/types/utils';
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
 
@@ -134,7 +112,12 @@ export default function NewTransactionForm({
             </SelectTrigger>
             <SelectContent>
               {updatedRecipients.map(
-                (recipient: { name: string }, index: number) => (
+                (
+                  recipient: {
+                    name: string;
+                  },
+                  index: number
+                ) => (
                   <SelectItem key={index} value={recipient.name}>
                     {recipient.name}
                   </SelectItem>
