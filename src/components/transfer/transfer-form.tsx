@@ -42,7 +42,6 @@ interface TransferFormProps {
   }) => void;
 }
 
-// Koristimo z.coerce.number() umesto regex validacije za amount
 const transferSchema = z.object({
   fromAccount: z.string().min(1, 'Please select an account'),
   toAccount: z.string().min(1, 'Please select an account'),
@@ -63,6 +62,7 @@ export default function TransferForm({
   });
 
   const fromAccount = form.watch('fromAccount');
+  const amount = form.watch('amount');
   const selectedFromAccount = accounts.find((acc) => acc.id === fromAccount);
 
   const filteredToAccounts = accounts.filter(
@@ -78,6 +78,11 @@ export default function TransferForm({
   }) {
     onSubmit(data);
   }
+
+  const adjustedBalance =
+    selectedFromAccount && amount
+      ? Math.max(selectedFromAccount.availableBalance - amount, 0)
+      : selectedFromAccount?.availableBalance;
 
   return (
     <div className="flex justify-center items-center h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800">
@@ -121,7 +126,7 @@ export default function TransferForm({
                       <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
                         Available:{' '}
                         <span className="font-semibold">
-                          {selectedFromAccount.availableBalance}
+                          {adjustedBalance?.toLocaleString()}
                         </span>{' '}
                         {selectedFromAccount.currency.code}
                       </p>
