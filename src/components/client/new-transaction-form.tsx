@@ -65,6 +65,7 @@ const formSchema = z.object({
   }),
   paymentPurpose: z.string().min(1, 'Payment purpose is required'),
   payerAccount: z.string().min(1, 'Payer account is required'),
+  saveRecipient: z.boolean().optional(),
 });
 
 export interface NewTransactionFormProps {
@@ -88,8 +89,10 @@ export default function NewTransactionForm({
     mode: 'onBlur',
   });
 
+  const [saveRecipient, setSaveRecipient] = React.useState(false);
+
   function _onSubmit(data: NewTransactionFormValues) {
-    onSubmitAction(data);
+    onSubmitAction({ ...data, saveRecipient });
   }
 
   const updatedRecipients = [
@@ -121,7 +124,7 @@ export default function NewTransactionForm({
   return (
     <div className="w-full h-content flex flex-col gap-4 items-start justify-center">
       <div className="flex gap-5 items-center">
-        {/* Choose from saved recipients select*/}
+        {/* Choose from saved recipients select */}
         <h5 className="text-xl font-semibold">Saved recipients</h5>
         <div className="flex flex-wrap gap-4">
           <Select onValueChange={handleRecipientChange}>
@@ -141,8 +144,12 @@ export default function NewTransactionForm({
         </div>
         {/* Save as recipient switch */}
         <div className="flex items-center space-x-2 ml-4">
-          <Switch id="airplane-mode" />
-          <Label htmlFor="airplane-mode">Save recipient</Label>
+          <Switch
+            id="save-recipient"
+            checked={saveRecipient}
+            onCheckedChange={setSaveRecipient}
+          />
+          <Label htmlFor="save-recipient">Save recipient</Label>
         </div>
       </div>
       <Form {...form}>
@@ -276,7 +283,7 @@ export default function NewTransactionForm({
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a recipient" />
+                      <SelectValue placeholder="Select a payment code" />
                     </SelectTrigger>
                   </FormControl>
 
