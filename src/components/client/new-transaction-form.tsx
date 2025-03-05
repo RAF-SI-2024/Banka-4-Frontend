@@ -121,14 +121,6 @@ export default function NewTransactionForm({
     }
   };
 
-  const handleAccountChange = (value: string) => {
-    form.setValue('payerAccount', value);
-  };
-
-  const handlePaymentCodeChange = (value: string) => {
-    form.setValue('paymentCode', value);
-  };
-
   return (
     <div className="w-full h-content flex flex-col gap-4 items-start justify-center">
       <div className="flex gap-5 items-center">
@@ -165,7 +157,11 @@ export default function NewTransactionForm({
                 <FormLabel>
                   Payer Account <span className="text-red-500">*</span>
                 </FormLabel>
-                <Select {...field} onValueChange={handleAccountChange}>
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your account" />
@@ -276,10 +272,7 @@ export default function NewTransactionForm({
                 <FormLabel>
                   Payment Code <span className="text-red-500">*</span>
                 </FormLabel>
-                <Select
-                  onValueChange={handlePaymentCodeChange}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a payment code" />
