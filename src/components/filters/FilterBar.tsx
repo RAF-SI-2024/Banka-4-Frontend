@@ -5,13 +5,13 @@ import FilterInput from './FilterInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
-interface FilterBarProps<TFilter extends { [K in keyof TFilter]: string }> {
+interface FilterBarProps<TFilter extends { [K in keyof TFilter]: unknown }> {
   onSearch: (filters: TFilter) => void;
   filter: TFilter;
   filterKeyToName: (key: keyof TFilter) => string;
 }
 
-export function FilterBar<TFilter extends { [K in keyof TFilter]: string }>({
+export function FilterBar<TFilter extends { [K in keyof TFilter]: unknown }>({
   onSearch,
   filter,
   filterKeyToName,
@@ -40,7 +40,7 @@ export function FilterBar<TFilter extends { [K in keyof TFilter]: string }>({
         <FilterInput
           key={key}
           propertyName={key}
-          value={filterState[key as keyof TFilter]}
+          value={filterState[key as keyof TFilter] as string}
           onChange={handleFilterChange}
           placeholder={`Filter by ${filterKeyToName(key as keyof TFilter)}`}
         />
