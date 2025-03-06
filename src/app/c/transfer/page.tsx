@@ -14,8 +14,8 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import {getAccounts} from "@/api/account";
-import {toastRequestError} from "@/api/errors";
+import { getAccounts } from '@/api/account';
+import { toastRequestError } from '@/api/errors';
 
 interface TransferData {
   fromAccount: string;
@@ -44,7 +44,7 @@ export default function TransferPage() {
       setIsTransferSuccessful(true);
     },
     onError: (error) => {
-      toastRequestError(error)
+      toastRequestError(error);
     },
   });
 
