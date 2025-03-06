@@ -8,13 +8,13 @@ import { UserType } from '@/api/auth';
 
 interface GuardBlockProps {
   requiredUserType?: UserType;
-  requiredPrivileges: Privilege[];
+  requiredPrivileges?: Privilege[];
   children: ReactNode;
 }
 
 const GuardBlock: React.FC<GuardBlockProps> = ({
   requiredUserType,
-  requiredPrivileges,
+  requiredPrivileges = [],
   children,
 }) => {
   // Fetch user data (including permissions) via React Query.
