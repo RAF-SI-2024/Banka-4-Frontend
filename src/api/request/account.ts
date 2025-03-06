@@ -1,5 +1,6 @@
 import { Privilege } from '@/types/privileges';
 import { Currency } from '@/types/currency';
+import { Gender } from '@/types/gender';
 
 export interface NewAccountDto {
   client: NewClientDto | ExistingClientDto;
@@ -24,7 +25,7 @@ export interface NewClientDto {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  gender: string; // TODO(marko): make this Gender
+  gender: Gender;
   email: string;
   phone: string;
   address: string;

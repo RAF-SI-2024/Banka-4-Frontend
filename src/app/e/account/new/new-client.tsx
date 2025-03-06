@@ -43,8 +43,7 @@ export default function NewClientStage(props: NewClientProps) {
               email: '',
               phoneNumber: '',
               address: '',
-              gender:
-                'male' /* TODO(marko): fix this later, it should be Male */,
+              gender: 'Male',
               privilege: [],
             }}
           />
