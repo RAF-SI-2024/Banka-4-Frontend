@@ -3,5 +3,3 @@ export interface NewTransferRequest {
   toAccount: string;
   fromAmount: number;
 }
-
-export type EditTransferRequest = Partial<NewTransferRequest>;

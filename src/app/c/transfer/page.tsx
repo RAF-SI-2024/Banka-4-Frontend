@@ -2,7 +2,6 @@
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import TransferForm from '@/components/transfer/transfer-form';
-import { getAllAccounts } from '@/api/account';
 import { postNewTransfer } from '@/api/transfer';
 import { AccountDto } from '@/api/response/account';
 import { useHttpClient } from '@/context/HttpClientContext';
@@ -15,6 +14,8 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
+import {getAccounts} from "@/api/account";
+import {toastRequestError} from "@/api/errors";
 
 interface TransferData {
   fromAccount: string;
@@ -31,7 +32,7 @@ export default function TransferPage() {
     error,
   } = useQuery<AccountDto[]>({
     queryKey: ['accounts'],
-    queryFn: () => getAllAccounts(client),
+    queryFn: async () => (await getAccounts(client)).data,
   });
 
   const [isTransferSuccessful, setIsTransferSuccessful] = useState(false);
@@ -42,21 +43,17 @@ export default function TransferPage() {
     onSuccess: () => {
       setIsTransferSuccessful(true);
     },
-    onError: () => {
-      alert('Failed to complete the transfer. Please try again later.');
+    onError: (error) => {
+      toastRequestError(error)
     },
   });
 
   const handleTransferSubmit = (transferData: TransferData) => {
-    console.log(transferData);
     mutation.mutate(transferData);
   };
 
-  if (isLoading) return <p>Loading accounts...</p>;
-  if (error) return <p>Error loading accounts</p>;
-
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center pt-12">
       <Card>
         <CardHeader>
           <CardTitle>Transfer Funds</CardTitle>
