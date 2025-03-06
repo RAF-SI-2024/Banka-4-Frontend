@@ -26,7 +26,6 @@ export default function TransactionsPage() {
     { pageSize: 8, page: 0 }
   );
   const client = useHttpClient();
-  const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionDto>();
 
@@ -81,11 +80,15 @@ export default function TransactionsPage() {
     <GuardBlock>
       <div className="p-8">
         <style>{'th, td {white-space: nowrap;}'}</style>
-        <TransactionDialog
-          dto={selectedTransaction}
-          open={modalOpen}
-          setOpen={setModalOpen}
-        />
+        {selectedTransaction && (
+          <TransactionDialog
+            dto={selectedTransaction}
+            open={true}
+            setOpen={(open) =>
+              setSelectedTransaction(open ? selectedTransaction : undefined)
+            }
+          />
+        )}
         <Card className="max-w-[900px] mx-auto">
           <CardHeader>
             <h1 className="text-2xl font-bold">Transactions Overview</h1>
@@ -107,7 +110,6 @@ export default function TransactionsPage() {
             <DataTable
               onRowClick={(row) => {
                 setSelectedTransaction(row.original);
-                setModalOpen(true);
               }}
               columns={transactionColumns}
               data={data?.content ?? []}

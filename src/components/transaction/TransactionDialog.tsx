@@ -20,7 +20,7 @@ export const TransactionDialog = ({
   setOpen,
   dto,
 }: {
-  dto?: TransactionDto;
+  dto: TransactionDto;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -33,86 +33,74 @@ export const TransactionDialog = ({
             Details about this transaction are shown in the following form.
           </DialogDescription>
         </DialogHeader>
-        {dto && (
+        <div>
+          <Label className={'text-muted-foreground'}>Transaction number</Label>
+          <p>{dto.transactionNumber}</p>
+        </div>
+        <div className="grid grid-cols-2 gap-y-4">
           <div>
             <Label className={'text-muted-foreground'}>
-              Transaction number
+              From account number
             </Label>
-            <p>{dto.transactionNumber}</p>
+            <p>{dto.fromAccount}</p>
           </div>
-        )}
-        {dto && (
-          <div className="grid grid-cols-2 gap-y-4">
-            <div>
-              <Label className={'text-muted-foreground'}>
-                From account number
-              </Label>
-              <p>{dto.fromAccount}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>
-                To account number
-              </Label>
-              <p>{dto.toAccount}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>From amount</Label>
-              <p>{dto.fromAmount}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>From currency</Label>
-              <p>{dto.fromCurrency}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>To amount</Label>
-              <p>{dto.toAmount}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>To currency</Label>
-              <p>{dto.toCurrency}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>Fee amount</Label>
-              <p>{dto.feeAmount}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>Fee currency</Label>
-              <p>{dto.feeCurrency}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>Recipient name</Label>
-              <p>{dto.recipient}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>Payment code</Label>
-              <p>{dto.paymentCode}</p>
-            </div>
-            <div>
-              <Label className={'text-muted-foreground'}>
-                Reference number
-              </Label>
-              <p>{dto.referenceNumber}</p>
-            </div>
-            {dto?.paymentPurpose && (
-              <div>
-                <Label className={'text-muted-foreground'}>
-                  Payment purpose
-                </Label>
-                <p>{dto.paymentPurpose}</p>
-              </div>
-            )}
-            <div>
-              <Label className={'text-gray-500'}>Payment date and time</Label>
-              <p>{formatDateTime(dto.paymentDateTime)}</p>
-            </div>
-            <div className="flex flex-col">
-              <Label className={'text-gray-500'}>Payment status</Label>
-              <Badge className="mt-2 justify-center mr-auto">
-                {paymentStatusToString(dto.status).toUpperCase()}
-              </Badge>
-            </div>
+          <div>
+            <Label className={'text-muted-foreground'}>To account number</Label>
+            <p>{dto.toAccount}</p>
           </div>
-        )}
+          <div>
+            <Label className={'text-muted-foreground'}>From amount</Label>
+            <p>{dto.fromAmount}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>From currency</Label>
+            <p>{dto.fromCurrency}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>To amount</Label>
+            <p>{dto.toAmount}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>To currency</Label>
+            <p>{dto.toCurrency}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>Fee amount</Label>
+            <p>{dto.feeAmount}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>Fee currency</Label>
+            <p>{dto.feeCurrency}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>Recipient name</Label>
+            <p>{dto.recipient}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>Payment code</Label>
+            <p>{dto.paymentCode}</p>
+          </div>
+          <div>
+            <Label className={'text-muted-foreground'}>Reference number</Label>
+            <p>{dto.referenceNumber}</p>
+          </div>
+          {dto.paymentPurpose && (
+            <div>
+              <Label className={'text-muted-foreground'}>Payment purpose</Label>
+              <p>{dto.paymentPurpose}</p>
+            </div>
+          )}
+          <div>
+            <Label className={'text-gray-500'}>Payment date and time</Label>
+            <p>{formatDateTime(dto.paymentDateTime)}</p>
+          </div>
+          <div className="flex flex-col">
+            <Label className={'text-gray-500'}>Payment status</Label>
+            <Badge className="mt-2 justify-center mr-auto">
+              {paymentStatusToString(dto.status).toUpperCase()}
+            </Badge>
+          </div>
+        </div>
         <div className="flex flex-col-reverse gap-2 sm:flex-row-reverse">
           <Button>Print</Button>
           <DialogClose asChild>
