@@ -3,7 +3,14 @@
 import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -53,36 +60,43 @@ export default function ContactForm({
   };
 
   return (
-    <form onSubmit={form.handleSubmit(_onSubmit)} className="space-y-4">
-      <div>
-        <Label>Name</Label>
-        <Input {...form.register('name')} placeholder="Enter name" />
-        {form.formState.errors.name && (
-          <p className="text-red-500 text-sm">
-            {form.formState.errors.name.message}
-          </p>
-        )}
-      </div>
-      <div>
-        <Label>Account Number</Label>
-        <Input
-          {...form.register('accountNumber')}
-          placeholder="Enter account number"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(_onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Enter name" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        {form.formState.errors.accountNumber && (
-          <p className="text-red-500 text-sm">
-            {form.formState.errors.accountNumber.message}
-          </p>
-        )}
-      </div>
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button disabled={isPending} type="submit">
-          Save
-        </Button>
-      </div>
-    </form>
+        <FormField
+          control={form.control}
+          name="accountNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Account Number</FormLabel>
+              <FormControl>
+                <Input {...field} placeholder="Enter account number" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className="flex justify-end space-x-2">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button disabled={isPending} type="submit">
+            Save
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -1,9 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit2, Trash } from 'lucide-react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { DeleteDialog } from '@/components/DeleteDialog';
-import ContactForm from '@/components/contacts/contact-form';
 
 // Pretpostavljamo da tip za kontakt izgleda ovako:
 export interface ContactResponseDto {
@@ -12,51 +9,39 @@ export interface ContactResponseDto {
   accountNumber: string;
 }
 
-const ContactsActions = ({ contact }: { contact: ContactResponseDto }) => {
-  const [showEditDialog, setShowEditDialog] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+interface ContactsActionsProps {
+  contact: ContactResponseDto;
+  onEdit: (contact: ContactResponseDto) => void;
+  onDelete: (contact: ContactResponseDto) => void;
+}
 
+export const ContactsActions = ({
+  contact,
+  onEdit,
+  onDelete,
+}: ContactsActionsProps) => {
   return (
     <div className="flex justify-end items-center space-x-2">
       <button
-        onClick={() => setShowEditDialog(true)}
+        onClick={() => onEdit(contact)}
         className="p-1 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
       >
         <Edit2 className="h-4 w-4" />
       </button>
       <button
-        onClick={() => setShowDeleteDialog(true)}
+        onClick={() => onDelete(contact)}
         className="p-1 text-red-600 hover:text-red-800"
       >
         <Trash className="h-4 w-4" />
       </button>
-      {showEditDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-black rounded-lg p-6 shadow-2xl">
-            <ContactForm
-              contact={contact}
-              onClose={() => setShowEditDialog(false)}
-            />
-          </div>
-        </div>
-      )}
-      {showDeleteDialog && (
-        <DeleteDialog
-          open={showDeleteDialog}
-          itemName={contact.name}
-          onConfirm={() => {
-            console.log('Deleting contact', contact.id);
-            // TODO: Call delete API method here
-            setShowDeleteDialog(false);
-          }}
-          onCancel={() => setShowDeleteDialog(false)}
-        />
-      )}
     </div>
   );
 };
 
-export const contactsColumns: ColumnDef<ContactResponseDto>[] = [
+export const createContactsColumns = (
+  onEdit: (contact: ContactResponseDto) => void,
+  onDelete: (contact: ContactResponseDto) => void
+): ColumnDef<ContactResponseDto>[] => [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -70,6 +55,12 @@ export const contactsColumns: ColumnDef<ContactResponseDto>[] = [
   {
     id: 'actions',
     header: '',
-    cell: ({ row }) => <ContactsActions contact={row.original} />,
+    cell: ({ row }) => (
+      <ContactsActions
+        contact={row.original}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    ),
   },
 ];
