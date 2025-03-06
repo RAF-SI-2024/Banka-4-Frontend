@@ -157,7 +157,7 @@ export default function CompanyForm({
             type="submit"
             variant="default"
             className="font-normal"
-            disabled={!isPending}
+            disabled={isPending}
           >
             Add Company
           </Button>
