@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import NewClientStage from '@/app/e/account/new/new-client';
-import PickBetween from '@/app/e/account/new/pick-between';
+import NewClientStage from '@/app/e/accounts/new/new-client';
+import PickBetween from '@/app/e/accounts/new/pick-between';
 import {
   BriefcaseBusiness,
   UserRound,
@@ -10,10 +10,10 @@ import {
   UserRoundPlus,
 } from 'lucide-react';
 import { CompanyFormData } from '@/components/company/company-form';
-import NewCompanyStage from '@/app/e/account/new/new-company';
-import FinalNewAccountStage from '@/app/e/account/new/final-new-account-stage';
+import NewCompanyStage from '@/app/e/accounts/new/new-company';
+import FinalNewAccountStage from '@/app/e/accounts/new/final-new-account-stage';
 import { AccountFormData } from '@/components/account/account-form';
-import NewAccountResult from '@/app/e/account/new/new-account-result';
+import NewAccountResult from '@/app/e/accounts/new/new-account-result';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -23,7 +23,7 @@ import {
 } from '@/api/request/account';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { postNewAccount } from '@/api/account';
-import PickExistingClient from '@/app/e/account/new/pick-existing-client';
+import PickExistingClient from '@/app/e/accounts/new/pick-existing-client';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
 
