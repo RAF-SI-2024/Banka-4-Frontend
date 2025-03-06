@@ -1,7 +1,7 @@
 'use client';
 import ClientForm, {
-  ClientFormValues,
   ClientFormAction,
+  ClientFormValues,
 } from '@/components/client/client-form';
 import {
   Card,
@@ -17,7 +17,6 @@ import { toastRequestError } from '@/api/errors';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
-import GuardBlock from '@/components/GuardBlock';
 import { EditClientRequest } from '@/api/request/client';
 import { getClientById, updateClientById } from '@/api/client';
 
@@ -96,23 +95,21 @@ export default function EditClientPage() {
   }
 
   return (
-    <GuardBlock requiredPrivileges={['ADMIN']}>
-      <div className="flex justify-center items-center pt-16">
-        <Card className="w-[800px]">
-          <CardHeader>
-            <CardTitle>Edit Client Details</CardTitle>
-            <CardDescription>Update the client’s information.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ClientForm
-              isUpdate={true}
-              isPending={isPendingFetch || isPendingUpdate}
-              onSubmitAction={onSubmit}
-              defaultValues={clientForEdit}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    </GuardBlock>
+    <div className="flex justify-center items-center pt-16">
+      <Card className="w-[800px]">
+        <CardHeader>
+          <CardTitle>Edit Client Details</CardTitle>
+          <CardDescription>Update the client’s information.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ClientForm
+            isUpdate={true}
+            isPending={isPendingFetch || isPendingUpdate}
+            onSubmitAction={onSubmit}
+            defaultValues={clientForEdit}
+          />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
