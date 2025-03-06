@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useQuery } from '@tanstack/react-query';
@@ -10,6 +15,7 @@ import { DataTable } from '@/components/dataTable/DataTable';
 import { accountsColumns } from '@/ui/dataTables/accounts/accounts-columns';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar from '@/components/filters/FilterBar';
+import GuardBlock from '@/components/GuardBlock';
 
 interface AccountFilter {
   accountNumber: string;
@@ -65,50 +71,47 @@ const AccountOverviewPage: React.FC = () => {
       type: 'SET_BREADCRUMB',
       items: [
         { title: 'Home', url: '/' },
-        { title: 'Employees', url: '/e/employee' },
+        { title: 'Accounts', url: '/e/accounts' },
         { title: 'Overview' },
       ],
     });
   }, [dispatch]);
 
   return (
-    // <GuardBlock requiredPrivileges={['ADMIN']}>
-    <div className="p-8">
-      <Card className="max-w-[900px] mx-auto">
-        <CardHeader>
-          <h1 className="text-2xl font-bold">Accounts</h1>
-          <p className="text-sm text-zinc-500">
-            This table provides a clear and organized overview of key employee
-            details for quick reference and easy access.
-          </p>
-          <FilterBar<AccountFilter>
-            filterKeyToName={accountFilterKeyToName}
-            onSearch={(filter) => {
-              setPage(0);
-              setSearchFilter(filter);
-            }}
-            filter={searchFilter}
-          />
-        </CardHeader>
-        <CardContent className="rounded-lg overflow-hidden">
-          <DataTable
-            // onRowClick={(row) =>
-            //   // router.push(`/e/employee/${row.original.id}/edit`)
-            // }
-            columns={accountsColumns}
-            data={data?.content ?? []}
-            isLoading={isLoading}
-            pageCount={data?.page.totalPages ?? 0}
-            pagination={{ page: page, pageSize }}
-            onPaginationChange={(newPagination) => {
-              setPage(newPagination.page);
-              setPageSize(newPagination.pageSize);
-            }}
-          />
-        </CardContent>
-      </Card>
-    </div>
-    // </GuardBlock>
+    <GuardBlock requiredUserType={'employee'}>
+      <div className="p-8">
+        <Card className="max-w-[900px] mx-auto">
+          <CardHeader>
+            <h1 className="text-2xl font-bold">Accounts</h1>
+            <CardDescription>
+              This table provides a clear and organized overview of key employee
+              details for quick reference and easy access.
+            </CardDescription>
+            <FilterBar<AccountFilter>
+              filterKeyToName={accountFilterKeyToName}
+              onSearch={(filter) => {
+                setPage(0);
+                setSearchFilter(filter);
+              }}
+              filter={searchFilter}
+            />
+          </CardHeader>
+          <CardContent className="rounded-lg overflow-hidden">
+            <DataTable
+              columns={accountsColumns}
+              data={data?.content ?? []}
+              isLoading={isLoading}
+              pageCount={data?.page.totalPages ?? 0}
+              pagination={{ page: page, pageSize }}
+              onPaginationChange={(newPagination) => {
+                setPage(newPagination.page);
+                setPageSize(newPagination.pageSize);
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </GuardBlock>
   );
 };
 

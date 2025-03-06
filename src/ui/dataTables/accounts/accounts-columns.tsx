@@ -39,14 +39,14 @@ export const accountsColumns: ColumnDef<AccountDto>[] = [
           item={{
             accountNumber: row.original.accountNumber,
             balance: row.original.balance,
-            valuta: row.original.currency.code,
+            currencyCode: row.original.currency.code,
             owner:
               row.original.client.firstName +
               ' ' +
               row.original.client.lastName,
             type: row.original.accountType,
-            availableResources: row.original.availableBalance,
-            reservedResources: 0,
+            availableBalance: row.original.availableBalance,
+            reservedBalance: 0 /* TODO: this is 0 for now. Should be changed in the later sprints */,
           }}
         />
       </div>
