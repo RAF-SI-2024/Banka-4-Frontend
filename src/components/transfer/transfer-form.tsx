@@ -43,7 +43,7 @@ const transferSchema = z.object({
   fromAmount: z.coerce.number({ invalid_type_error: 'Invalid amount' }),
 });
 
-type TransferFormValues = z.infer<typeof transferSchema>
+type TransferFormValues = z.infer<typeof transferSchema>;
 
 export default function TransferForm({
   accounts,
@@ -92,9 +92,7 @@ export default function TransferForm({
           name="fromAccount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                From Account
-              </FormLabel>
+              <FormLabel>From Account</FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange}>
                   <SelectTrigger>
@@ -132,9 +130,7 @@ export default function TransferForm({
           name="toAccount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                To Account
-              </FormLabel>
+              <FormLabel>To Account</FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} disabled={!fromAccount}>
                   <SelectTrigger>
@@ -169,9 +165,7 @@ export default function TransferForm({
           name="fromAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
-                Amount
-              </FormLabel>
+              <FormLabel>Amount</FormLabel>
               <FormControl>
                 <div className="flex items-center border rounded-md px-3 py-2">
                   <Input
