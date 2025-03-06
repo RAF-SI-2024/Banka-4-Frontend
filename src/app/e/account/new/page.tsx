@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NewClientStage from '@/app/e/account/new/new-client';
 import PickBetween from '@/app/e/account/new/pick-between';
 import {
@@ -23,6 +23,8 @@ import {
 } from '@/api/request/account';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { postNewAccount } from '@/api/account';
+import PickExistingClient from '@/app/e/account/new/pick-existing-client';
+import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
 enum NewAccountStage {
   NewOrExistingClient,
@@ -45,6 +47,17 @@ type ClientRequest =
     };
 
 export default function NewAccountPage() {
+  const { dispatch } = useBreadcrumb();
+  useEffect(() => {
+    dispatch({
+      type: 'SET_BREADCRUMB',
+      items: [
+        { title: 'Home', url: '/e' },
+        { title: 'Accounts', url: '/e/accounts' },
+        { title: 'New' },
+      ],
+    });
+  }, [dispatch]);
   const httpClient = useHttpClient();
 
   const [stage, setStage] = useState<NewAccountStage>(
@@ -96,7 +109,17 @@ export default function NewAccountPage() {
           />
         );
       case NewAccountStage.ExistingClient:
-        return <h1>TODO</h1>;
+        return (
+          <PickExistingClient
+            onClientPicked={(c) => {
+              setClient({
+                isNew: false,
+                client: { id: c.id },
+              });
+              setStage(NewAccountStage.PersonalOrCompany);
+            }}
+          />
+        );
       case NewAccountStage.NewClient:
         return (
           <NewClientStage
