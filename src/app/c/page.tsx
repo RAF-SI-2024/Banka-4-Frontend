@@ -51,7 +51,9 @@ export const transactionsColumns: ColumnDef<TransactionDto>[] = [
 ];
 
 const ClientHomePage: React.FC = () => {
-  const [selectedAccount, setSelectedAccount] = useState<AccountDto | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<AccountDto | null>(
+    null
+  );
   const client = useHttpClient();
 
   const { data: accounts } = useQuery<AccountDto[]>({
@@ -65,7 +67,10 @@ const ClientHomePage: React.FC = () => {
   const { data: transactions } = useQuery<TransactionDto[]>({
     queryKey: ['transactions', selectedAccount?.accountNumber],
     queryFn: async () => {
-      const response = await fetchTransactions(client, selectedAccount?.accountNumber);
+      const response = await fetchTransactions(
+        client,
+        selectedAccount?.accountNumber
+      );
       return response;
     },
     enabled: !!selectedAccount,
@@ -79,37 +84,41 @@ const ClientHomePage: React.FC = () => {
 
   return (
     <div className="p-8">
-          <h1 className="text-2xl font-bold">Client Accounts</h1>
-        {accounts && (
-            <AccountCarousel 
-              items={accounts.map(account => ({
-                accountNumber: account.accountNumber,
-                balance: account.balance,
-                valuta: account.currency.code,
-                owner: account.client.firstName + ' ' + account.client.lastName,
-                type: account.accountType,
-                availableResources: account.availableBalance,
-                reservedResources: account.accountMaintenance, 
-              }))} 
-              onSelect={(accountNumber: string) => {
-                const account = accounts?.find(acc => acc.accountNumber === accountNumber) || null;
-                setSelectedAccount(account);
-              }} 
-            />
-          )}
-          {selectedAccount && (
-            <div className="w-full mt-4">
-              <h2 className="text-xl font-semibold">Transactions for Account: {selectedAccount.accountNumber}</h2>
-              <DataTable 
-                columns={transactionsColumns} 
-                data={transactions || []} 
-                isLoading={!transactions}
-                pagination={{ page: 0, pageSize: 10 }}
-                onPaginationChange={() => {}}
-                pageCount={Math.ceil((transactions?.length || 0) / 10)}
-              />
-            </div>
-          )}
+      <h1 className="text-2xl font-bold">Client Accounts</h1>
+      {accounts && (
+        <AccountCarousel
+          items={accounts.map((account) => ({
+            accountNumber: account.accountNumber,
+            balance: account.balance,
+            valuta: account.currency.code,
+            owner: account.client.firstName + ' ' + account.client.lastName,
+            type: account.accountType,
+            availableResources: account.availableBalance,
+            reservedResources: account.accountMaintenance,
+          }))}
+          onSelect={(accountNumber: string) => {
+            const account =
+              accounts?.find((acc) => acc.accountNumber === accountNumber) ||
+              null;
+            setSelectedAccount(account);
+          }}
+        />
+      )}
+      {selectedAccount && (
+        <div className="w-full mt-4">
+          <h2 className="text-xl font-semibold">
+            Transactions for Account: {selectedAccount.accountNumber}
+          </h2>
+          <DataTable
+            columns={transactionsColumns}
+            data={transactions || []}
+            isLoading={!transactions}
+            pagination={{ page: 0, pageSize: 10 }}
+            onPaginationChange={() => {}}
+            pageCount={Math.ceil((transactions?.length || 0) / 10)}
+          />
+        </div>
+      )}
     </div>
   );
 };
