@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
@@ -120,10 +125,10 @@ const ContactsPage: React.FC = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold">Contacts</h1>
-                <p className="text-sm text-zinc-500">
+                <CardDescription>
                   Manage your contacts. Use the actions to edit or delete
                   contacts.
-                </p>
+                </CardDescription>
               </div>
               <Button
                 onClick={() => {
@@ -175,9 +180,9 @@ const ContactsPage: React.FC = () => {
       {showDeleteDialog && selectedContact && (
         <DeleteDialog
           open={showDeleteDialog}
-          itemName={selectedContact.name}
+          itemName={selectedContact.fullName}
           onConfirm={() => {
-            console.log('Deleting contact', selectedContact.id);
+            console.log('Deleting contact', selectedContact?.accountNumber);
             // TODO: Call deleteContact API method here
             setShowDeleteDialog(false);
             setSelectedContact(null);

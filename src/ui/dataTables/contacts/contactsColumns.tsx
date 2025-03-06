@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 
 // Pretpostavljamo da tip za kontakt izgleda ovako:
 export interface ContactResponseDto {
-  id: string;
-  name: string;
+  fullName: string;
   accountNumber: string;
 }
 
@@ -22,18 +21,12 @@ export const ContactsActions = ({
 }: ContactsActionsProps) => {
   return (
     <div className="flex justify-end items-center space-x-2">
-      <button
-        onClick={() => onEdit(contact)}
-        className="p-1 text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white"
-      >
+      <Button onClick={() => onEdit(contact)}>
         <Edit2 className="h-4 w-4" />
-      </button>
-      <button
-        onClick={() => onDelete(contact)}
-        className="p-1 text-red-600 hover:text-red-800"
-      >
+      </Button>
+      <Button onClick={() => onDelete(contact)} variant={'destructive'}>
         <Trash className="h-4 w-4" />
-      </button>
+      </Button>
     </div>
   );
 };
@@ -43,8 +36,8 @@ export const createContactsColumns = (
   onDelete: (contact: ContactResponseDto) => void
 ): ColumnDef<ContactResponseDto>[] => [
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'fullName',
+    header: 'Full Name',
     cell: (info) => info.getValue(),
   },
   {

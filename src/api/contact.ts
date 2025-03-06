@@ -1,22 +1,19 @@
 import { Axios } from 'axios';
 import { ContactResponseDto } from '@/api/response/contact';
 import { NewContactRequest, EditContactRequest } from '@/api/request/contact';
-import { ContactOverviewResponseDto } from '@/api/response/contact';
-
-export const getContactById = async (client: Axios, id: string) =>
-  client.get<ContactResponseDto>(`/contact/${id}`);
+import { Pageable } from '@/types/pageable';
 
 export const postNewContact = async (client: Axios, data: NewContactRequest) =>
-  client.post<void>('/contact', data);
+  client.post<void>('/client/create-contact', data);
 
 export const updateContact = async (
   client: Axios,
   id: string,
   data: EditContactRequest
-) => client.put<void>(`/contact/${id}`, data);
+) => client.put<void>(`/client/contact/${id}`, data);
 
 export const deleteContact = async (client: Axios, id: string) =>
-  client.delete<void>(`/contact/${id}`);
+  client.delete<void>(`/client/delete-contact/${id}`);
 
 export const searchContacts = async (
   client: Axios,
@@ -24,7 +21,7 @@ export const searchContacts = async (
   rowsPerPage: number,
   currentPage: number
 ) => {
-  return client.get<ContactOverviewResponseDto>('/contact/search', {
+  return client.get<Pageable<ContactResponseDto>>('/client/contacts', {
     params: { ...filters, size: rowsPerPage, page: currentPage },
   });
 };

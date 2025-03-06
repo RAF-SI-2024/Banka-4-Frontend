@@ -17,8 +17,9 @@ const FilterInput: React.FC<FilterInputProps> = ({
   placeholder,
 }) => {
   return (
-    <div className="filter-input">
+    <div className="filter-input w-full">
       <Input
+        className={'w-full'}
         type="text"
         name={propertyName}
         placeholder={placeholder || `Filter by ${propertyName}`}

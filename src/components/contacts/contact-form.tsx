@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getDirtyValues } from '@/lib/form-utils';
 
 const contactSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
+  fullName: z.string().min(1, 'Name is required'),
   accountNumber: z.string().min(1, 'Account Number is required'),
 });
 
@@ -43,7 +43,7 @@ export default function ContactForm({
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      name: contact?.name || '',
+      fullName: contact?.fullName || '',
       accountNumber: contact?.accountNumber || '',
     },
   });
@@ -64,7 +64,7 @@ export default function ContactForm({
       <form onSubmit={form.handleSubmit(_onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="name"
+          name="fullName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Name</FormLabel>

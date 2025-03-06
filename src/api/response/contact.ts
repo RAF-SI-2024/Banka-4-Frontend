@@ -1,13 +1,4 @@
 export interface ContactResponseDto {
-  id: string;
-  name: string;
+  fullName: string;
   accountNumber: string;
-}
-
-export interface ContactOverviewResponseDto {
-  content: ContactResponseDto[];
-  totalElements: number;
-  page: {
-    totalPages: number;
-  };
 }
