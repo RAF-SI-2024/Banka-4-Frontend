@@ -102,8 +102,11 @@ export const TransactionDialog = ({
           </div>
         )}
         <div className="flex flex-col-reverse gap-2 sm:flex-row-reverse">
+          <Button>Print</Button>
           <DialogClose asChild>
-            <Button type="button">Close</Button>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
           </DialogClose>
         </div>
       </DialogContent>

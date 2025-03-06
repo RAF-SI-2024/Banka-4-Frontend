@@ -77,10 +77,7 @@ export default function TransactionsPage() {
       />
       <Card className="max-w-[900px] mx-auto">
         <CardHeader>
-          <div className="flex flex-row">
-            <h1 className="text-2xl font-bold">Transactions Overview</h1>
-            <Button className="ml-auto">Print</Button>
-          </div>
+          <h1 className="text-2xl font-bold">Transactions Overview</h1>
           <p className="text-sm text-zinc-500 pb-4">
             This table provides a clear and organized overview of key
             transaction details for quick reference and easy access.

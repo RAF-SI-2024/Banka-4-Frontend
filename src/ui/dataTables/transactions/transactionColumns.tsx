@@ -9,8 +9,8 @@ export const transactionColumns: ColumnDef<TransactionDto>[] = [
     header: 'Transaction Number',
   },
   {
-    accessorKey: 'fromAccount',
-    header: 'From Account',
+    accessorKey: 'recipient',
+    header: 'Recipient',
   },
   {
     accessorKey: 'toAccount',
@@ -18,43 +18,12 @@ export const transactionColumns: ColumnDef<TransactionDto>[] = [
   },
   {
     accessorKey: 'fromAmount',
-    header: 'From Amount',
-  },
-  {
-    accessorKey: 'fromCurrency',
-    header: 'From Currency',
-  },
-  {
-    accessorKey: 'toAmount',
-    header: 'To Amount',
-  },
-  {
-    accessorKey: 'toCurrency',
-    header: 'To Currency',
-  },
-  {
-    accessorKey: 'feeAmount',
-    header: 'Fee Amount',
-  },
-  {
-    accessorKey: 'feeCurrency',
-    header: 'Fee Currency',
-  },
-  {
-    accessorKey: 'recipient',
-    header: 'Recipient',
-  },
-  {
-    accessorKey: 'paymentCode',
-    header: 'Payment Code',
-  },
-  {
-    accessorKey: 'referenceNumber',
-    header: 'Reference Number',
-  },
-  {
-    accessorKey: 'paymentPurpose',
-    header: 'Payment Purpose',
+    header: 'Amount',
+    cell: ({ row }) => (
+      <p>
+        {row.original.fromAmount} {row.original.fromCurrency}
+      </p>
+    ),
   },
   {
     accessorKey: 'paymentDateTime',
