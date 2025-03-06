@@ -24,7 +24,7 @@ import { Switch } from '../ui/switch';
 import { currencyOptions } from '@/types/currency';
 
 const formSchema = z.object({
-  amount: z.coerce.number().min(1),
+  amount: z.coerce.number().min(0),
   currency: z.enum(currencyOptions),
   makeCard: z.boolean(),
 });
@@ -60,6 +60,7 @@ export default function AccountForm({ onSubmit, isPending }: AccountFormProps) {
                 <Input
                   {...field}
                   type="number"
+                  min={0}
                   onChange={field.onChange}
                   placeholder="Enter amount"
                 />
