@@ -1,6 +1,7 @@
 import { ClientResponseDto } from './client';
 import { CompanyResponseDto } from './company';
 import { EmployeeResponseDto } from './employee';
+import { Pageable } from '@/types/pageable';
 
 export interface AccountDto {
   id: string;
@@ -26,3 +27,5 @@ export interface CurrencyDto {
   code: string;
   symbol: string;
 }
+
+export type AccountOverviewResponseDto = Pageable<AccountDto>;
