@@ -12,11 +12,13 @@ import {
   createContactsColumns,
   ContactResponseDto,
 } from '@/ui/dataTables/contacts/contactsColumns';
-import { mockContacts } from '@/mocks/contacts';
 import ContactForm, {
   ContactFormAction,
 } from '@/components/contacts/contact-form';
 import { DeleteDialog } from '@/components/DeleteDialog';
+import { useQuery } from '@tanstack/react-query';
+import { useHttpClient } from '@/context/HttpClientContext';
+import { searchContacts } from '@/api/contact';
 
 interface ContactFilter {
   name: string;
@@ -61,28 +63,43 @@ const ContactsPage: React.FC = () => {
     });
   }, [dispatch]);
 
-  // Koristimo mock podatke
-  const data = mockContacts;
-  const totalElements = data?.totalElements || 0;
-  const pageCount = Math.ceil(totalElements / pageSize);
+  const client = useHttpClient();
+  const { data, isLoading } = useQuery({
+    queryKey: ['contact', page, pageSize, searchFilter],
+    queryFn: async () => {
+      const response = await searchContacts(
+        client,
+        searchFilter,
+        pageSize,
+        page
+      );
+      return response.data;
+    },
+    staleTime: 5000,
+  });
 
-  // Callback for edit
+  const pageCount = data?.page.totalPages ?? 0;
+
+  // Callback za edit
   const handleEdit = (contact: ContactResponseDto) => {
     setSelectedContact(contact);
     setShowClientForm(true);
   };
 
-  // Callback for delete
+  // Callback za delete
   const handleDelete = (contact: ContactResponseDto) => {
     setSelectedContact(contact);
     setShowDeleteDialog(true);
   };
 
+  // Callback koji dobija akciju iz forme
   const handleContactSubmit = (action: ContactFormAction) => {
     if (action.update) {
       console.log('Update contact with data:', action.data);
+      // TODO: Call updateContact API method here
     } else {
       console.log('Create new contact with data:', action.data);
+      // TODO: Call postNewContact API method here
     }
     setShowClientForm(false);
     setSelectedContact(null);
@@ -127,11 +144,11 @@ const ContactsPage: React.FC = () => {
             />
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
-            <DataTable
+            <DataTable<ContactResponseDto>
               onRowClick={() => {}}
               columns={columns}
               data={data?.content ?? []}
-              isLoading={false}
+              isLoading={isLoading}
               pageCount={pageCount}
               pagination={{ page, pageSize }}
               onPaginationChange={(newPagination) => {
@@ -161,7 +178,7 @@ const ContactsPage: React.FC = () => {
           itemName={selectedContact.name}
           onConfirm={() => {
             console.log('Deleting contact', selectedContact.id);
-            // TODO: Call delete API method here
+            // TODO: Call deleteContact API method here
             setShowDeleteDialog(false);
             setSelectedContact(null);
           }}
