@@ -1,6 +1,7 @@
 import { Axios } from 'axios';
 import { ClientResponseDto } from './response/client';
 import { EditClientRequest, NewClientRequest } from './request/client';
+import { Pageable } from '@/types/pageable';
 
 export const getClientById = async (client: Axios, id: string) =>
   client.get<ClientResponseDto>(`/client/${id}`);
@@ -25,10 +26,7 @@ export const searchClients = async (
   rowsPerPage: number,
   currentPage: number
 ) => {
-  return client.get<{ content: ClientResponseDto[]; totalElements: number }>(
-    '/client/search',
-    {
-      params: { ...filters, size: rowsPerPage, page: currentPage },
-    }
-  );
+  return client.get<Pageable<ClientResponseDto>>('/client/search', {
+    params: { ...filters, size: rowsPerPage, page: currentPage },
+  });
 };

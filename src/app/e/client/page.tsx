@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useRouter } from 'next/navigation';
@@ -80,19 +85,15 @@ const ClientOverviewPage: React.FC = () => {
     });
   }, [dispatch]);
 
-  // Izračunavanje ukupnog broja stranica
-  const totalElements = data?.totalElements || 0;
-  const pageCount = Math.ceil(totalElements / pageSize);
-
   return (
     <div className="p-8">
       <Card className="max-w-[900px] mx-auto">
         <CardHeader>
           <h1 className="text-2xl font-bold">Clients Overview</h1>
-          <p className="text-sm text-zinc-500">
+          <CardDescription>
             This table provides a clear and organized overview of key client
             details for quick reference and easy access.
-          </p>
+          </CardDescription>
           <FilterBar<ClientFilter>
             filterKeyToName={clientFilterKeyToName}
             onSearch={(filter) => {
@@ -104,11 +105,13 @@ const ClientOverviewPage: React.FC = () => {
         </CardHeader>
         <CardContent className="rounded-lg overflow-hidden">
           <DataTable<ClientResponseDto>
-            onRowClick={(row) => router.push(`/e/client/${row.original.id}`)} //TODO()  i guess
+            onRowClick={(row) =>
+              router.push(`/e/client/${row.original.id}/edit`)
+            } //TODO()  i guess
             columns={clientsColumns}
             data={data?.content ?? []}
             isLoading={isLoading}
-            pageCount={pageCount}
+            pageCount={data?.page.totalPages ?? 0}
             pagination={{ page: page, pageSize }}
             onPaginationChange={(newPagination) => {
               setPage(newPagination.page);
