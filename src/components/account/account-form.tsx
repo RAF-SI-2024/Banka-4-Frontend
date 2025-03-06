@@ -116,7 +116,9 @@ export default function AccountForm({ onSubmit, isPending }: AccountFormProps) {
           )}
         />
 
-        <Button type="submit" disabled={isPending}>Submit</Button>
+        <Button type="submit" disabled={isPending}>
+          Submit
+        </Button>
       </form>
     </Form>
   );
