@@ -17,20 +17,13 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { formatAccountNumber } from '@/lib/account-utils';
 import { AccountInfoDialog } from '@/components/account/account-info-dialog';
+import { TransactionCarouselItem } from '@/types/transaction';
 
 export function AccountCarousel({
   items,
   onSelect,
 }: {
-  items: {
-    accountNumber: string;
-    balance: number;
-    valuta: string;
-    owner: string;
-    type: string;
-    availableResources: number;
-    reservedResources: number;
-  }[];
+  items: TransactionCarouselItem[];
   onSelect: (accountNumber: string) => void;
 }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -58,7 +51,7 @@ export function AccountCarousel({
                       {formatAccountNumber(item.accountNumber)}
                     </CardTitle>
                     <span className="text-4xl font-bold">
-                      {item.balance.toLocaleString()} {item.valuta}
+                      {item.balance.toLocaleString()} {item.currencyCode}
                     </span>
                   </CardHeader>
                   <CardContent className="flex justify-center space-x-4">

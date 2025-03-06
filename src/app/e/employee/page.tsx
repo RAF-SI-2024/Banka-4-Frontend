@@ -1,7 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
@@ -81,10 +86,10 @@ const EmployeeOverviewPage: React.FC = () => {
         <Card className="max-w-[900px] mx-auto">
           <CardHeader>
             <h1 className="text-2xl font-bold">Employees Overview</h1>
-            <p className="text-sm text-zinc-500">
+            <CardDescription>
               This table provides a clear and organized overview of key employee
               details for quick reference and easy access.
-            </p>
+            </CardDescription>
             <FilterBar<EmployeeFilter>
               filterKeyToName={employeeFilterKeyToName}
               onSearch={(filter) => {

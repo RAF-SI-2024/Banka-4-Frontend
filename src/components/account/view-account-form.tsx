@@ -3,24 +3,10 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { formatAccountNumber } from '@/lib/account-utils';
+import { TransactionCarouselItem } from '@/types/transaction';
 
-export function ViewAccountForm({
-  accountNumber,
-  balance,
-  valuta,
-  owner,
-  type,
-  availableResources,
-  reservedResources,
-}: {
-  accountNumber: string;
-  balance: number;
-  valuta: string;
-  owner: string;
-  type: string;
-  availableResources: number;
-  reservedResources: number;
-}) {
+/* TODO: we should use another type here, works for now, time rush */
+export function ViewAccountForm(transaction: TransactionCarouselItem) {
   return (
     <form className="grid grid-cols-2 gap-6">
       <div className="flex flex-col">
@@ -29,7 +15,7 @@ export function ViewAccountForm({
           disabled
           type="AccNum"
           className={'disabled:cursor-default'}
-          value={formatAccountNumber(accountNumber)}
+          value={formatAccountNumber(transaction.accountNumber)}
         />
       </div>
       <div className="flex flex-col">
@@ -38,7 +24,7 @@ export function ViewAccountForm({
           disabled
           type="owner"
           className={'disabled:cursor-default'}
-          value={owner}
+          value={transaction.owner}
         />
       </div>
       <div className="flex flex-col">
@@ -47,7 +33,7 @@ export function ViewAccountForm({
           disabled
           type="type"
           className={'disabled:cursor-default'}
-          value={type}
+          value={transaction.type}
         />
       </div>
       <div className="flex flex-col">
@@ -56,7 +42,7 @@ export function ViewAccountForm({
           disabled
           type="avRes"
           className={'disabled:cursor-default'}
-          value={`${availableResources.toLocaleString()} ${valuta}`}
+          value={`${transaction.availableBalance.toLocaleString()} ${transaction.currencyCode}`}
         />
       </div>
       <div className="flex flex-col">
@@ -65,7 +51,7 @@ export function ViewAccountForm({
           disabled
           type="resRes"
           className={'disabled:cursor-default'}
-          value={`${reservedResources.toLocaleString()} ${valuta}`}
+          value={`${transaction.reservedBalance.toLocaleString()} ${transaction.currencyCode}`}
         />
       </div>
       <div className="flex flex-col">
@@ -74,7 +60,7 @@ export function ViewAccountForm({
           disabled
           type="EDate"
           className={'disabled:cursor-default'}
-          value={`${balance.toLocaleString()} ${valuta}`}
+          value={`${transaction.balance.toLocaleString()} ${transaction.currencyCode}`}
         />
       </div>
     </form>

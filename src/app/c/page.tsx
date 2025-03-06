@@ -10,45 +10,14 @@ import { AccountCarousel } from '@/components/account/account-carousel';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { useQuery } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
-
-const transactionsColumns: ColumnDef<TransactionDto>[] = [
-  {
-    header: 'Transaction Number',
-    accessorKey: 'transactionNumber',
-  },
-  {
-    header: 'From Account',
-    accessorKey: 'fromAccount',
-  },
-  {
-    header: 'To Account',
-    accessorKey: 'toAccount',
-  },
-  {
-    header: 'Amount',
-    accessorKey: 'fromAmount',
-  },
-  {
-    header: 'Currency',
-    accessorKey: 'fromCurrency',
-  },
-  {
-    header: 'Recipient',
-    accessorKey: 'recipient',
-  },
-  {
-    header: 'Payment Purpose',
-    accessorKey: 'paymentPurpose',
-  },
-  {
-    header: 'Date',
-    accessorKey: 'paymentDateTime',
-  },
-  {
-    header: 'Status',
-    accessorKey: 'status',
-  },
-];
+import { formatAccountNumber } from '@/lib/account-utils';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
+import { transactionColumns } from '@/ui/dataTables/transactions/transactionColumns';
 
 const ClientHomePage: React.FC = () => {
   const [selectedAccount, setSelectedAccount] = useState<AccountDto | null>(
@@ -83,18 +52,17 @@ const ClientHomePage: React.FC = () => {
   }, [accounts, selectedAccount]);
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">Client Accounts</h1>
+    <div>
       {accounts && (
         <AccountCarousel
           items={accounts.map((account) => ({
             accountNumber: account.accountNumber,
             balance: account.balance,
-            valuta: account.currency.code,
+            currencyCode: account.currency.code,
             owner: account.client.firstName + ' ' + account.client.lastName,
             type: account.accountType,
-            availableResources: account.availableBalance,
-            reservedResources: account.accountMaintenance,
+            availableBalance: account.availableBalance,
+            reservedBalance: 0 /* TODO(marko): this sprint, reservedBalance is always 0, fix this when the time comes */,
           }))}
           onSelect={(accountNumber: string) => {
             const account =
@@ -105,18 +73,29 @@ const ClientHomePage: React.FC = () => {
         />
       )}
       {selectedAccount && (
-        <div className="w-full mt-4">
-          <h2 className="text-xl font-semibold">
-            Transactions for Account: {selectedAccount.accountNumber}
-          </h2>
-          <DataTable
-            columns={transactionsColumns}
-            data={transactions || []}
-            isLoading={!transactions}
-            pagination={{ page: 0, pageSize: 10 }}
-            onPaginationChange={() => {}}
-            pageCount={Math.ceil((transactions?.length || 0) / 10)}
-          />
+        <div className={'flex flex-col items-center justify-center'}>
+          <Card className="max-w-[900px] w-full mx-auto">
+            <CardHeader>
+              <h1 className="text-2xl font-bold">
+                Transactions for Account:{' '}
+                {formatAccountNumber(selectedAccount.accountNumber)}
+              </h1>
+              <CardDescription>
+                This table provides a clear and organized overview of key
+                transactions details for quick reference and easy access.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <DataTable
+                columns={transactionColumns}
+                data={transactions || []}
+                isLoading={!transactions}
+                pagination={{ page: 0, pageSize: 8 }}
+                onPaginationChange={() => {}}
+                pageCount={Math.ceil((transactions?.length || 0) / 8)}
+              />
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

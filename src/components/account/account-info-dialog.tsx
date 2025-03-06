@@ -8,19 +8,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ViewAccountForm } from '@/components/account/view-account-form';
+import { TransactionCarouselItem } from '@/types/transaction';
 
 export function AccountInfoDialog({
   item,
 }: {
-  item: {
-    accountNumber: string;
-    balance: number;
-    valuta: string;
-    owner: string;
-    type: string;
-    availableResources: number;
-    reservedResources: number;
-  };
+  item: TransactionCarouselItem /* TODO: we should use another type here, works for now, time rush */;
 }) {
   return (
     <Dialog>
