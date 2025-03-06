@@ -8,10 +8,10 @@ import { fetchAccounts } from '@/api/accounts';
 import React, { useState, useEffect } from 'react';
 import { AccountCarousel } from '@/components/account/account-carousel';
 import { DataTable } from '@/components/dataTable/DataTable';
-import { useHttpClient } from '@/context/HttpClientContext';
 import { useQuery } from '@tanstack/react-query';
+import { useHttpClient } from '@/context/HttpClientContext';
 
-export const transactionsColumns: ColumnDef<TransactionDto>[] = [
+const transactionsColumns: ColumnDef<TransactionDto>[] = [
   {
     header: 'Transaction Number',
     accessorKey: 'transactionNumber',
