@@ -5,6 +5,11 @@ import { NewAccountDto } from '@/api/request/account';
 export const getAccountById = async (client: Axios, id: string) =>
   client.get<AccountDto>(`/account/${id}`);
 
+export const getAllAccounts = async (client: Axios): Promise<AccountDto[]> => {
+  const response = await client.get('/account/');
+  return response.data;
+};
+
 export const searchAccounts = async (
   client: Axios,
   filters: {

@@ -38,14 +38,14 @@ interface TransferFormProps {
   onSubmit: (transferData: {
     fromAccount: string;
     toAccount: string;
-    amount: number;
+    fromAmount: number;
   }) => void;
 }
 
 const transferSchema = z.object({
   fromAccount: z.string().min(1, 'Please select an account'),
   toAccount: z.string().min(1, 'Please select an account'),
-  amount: z.coerce.number({ invalid_type_error: 'Invalid amount' }),
+  fromAmount: z.coerce.number({ invalid_type_error: 'Invalid amount' }),
 });
 
 export default function TransferForm({
@@ -57,24 +57,26 @@ export default function TransferForm({
     defaultValues: {
       fromAccount: '',
       toAccount: '',
-      amount: 0,
+      fromAmount: 0,
     },
   });
 
   const fromAccount = form.watch('fromAccount');
-  const amount = form.watch('amount');
-  const selectedFromAccount = accounts.find((acc) => acc.id === fromAccount);
+  const amount = form.watch('fromAmount');
+  const selectedFromAccount = accounts.find(
+    (acc) => acc.accountNumber === fromAccount
+  );
 
   const filteredToAccounts = accounts.filter(
     (acc) =>
       acc.currency.code === selectedFromAccount?.currency.code &&
-      acc.id !== fromAccount
+      acc.accountNumber !== fromAccount
   );
 
   function handleSubmit(data: {
     fromAccount: string;
     toAccount: string;
-    amount: number;
+    fromAmount: number;
   }) {
     onSubmit(data);
   }
@@ -114,7 +116,10 @@ export default function TransferForm({
                         </SelectTrigger>
                         <SelectContent>
                           {accounts.map((account) => (
-                            <SelectItem key={account.id} value={account.id}>
+                            <SelectItem
+                              key={account.id}
+                              value={account.accountNumber}
+                            >
                               {account.accountNumber} ({account.currency.symbol}
                               )
                             </SelectItem>
@@ -156,7 +161,10 @@ export default function TransferForm({
                         <SelectContent>
                           {filteredToAccounts.length > 0 ? (
                             filteredToAccounts.map((account) => (
-                              <SelectItem key={account.id} value={account.id}>
+                              <SelectItem
+                                key={account.id}
+                                value={account.accountNumber}
+                              >
                                 {account.accountNumber} (
                                 {account.currency.symbol})
                               </SelectItem>
@@ -177,7 +185,7 @@ export default function TransferForm({
               {/* Amount */}
               <FormField
                 control={form.control}
-                name="amount"
+                name="fromAmount"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700 dark:text-gray-300">
