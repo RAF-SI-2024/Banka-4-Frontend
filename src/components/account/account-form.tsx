@@ -33,9 +33,10 @@ export type AccountFormData = z.infer<typeof formSchema>;
 
 interface AccountFormProps {
   onSubmit: (data: AccountFormData) => void;
+  isPending: boolean;
 }
 
-export default function AccountForm({ onSubmit }: AccountFormProps) {
+export default function AccountForm({ onSubmit, isPending }: AccountFormProps) {
   const form = useForm<AccountFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: { amount: 0, currency: 'RSD', makeCard: false },
@@ -114,7 +115,7 @@ export default function AccountForm({ onSubmit }: AccountFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={isPending}>Submit</Button>
       </form>
     </Form>
   );
