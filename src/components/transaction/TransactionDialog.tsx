@@ -7,8 +7,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { TransactionDto } from '@/api/response/transaction';
-import { Card, CardContent } from '../ui/card';
+import {
+  paymentStatusToString,
+  TransactionDto,
+} from '@/api/response/transaction';
 import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { formatDateTime } from '@/lib/utils';
@@ -33,70 +35,80 @@ export const TransactionDialog = ({
         </DialogHeader>
         {dto && (
           <div>
-            <Label>Transaction number</Label>
+            <Label className={'text-muted-foreground'}>
+              Transaction number
+            </Label>
             <p>{dto.transactionNumber}</p>
           </div>
         )}
         {dto && (
           <div className="grid grid-cols-2 gap-y-4">
             <div>
-              <Label>From account number</Label>
+              <Label className={'text-muted-foreground'}>
+                From account number
+              </Label>
               <p>{dto.fromAccount}</p>
             </div>
             <div>
-              <Label>To account number</Label>
+              <Label className={'text-muted-foreground'}>
+                To account number
+              </Label>
               <p>{dto.toAccount}</p>
             </div>
             <div>
-              <Label>From amount</Label>
+              <Label className={'text-muted-foreground'}>From amount</Label>
               <p>{dto.fromAmount}</p>
             </div>
             <div>
-              <Label>From currency</Label>
+              <Label className={'text-muted-foreground'}>From currency</Label>
               <p>{dto.fromCurrency}</p>
             </div>
             <div>
-              <Label>To amount</Label>
+              <Label className={'text-muted-foreground'}>To amount</Label>
               <p>{dto.toAmount}</p>
             </div>
             <div>
-              <Label>To currency</Label>
+              <Label className={'text-muted-foreground'}>To currency</Label>
               <p>{dto.toCurrency}</p>
             </div>
             <div>
-              <Label>Fee amount</Label>
+              <Label className={'text-muted-foreground'}>Fee amount</Label>
               <p>{dto.feeAmount}</p>
             </div>
             <div>
-              <Label>Fee currency</Label>
+              <Label className={'text-muted-foreground'}>Fee currency</Label>
               <p>{dto.feeCurrency}</p>
             </div>
             <div>
-              <Label>Recipient name</Label>
+              <Label className={'text-muted-foreground'}>Recipient name</Label>
               <p>{dto.recipient}</p>
             </div>
             <div>
-              <Label>Payment code</Label>
+              <Label className={'text-muted-foreground'}>Payment code</Label>
               <p>{dto.paymentCode}</p>
             </div>
             <div>
-              <Label>Reference number</Label>
+              <Label className={'text-muted-foreground'}>
+                Reference number
+              </Label>
               <p>{dto.referenceNumber}</p>
             </div>
             {dto?.paymentPurpose && (
               <div>
-                <Label>Payment purpose</Label>
+                <Label className={'text-muted-foreground'}>
+                  Payment purpose
+                </Label>
                 <p>{dto.paymentPurpose}</p>
               </div>
             )}
             <div>
-              <Label>Payment date and time</Label>
+              <Label className={'text-gray-500'}>Payment date and time</Label>
               <p>{formatDateTime(dto.paymentDateTime)}</p>
             </div>
             <div className="flex flex-col">
-              <Label>Payment status</Label>
+              <Label className={'text-gray-500'}>Payment status</Label>
               <Badge className="mt-2 justify-center mr-auto">
-                {dto.status}
+                {paymentStatusToString(dto.status).toUpperCase()}
               </Badge>
             </div>
           </div>

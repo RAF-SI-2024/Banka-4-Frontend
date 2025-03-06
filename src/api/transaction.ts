@@ -1,9 +1,5 @@
 import { Axios } from 'axios';
-import {
-  TransactionsResponseDto,
-  PaymentStatus,
-  TransactionDto,
-} from './response/transaction';
+import { TransactionsResponseDto, PaymentStatus } from './response/transaction';
 
 export interface PaymentFilters {
   date?: Date;

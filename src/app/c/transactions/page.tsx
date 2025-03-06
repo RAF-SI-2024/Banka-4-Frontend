@@ -1,17 +1,20 @@
 'use client';
-import { PaymentStatus, TransactionDto } from '@/api/response/transaction';
+import { TransactionDto } from '@/api/response/transaction';
 import { PaymentFilters, searchPayments } from '@/api/transaction';
 import { DataTable } from '@/components/dataTable/DataTable';
 import FilterBar from '@/components/filters/FilterBar';
 import { TransactionDialog } from '@/components/transaction/TransactionDialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useHttpClient } from '@/context/HttpClientContext';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import { transactionColumns } from '@/ui/dataTables/transactions/transactionColumns';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function TransactionsPage() {
@@ -19,7 +22,6 @@ export default function TransactionsPage() {
     'transactions',
     { pageSize: 8, page: 0 }
   );
-  const router = useRouter();
   const client = useHttpClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
@@ -78,10 +80,10 @@ export default function TransactionsPage() {
       <Card className="max-w-[900px] mx-auto">
         <CardHeader>
           <h1 className="text-2xl font-bold">Transactions Overview</h1>
-          <p className="text-sm text-zinc-500 pb-4">
+          <CardDescription>
             This table provides a clear and organized overview of key
             transaction details for quick reference and easy access.
-          </p>
+          </CardDescription>
           {/* TODO: date, enum and number filters */}
           <FilterBar<PaymentFilters>
             filterKeyToName={transactionFilterKeyToName}

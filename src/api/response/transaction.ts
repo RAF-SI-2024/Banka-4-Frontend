@@ -1,12 +1,12 @@
 import { Pageable } from '@/types/pageable';
 
 export enum PaymentStatus {
-  REALIZED,
-  REJECTED,
-  IN_PROGRESS,
+  REALIZED = 'REALIZED',
+  REJECTED = 'REJECTED',
+  IN_PROGRESS = 'IN_PROGRESS',
 }
 
-export const PaymentStatusToString = (status: PaymentStatus): string => {
+export const paymentStatusToString = (status: PaymentStatus): string => {
   switch (status) {
     case PaymentStatus.REALIZED:
       return 'Realized';

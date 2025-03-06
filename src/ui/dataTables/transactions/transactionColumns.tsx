@@ -1,7 +1,11 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { TransactionDto } from '@/api/response/transaction';
+import {
+  paymentStatusToString,
+  TransactionDto,
+} from '@/api/response/transaction';
 import { Badge } from '@/components/ui/badge';
 import { formatDateTime } from '@/lib/utils';
+import { formatAccountNumber } from '@/lib/account-utils';
 
 export const transactionColumns: ColumnDef<TransactionDto>[] = [
   {
@@ -15,6 +19,7 @@ export const transactionColumns: ColumnDef<TransactionDto>[] = [
   {
     accessorKey: 'toAccount',
     header: 'To Account',
+    cell: ({ row }) => formatAccountNumber(row.original.toAccount),
   },
   {
     accessorKey: 'fromAmount',
@@ -27,12 +32,14 @@ export const transactionColumns: ColumnDef<TransactionDto>[] = [
   },
   {
     accessorKey: 'paymentDateTime',
-    header: 'Payment Date and Time',
+    header: 'Payment Timestamp',
     cell: ({ getValue }) => formatDateTime(getValue<string>()),
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => <Badge>{row.original.status}</Badge>,
+    cell: ({ row }) => (
+      <Badge>{paymentStatusToString(row.original.status).toUpperCase()}</Badge>
+    ),
   },
 ];
