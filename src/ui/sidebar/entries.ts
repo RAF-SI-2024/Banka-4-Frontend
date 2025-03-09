@@ -10,6 +10,7 @@ import {
   Plus,
   UserPlus,
   Users,
+  Repeat,
   CircleDollarSign,
   WalletCards,
 } from 'lucide-react';
@@ -85,6 +86,14 @@ const ClientGroups: SidebarGroupType[] = [
         privileges: [],
       },
     ],
+  },
+  {
+    title: 'Exchange',
+    url: '/c/exchange',
+    icon: Repeat,
+    isActive: false,
+    userType: 'client',
+    items: undefined,
   },
 ];
 
