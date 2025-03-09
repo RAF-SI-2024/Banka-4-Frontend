@@ -1,11 +1,14 @@
 export interface Card {
     cardNumber: string;
-    cardOwner: string;
     cardType: string;
-    expirationDate: string;
+    cardName: string;
+    createdDate: string;
+    expiryDate: string;
+    accountNumber: string;
     cvv: string;
+    limit: number;
     status: string;
-    balance: number;
+    cardOwner: string;
 }
 
 export interface CardInfo {
