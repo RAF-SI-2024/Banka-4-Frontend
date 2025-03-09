@@ -4,5 +4,6 @@ export interface Card{
     cardType: string;
     expirationDate: string;
     cvv: string;
+    status: string;
     balance: number;
 }
