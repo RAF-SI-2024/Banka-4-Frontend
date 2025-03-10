@@ -4,9 +4,6 @@
  * @returns The formatted card number.
  */
 export function formatCardNumber(cardNumber: string): string {
-  if (cardNumber.length !== 16) {
-    throw new Error('Card number must be 16 digits long');
-  }
 
   const firstFour = cardNumber.slice(0, 4);
   const lastFour = cardNumber.slice(-4);
