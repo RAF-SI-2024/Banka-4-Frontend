@@ -12,7 +12,6 @@ export function CardInfoForm(card: Card) {
         <Label>Card number:</Label>
         <Input
           disabled
-          type="cardNumber"
           className={'disabled:cursor-default'}
           value={formatCardNumber(card.cardNumber)}
         />
@@ -21,7 +20,6 @@ export function CardInfoForm(card: Card) {
         <Label>Card type:</Label>
         <Input
           disabled
-          type="cardType"
           className={'disabled:cursor-default'}
           value={card.cardType}
         />
@@ -30,7 +28,6 @@ export function CardInfoForm(card: Card) {
         <Label>Card name:</Label>
         <Input
           disabled
-          type="cardName"
           className={'disabled:cursor-default'}
           value={card.cardName}
         />
@@ -39,7 +36,6 @@ export function CardInfoForm(card: Card) {
         <Label>Creation date:</Label>
         <Input
           disabled
-          type="dateCreated"
           className={'disabled:cursor-default'}
           value={card.createdDate}
         />
@@ -48,7 +44,6 @@ export function CardInfoForm(card: Card) {
         <Label>Exparation date:</Label>
         <Input
           disabled
-          type="dateExparation"
           className={'disabled:cursor-default'}
           value={card.expiryDate}
         />
@@ -57,7 +52,6 @@ export function CardInfoForm(card: Card) {
         <Label>Account number:</Label>
         <Input
           disabled
-          type="accNumber"
           className={'disabled:cursor-default'}
           value={card.accountNumber}
         />
@@ -66,7 +60,6 @@ export function CardInfoForm(card: Card) {
         <Label>Limit:</Label>
         <Input
           disabled
-          type="limit"
           className={'disabled:cursor-default'}
           value={card.limit}
         />
@@ -75,7 +68,6 @@ export function CardInfoForm(card: Card) {
         <Label>Status:</Label>
         <Input
           disabled
-          type="status"
           className={'disabled:cursor-default'}
           value={card.status}
         />
@@ -84,7 +76,6 @@ export function CardInfoForm(card: Card) {
         <Label>Card owner:</Label>
         <Input
           disabled
-          type="cardOwner"
           className={'disabled:cursor-default'}
           value={card.cardOwner}
         />
