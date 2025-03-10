@@ -41,7 +41,7 @@ export function CardInfoForm(card: Card) {
         />
       </div>
       <div className="flex flex-col">
-        <Label>Exparation date:</Label>
+        <Label>Expiration date:</Label>
         <Input
           disabled
           className={'disabled:cursor-default'}
