@@ -36,52 +36,68 @@ export const LoanDialog = ({
             Details about this Loan are shown in the following form.
           </DialogDescription>
         </DialogHeader>
-        <div className='grid grid-cols-2 gap-4'>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Loan number</Label>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Loan number
+            </Label>
             <p>{dto.loanNumber}</p>
           </div>
-          <div className=''>
+          <div className="">
             <Label className="text-muted-foreground row-span-2">Type</Label>
             <p>{dto.type}</p>
           </div>
-          <div className=''>
+          <div className="">
             <Label className="text-muted-foreground row-span-2">Amount</Label>
             <p>{dto.amount}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Repayment Period</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Repayment Period
+            </Label>
             <p>{dto.repaymentPeriod}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Interest Rate</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Interest Rate
+            </Label>
             <p>{dto.interestRate}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Effective Interest Rate</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Effective Interest Rate
+            </Label>
             <p>{dto.effectiveInterestRate}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Agreement Date</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Agreement Date
+            </Label>
             <p>{dto.agreementDate}</p>
           </div>
-          <div className=''>
+          <div className="">
             <Label className="text-muted-foreground row-span-2">Due Date</Label>
             <p>{dto.dueDate}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Next Installment Amount</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Next Installment Amount
+            </Label>
             <p>{dto.nextInstallmentAmount}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Next Installment Date</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Next Installment Date
+            </Label>
             <p>{dto.nextInstallmentDate}</p>
           </div>
-          <div className=''>
-            <Label className="text-muted-foreground row-span-2">Remaining Debt</Label>
+          <div className="">
+            <Label className="text-muted-foreground row-span-2">
+              Remaining Debt
+            </Label>
             <p>{dto.remainingDebt}</p>
           </div>
-          <div className=''>
+          <div className="">
             <Label className="text-muted-foreground row-span-2">Currency</Label>
             <p>{dto.currency.code}</p>
           </div>

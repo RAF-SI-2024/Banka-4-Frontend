@@ -30,10 +30,10 @@ const ClientLoanOverviewPage: React.FC = () => {
   const [selectedLoan, setSelectedLoan] = useState<LoanDto>();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const client = useHttpClient();
-  const { page, pageSize, setPage, setPageSize } = useTablePageParams(
-    'loans',
-    { pageSize: 8, page: 0 }
-  );
+  const { page, pageSize, setPage, setPageSize } = useTablePageParams('loans', {
+    pageSize: 8,
+    page: 0,
+  });
 
   const { data: loans, isLoading } = useQuery<LoansResponseDto>({
     queryKey: ['loans', page, pageSize],
@@ -53,13 +53,20 @@ const ClientLoanOverviewPage: React.FC = () => {
 
   return (
     <GuardBlock requiredUserType={'client'}>
-      {selectedLoan && <LoanDialog dto={selectedLoan} open={isDialogOpen} setOpen={setIsDialogOpen} />}
+      {selectedLoan && (
+        <LoanDialog
+          dto={selectedLoan}
+          open={isDialogOpen}
+          setOpen={setIsDialogOpen}
+        />
+      )}
       <div className="p-8">
         <Card className="max-w-[900px] w-full mx-auto">
           <CardHeader>
             <h1 className="text-2xl font-bold">Loans Overview</h1>
             <CardDescription>
-              This table provides a clear and organized overview of key loan details for quick reference and easy access.
+              This table provides a clear and organized overview of key loan
+              details for quick reference and easy access.
             </CardDescription>
           </CardHeader>
           <CardContent>

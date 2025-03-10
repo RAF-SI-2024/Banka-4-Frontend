@@ -2,7 +2,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { LoanDto } from '@/api/response/loan';
 import { formatDate } from '@/lib/utils';
 
-export const getLoanColumns = (handleViewDetails: (loan: LoanDto) => void): ColumnDef<LoanDto>[] => [
+export const getLoanColumns = (
+  handleViewDetails: (loan: LoanDto) => void
+): ColumnDef<LoanDto>[] => [
   {
     accessorKey: 'loanNumber',
     header: 'Loan Number',
@@ -53,5 +55,5 @@ export const getLoanColumns = (handleViewDetails: (loan: LoanDto) => void): Colu
   {
     accessorKey: 'currency.code',
     header: 'Currency',
-  }
+  },
 ];
