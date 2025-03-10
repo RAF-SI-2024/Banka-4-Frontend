@@ -7,8 +7,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
 import { LoanDto } from '@/api/response/loan';
 import { Label } from '../ui/label';
 
@@ -21,12 +19,6 @@ export const LoanDialog = ({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [printerWindow, setPrinterWindow] = useState<Window | null>(null);
-
-  function doPrint() {
-    printerWindow?.print();
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>

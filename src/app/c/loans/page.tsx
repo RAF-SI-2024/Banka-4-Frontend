@@ -15,7 +15,7 @@ import GuardBlock from '@/components/GuardBlock';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { searchLoans } from '@/api/loans';
 import useTablePageParams from '@/hooks/useTablePageParams';
-import { getLoanColumns } from '@/ui/dataTables/loans/loanColumns';
+import { loanColumns } from '@/ui/dataTables/loans/loanColumns';
 import { LoanDialog } from '@/components/loans/LoanDialog';
 
 const ClientLoanOverviewPage: React.FC = () => {
@@ -42,8 +42,7 @@ const ClientLoanOverviewPage: React.FC = () => {
   const { data: loans, isLoading } = useQuery<LoansResponseDto>({
     queryKey: ['loans', page, pageSize],
     queryFn: async () => {
-      const response = await searchLoans(client, {}, page, pageSize);
-      return response.data;
+      return (await searchLoans(client, {}, page, pageSize)).data;
     },
   });
 
@@ -51,8 +50,6 @@ const ClientLoanOverviewPage: React.FC = () => {
     setSelectedLoan(loan);
     setIsDialogOpen(true);
   };
-
-  const columns = getLoanColumns;
 
   return (
     <GuardBlock requiredUserType={'client'}>
@@ -74,7 +71,7 @@ const ClientLoanOverviewPage: React.FC = () => {
           </CardHeader>
           <CardContent>
             <DataTable
-              columns={columns}
+              columns={loanColumns}
               data={loans?.content ?? []}
               isLoading={isLoading}
               pagination={{ page, pageSize }}

@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { LoanDto } from '@/api/response/loan';
 
-export const getLoanColumns: ColumnDef<LoanDto>[] = [
+export const loanColumns: ColumnDef<LoanDto>[] = [
   {
     accessorKey: 'type',
     header: 'Type',
