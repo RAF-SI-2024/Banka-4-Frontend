@@ -10,3 +10,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatDateTime = (date: string | Date) =>
   moment(new Date(date)).format('DD-MM-YYYY HH:mm:ss');
+
+export const formatDate = (date: string | Date) =>
+  moment(new Date(date)).format('DD-MM-YYYY');
