@@ -102,11 +102,6 @@ export const LoanDialog = ({
             <p>{dto.currency.code}</p>
           </div>
         </div>
-        <iframe
-          className="hidden"
-          onLoad={(e) => setPrinterWindow(e.currentTarget.contentWindow)}
-        />
-        <Button onClick={doPrint}>Print</Button>
         <DialogClose asChild>
           <Button type="button" variant="secondary">
             Close

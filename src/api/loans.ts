@@ -1,6 +1,7 @@
 import { Axios } from 'axios';
 import { LoansResponseDto } from './response/loan';
 
+//TODO: define LoanFilters interface
 export interface LoanFilters {
   date?: Date;
   type?: string;

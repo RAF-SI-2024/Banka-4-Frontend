@@ -23,7 +23,11 @@ const ClientLoanOverviewPage: React.FC = () => {
   useEffect(() => {
     dispatch({
       type: 'SET_BREADCRUMB',
-      items: [{ title: 'Home' }, { title: 'Loans' }, { title: 'Overview' }],
+      items: [
+        { title: 'Home', url: '/c' },
+        { title: 'Loans', url: '/c/loans' },
+        { title: 'Overview' },
+      ],
     });
   }, [dispatch]);
 
@@ -39,7 +43,6 @@ const ClientLoanOverviewPage: React.FC = () => {
     queryKey: ['loans', page, pageSize],
     queryFn: async () => {
       const response = await searchLoans(client, {}, page, pageSize);
-      console.log(response.data);
       return response.data;
     },
   });
@@ -49,7 +52,7 @@ const ClientLoanOverviewPage: React.FC = () => {
     setIsDialogOpen(true);
   };
 
-  const columns = getLoanColumns(handleViewDetails);
+  const columns = getLoanColumns;
 
   return (
     <GuardBlock requiredUserType={'client'}>
