@@ -4,7 +4,6 @@
  * @returns The formatted card number.
  */
 export function formatCardNumber(cardNumber: string): string {
-
   const firstFour = cardNumber.slice(0, 4);
   const lastFour = cardNumber.slice(-4);
   const masked = '********';
