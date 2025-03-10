@@ -49,6 +49,21 @@ const ClientGroups: SidebarGroupType[] = [
     ],
   },
   {
+    title: 'Loans',
+    url: '/c/loans',
+    icon: HandCoins,
+    isActive: false,
+    userType: 'client',
+    items: [
+      {
+        title: 'Overview',
+        url: '/c/loans',
+        icon: List,
+        privileges: [],
+      }
+    ],
+  },
+  {
     title: 'Contacts',
     url: '/c/contacts',
     icon: Users,
