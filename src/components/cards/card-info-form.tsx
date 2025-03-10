@@ -2,10 +2,9 @@
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-dropdown-menu';
-import { formatAccountNumber } from '@/lib/account-utils';
 import { Card } from '@/types/card';
+import { formatCardNumber } from '@/lib/card-number-utils';
 
-/* TODO: we should use another type here, works for now, time rush */
 export function CardInfoForm(card: Card) {
   return (
     <form className="grid grid-cols-2 gap-6">
@@ -15,7 +14,7 @@ export function CardInfoForm(card: Card) {
           disabled
           type="cardNumber"
           className={'disabled:cursor-default'}
-          value={formatAccountNumber(card.accountNumber)}
+          value={formatCardNumber(card.cardNumber)}
         />
       </div>
       <div className="flex flex-col">
@@ -64,16 +63,7 @@ export function CardInfoForm(card: Card) {
         />
       </div>
       <div className="flex flex-col">
-        <Label>CVV:</Label>
-        <Input
-          disabled
-          type="cvv"
-          className={'disabled:cursor-default'}
-          value={card.cvv}
-        />
-      </div>
-      <div className="flex flex-col">
-        <Label>limit:</Label>
+        <Label>Limit:</Label>
         <Input
           disabled
           type="limit"
