@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { ChevronDown } from 'lucide-react';
-import { ChevronUp } from 'lucide-react';
 
 export interface FilterTimestampInputProps<TFilterKey> {
   propertyName: TFilterKey;
