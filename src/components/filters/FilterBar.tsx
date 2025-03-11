@@ -31,14 +31,14 @@ export interface EnumFilterDefinition extends BaseFilterDefinition {
 }
 
 export type FilterDefinition =
-    | StringFilterDefinition
-    | NumberFilterDefinition
-    | TimestampFilterDefinition
-    | EnumFilterDefinition;
+  | StringFilterDefinition
+  | NumberFilterDefinition
+  | TimestampFilterDefinition
+  | EnumFilterDefinition;
 
 export type FilterBarProps<
-    TFilter, // filter values (e.g. { firstName: string; age: number; ... })
-    TColumns extends Record<keyof TFilter, FilterDefinition>
+  TFilter, // filter values (e.g. { firstName: string; age: number; ... })
+  TColumns extends Record<keyof TFilter, FilterDefinition>,
 > = {
   onSubmit: (filters: TFilter) => void;
   filter: TFilter; // values only
@@ -47,14 +47,14 @@ export type FilterBarProps<
 };
 
 export function FilterBar<
-    TFilter,
-    TColumns extends Record<keyof TFilter, FilterDefinition>
+  TFilter,
+  TColumns extends Record<keyof TFilter, FilterDefinition>,
 >({
-    onSubmit,
-    filter,
-    columns,
-    filterKeyToName,
-  }: FilterBarProps<TFilter, TColumns>) {
+  onSubmit,
+  filter,
+  columns,
+  filterKeyToName,
+}: FilterBarProps<TFilter, TColumns>) {
   const [filterState, setFilterState] = useState<TFilter>(filter);
 
   useEffect(() => {
@@ -62,8 +62,8 @@ export function FilterBar<
   }, [filter]);
 
   const handleFilterChange = (
-      propertyName: keyof TFilter,
-      newValue: string | Date | number | null
+    propertyName: keyof TFilter,
+    newValue: string | Date | number | null
   ) => {
     setFilterState((prevFilters) => ({
       ...prevFilters,
@@ -75,49 +75,49 @@ export function FilterBar<
     const columnDef = columns[key];
     const value = filterState[key];
     const placeholder =
-        columnDef.placeholder || `Filter by ${filterKeyToName(key)}`;
+      columnDef.placeholder || `Filter by ${filterKeyToName(key)}`;
 
     switch (columnDef.filterType) {
       case 'string':
         return (
-            <FilterStringInput
-                key={String(key)}
-                propertyName={key}
-                value={value as string}
-                onChange={handleFilterChange}
-                placeholder={placeholder}
-            />
+          <FilterStringInput
+            key={String(key)}
+            propertyName={key}
+            value={value as string}
+            onChange={handleFilterChange}
+            placeholder={placeholder}
+          />
         );
       case 'number':
         return (
-            <FilterNumberInput<keyof TFilter>
-                key={String(key)}
-                propertyName={key}
-                value={value as number}
-                onChange={handleFilterChange}
-                placeholder={placeholder}
-            />
+          <FilterNumberInput<keyof TFilter>
+            key={String(key)}
+            propertyName={key}
+            value={value as number}
+            onChange={handleFilterChange}
+            placeholder={placeholder}
+          />
         );
       case 'timestamp':
         return (
-            <FilterTimestampInput
-                key={String(key)}
-                propertyName={key}
-                value={value as Date | null}
-                onChange={handleFilterChange}
-                placeholder={placeholder}
-            />
+          <FilterTimestampInput
+            key={String(key)}
+            propertyName={key}
+            value={value as Date | null}
+            onChange={handleFilterChange}
+            placeholder={placeholder}
+          />
         );
       case 'enum':
         return (
-            <FilterEnumInput
-                key={String(key)}
-                propertyName={key}
-                value={value as string}
-                onChange={handleFilterChange}
-                placeholder={placeholder}
-                options={(columnDef as EnumFilterDefinition).options}
-            />
+          <FilterEnumInput
+            key={String(key)}
+            propertyName={key}
+            value={value as string}
+            onChange={handleFilterChange}
+            placeholder={placeholder}
+            options={(columnDef as EnumFilterDefinition).options}
+          />
         );
       default:
         return null;
@@ -130,15 +130,15 @@ export function FilterBar<
   };
 
   return (
-      <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
-        {Object.keys(columns).map((key) =>
-            renderFilterInput(key as keyof TFilter)
-        )}
-        <Button type="submit">
-          Search
-          <Search className="w-4 h-4 mr-1" />
-        </Button>
-      </form>
+    <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
+      {Object.keys(columns).map((key) =>
+        renderFilterInput(key as keyof TFilter)
+      )}
+      <Button type="submit">
+        Search
+        <Search className="w-4 h-4 mr-1" />
+      </Button>
+    </form>
   );
 }
 

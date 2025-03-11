@@ -11,11 +11,11 @@ export interface FilterStringInputProps<TFilterKey> {
 }
 
 const FilterStringInput = <TFilterKey,>({
-                                       propertyName,
-                                       value,
-                                       onChange,
-                                       placeholder,
-                                     }: FilterStringInputProps<TFilterKey>) => {
+  propertyName,
+  value,
+  onChange,
+  placeholder,
+}: FilterStringInputProps<TFilterKey>) => {
   return (
     <div className="filter-input w-full">
       <Input

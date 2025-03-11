@@ -19,13 +19,13 @@ export interface FilterEnumInputProps<TFilterKey, T extends string> {
 }
 
 const FilterEnumInput = <TFilterKey, T extends string>({
-                                             propertyName,
-                                             value,
-                                             onChange,
-                                             options,
-                                             placeholder,
-                                             optionToString = (option: T) => option.toString(),
-                                           }: FilterEnumInputProps<TFilterKey, T>) => {
+  propertyName,
+  value,
+  onChange,
+  options,
+  placeholder,
+  optionToString = (option: T) => option.toString(),
+}: FilterEnumInputProps<TFilterKey, T>) => {
   return (
     <div className="filter-input w-full">
       <Select
