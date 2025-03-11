@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 
 export interface FilterTimestampInputProps<TFilterKey> {
   propertyName: TFilterKey;
-  value: Date | null;
+  value: string;
   onChange: (propertyName: TFilterKey, newValue: string) => void;
   placeholder?: string;
 }
@@ -25,23 +25,25 @@ const FilterTimestampInput = <TFilterKey,>({
                                            }: FilterTimestampInputProps<TFilterKey>) => {
   const [open, setOpen] = React.useState(false);
 
+  const selectedDate = value ? dayjs(value, 'YYYY-MM-DD').toDate() : undefined;
+
   return (
       <div className="filter-input w-full">
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" className="w-full text-left">
               {value
-                  ? dayjs(value).format('YYYY-MM-DD')
-                  : placeholder || `Filter by ${propertyName}`}
+                  ? value
+                  : placeholder || `Filter by ${String(propertyName)}`}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
             <Calendar
                 mode="single"
-                selected={value ?? undefined}
+                selected={selectedDate}
                 onSelect={(date) => {
                   if (date) {
-                    onChange(propertyName, dayjs(date).toISOString());
+                    onChange(propertyName, dayjs(date).format('YYYY-MM-DD'));
                     setOpen(false);
                   }
                 }}
