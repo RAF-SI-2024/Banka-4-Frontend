@@ -1,8 +1,8 @@
 'use client';
-import { TransactionDto } from '@/api/response/transaction';
+import { TransactionDto, TransactionStatus } from '@/api/response/transaction';
 import { searchTransactions, TransactionFilters } from '@/api/transaction';
 import { DataTable } from '@/components/dataTable/DataTable';
-import FilterBar from '@/components/filters/FilterBar';
+import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 import GuardBlock from '@/components/GuardBlock';
 import { TransactionDialog } from '@/components/transaction/TransactionDialog';
 import {
@@ -29,12 +29,48 @@ export default function TransactionsPage() {
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionDto>();
 
+  // Initial filter values
   const [paymentFilters, setPaymentFilters] = useState<TransactionFilters>({
     date: undefined,
     status: undefined,
     amount: undefined,
     accountNumber: params.get('an') ?? '',
   });
+
+  const transactionFilterColumns: Record<
+    keyof TransactionFilters,
+    FilterDefinition
+  > = {
+    date: {
+      filterType: 'timestamp',
+      placeholder: 'Select date',
+    },
+    status: {
+      filterType: 'enum',
+      placeholder: 'Select status',
+      options: Object.values(TransactionStatus),
+      optionToString: (opt: string) => {
+        switch (opt) {
+          case TransactionStatus.REALIZED:
+            return 'Realized';
+          case TransactionStatus.REJECTED:
+            return 'Rejected';
+          case TransactionStatus.IN_PROGRESS:
+            return 'In Progress';
+          default:
+            throw new Error('optionToString not implemented for case: ' + opt);
+        }
+      },
+    },
+    amount: {
+      filterType: 'number',
+      placeholder: 'Enter amount',
+    },
+    accountNumber: {
+      filterType: 'string',
+      placeholder: 'Enter account number',
+    },
+  };
 
   const { dispatch } = useBreadcrumb();
   useEffect(() => {
@@ -49,7 +85,7 @@ export default function TransactionsPage() {
   }, [dispatch]);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['payment', page, pageSize],
+    queryKey: ['transaction', page, pageSize, paymentFilters],
     queryFn: async () => {
       const response = await searchTransactions(
         client,
@@ -72,7 +108,7 @@ export default function TransactionsPage() {
       case 'status':
         return 'Status';
       case 'accountNumber':
-        return 'account number';
+        return 'Account Number';
     }
   };
 
@@ -96,14 +132,14 @@ export default function TransactionsPage() {
               This table provides a clear and organized overview of key
               transaction details for quick reference and easy access.
             </CardDescription>
-            {/* TODO: date, enum and number filters */}
-            <FilterBar<TransactionFilters>
+            <FilterBar<TransactionFilters, typeof transactionFilterColumns>
               filterKeyToName={transactionFilterKeyToName}
-              onSearch={(filter) => {
+              onSubmit={(filter) => {
                 setPage(0);
                 setPaymentFilters(filter);
               }}
               filter={paymentFilters}
+              columns={transactionFilterColumns}
             />
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
@@ -115,7 +151,7 @@ export default function TransactionsPage() {
               data={data?.content ?? []}
               isLoading={isLoading}
               pageCount={data?.page.totalPages ?? 0}
-              pagination={{ page: page, pageSize }}
+              pagination={{ page, pageSize }}
               onPaginationChange={(newPagination) => {
                 setPage(newPagination.page);
                 setPageSize(newPagination.pageSize);
