@@ -117,7 +117,8 @@ export function FilterBar<
             value={value as string}
             onChange={handleFilterChange}
             placeholder={placeholder}
-            options={(columnDef as EnumFilterDefinition).options}
+                 optionToString={columnDef.optionToString}
+            options={columnDef.options}
           />
         );
       default:
