@@ -44,7 +44,6 @@ export type FilterBarProps<
   onSubmit: (filters: TFilter) => void;
   filter: TFilter; // values only
   columns: TColumns; // definitions for each filter field
-  filterKeyToName: (key: keyof TFilter) => string;
 };
 
 export function FilterBar<
@@ -54,7 +53,6 @@ export function FilterBar<
   onSubmit,
   filter,
   columns,
-  filterKeyToName,
 }: FilterBarProps<TFilter, TColumns>) {
   const [filterState, setFilterState] = useState<TFilter>(filter);
 
@@ -76,7 +74,7 @@ export function FilterBar<
     const columnDef = columns[key];
     const value = filterState[key];
     const placeholder =
-      columnDef.placeholder || `Filter by ${filterKeyToName(key)}`;
+        columnDef.placeholder || `Filter by ${String(key)}`;
 
     switch (columnDef.filterType) {
       case 'string':
