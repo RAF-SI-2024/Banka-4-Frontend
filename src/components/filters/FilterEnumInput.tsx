@@ -9,23 +9,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export interface FilterEnumInputProps<T extends string> {
-  propertyName: string;
+export interface FilterEnumInputProps<TFilterKey, T extends string> {
+  propertyName: TFilterKey;
   value: T;
-  onChange: (propertyName: string, newValue: T) => void;
+  onChange: (propertyName: TFilterKey, newValue: T) => void;
   options: T[];
   placeholder?: string;
   optionToString?: (option: T) => string;
 }
 
-const FilterEnumInput = <T extends string>({
+const FilterEnumInput = <TFilterKey, T extends string>({
                                              propertyName,
                                              value,
                                              onChange,
                                              options,
                                              placeholder,
                                              optionToString = (option: T) => option.toString(),
-                                           }: FilterEnumInputProps<T>) => {
+                                           }: FilterEnumInputProps<TFilterKey, T>) => {
   return (
     <div className="filter-input w-full">
       <Select
