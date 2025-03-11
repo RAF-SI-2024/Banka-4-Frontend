@@ -97,21 +97,6 @@ export default function TransactionsPage() {
     },
   });
 
-  const transactionFilterKeyToName = (
-    key: keyof TransactionFilters
-  ): string => {
-    switch (key) {
-      case 'amount':
-        return 'Amount';
-      case 'date':
-        return 'Date';
-      case 'status':
-        return 'Status';
-      case 'accountNumber':
-        return 'Account Number';
-    }
-  };
-
   return (
     <GuardBlock>
       <div className="p-8">
@@ -133,7 +118,6 @@ export default function TransactionsPage() {
               transaction details for quick reference and easy access.
             </CardDescription>
             <FilterBar<TransactionFilters, typeof transactionFilterColumns>
-              filterKeyToName={transactionFilterKeyToName}
               onSubmit={(filter) => {
                 setPage(0);
                 setPaymentFilters(filter);

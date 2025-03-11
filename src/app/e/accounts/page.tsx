@@ -24,18 +24,6 @@ interface AccountFilter {
   accountType: string;
 }
 
-const accountFilterKeyToName = (key: keyof AccountFilter): string => {
-  switch (key) {
-    case 'accountNumber':
-      return 'account number';
-    case 'firstName':
-      return 'first name';
-    case 'lastName':
-      return 'last name';
-    case 'accountType':
-      return 'account type';
-  }
-};
 
 const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
   accountNumber: {
@@ -107,7 +95,6 @@ const AccountOverviewPage: React.FC = () => {
               details for quick reference and easy access.
             </CardDescription>
             <FilterBar<AccountFilter, typeof accountFilterColumns>
-              filterKeyToName={accountFilterKeyToName}
               onSubmit={(filter) => {
                 setPage(0);
                 setSearchFilter(filter);
