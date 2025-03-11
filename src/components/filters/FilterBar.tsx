@@ -49,11 +49,7 @@ export type FilterBarProps<
 export function FilterBar<
   TFilter,
   TColumns extends Record<keyof TFilter, FilterDefinition>,
->({
-  onSubmit,
-  filter,
-  columns,
-}: FilterBarProps<TFilter, TColumns>) {
+>({ onSubmit, filter, columns }: FilterBarProps<TFilter, TColumns>) {
   const [filterState, setFilterState] = useState<TFilter>(filter);
 
   useEffect(() => {
@@ -73,8 +69,7 @@ export function FilterBar<
   const renderFilterInput = (key: keyof TFilter) => {
     const columnDef = columns[key];
     const value = filterState[key];
-    const placeholder =
-        columnDef.placeholder || `Filter by ${String(key)}`;
+    const placeholder = columnDef.placeholder || `Filter by ${String(key)}`;
 
     switch (columnDef.filterType) {
       case 'string':
