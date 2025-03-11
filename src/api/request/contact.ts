@@ -1,5 +1,5 @@
 export interface NewContactRequest {
-  fullName: string;
+  nickname: string;
   accountNumber: string;
 }
 

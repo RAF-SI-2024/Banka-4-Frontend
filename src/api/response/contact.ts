@@ -1,4 +1,5 @@
-export interface ContactResponseDto {
-  fullName: string;
+export interface ClientContactDto {
+  id: string;
+  nickname: string;
   accountNumber: string;
 }
