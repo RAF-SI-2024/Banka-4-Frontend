@@ -5,6 +5,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
+  TableHeader,
   TableRow,
 } from '@/components/ui/table';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import {
   Row,
   useReactTable,
 } from '@tanstack/react-table';
-import { TableHeader } from '@/components/ui/table';
 import PaginationWrapper from '@/components/ui/pagination-wrapper';
 
 interface DataTableProps<TData> {
