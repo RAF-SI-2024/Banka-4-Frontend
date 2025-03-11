@@ -25,18 +25,6 @@ interface EmployeeFilter {
   position: string;
 }
 
-const employeeFilterKeyToName = (key: keyof EmployeeFilter): string => {
-  switch (key) {
-    case 'firstName':
-      return 'first name';
-    case 'lastName':
-      return 'last name';
-    case 'email':
-      return 'email';
-    case 'position':
-      return 'position';
-  }
-};
 
 const employeeFilterColumns: Record<keyof EmployeeFilter, FilterDefinition> = {
   firstName: {
@@ -109,7 +97,6 @@ const EmployeeOverviewPage: React.FC = () => {
               details for quick reference and easy access.
             </CardDescription>
             <FilterBar<EmployeeFilter, typeof employeeFilterColumns>
-              filterKeyToName={employeeFilterKeyToName}
               onSubmit={(filter) => {
                 setPage(0);
                 setSearchFilter(filter);
