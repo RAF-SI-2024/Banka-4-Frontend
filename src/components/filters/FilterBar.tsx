@@ -5,16 +5,50 @@ import FilterInput from './FilterInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
-interface FilterBarProps<TFilter extends { [K in keyof TFilter]: unknown }> {
-  onSearch: (filters: TFilter) => void;
+export interface BaseFilterableColumn {
+  filterType: 'string' | 'number' | 'timestamp' | 'enum';
+  placeholder: string;
+}
+
+export interface StringFilterableColumn extends BaseFilterableColumn {
+  filterType: 'string';
+  value: string;
+}
+
+export interface NumberFilterableColumn extends BaseFilterableColumn {
+  filterType: 'number';
+  value: string;
+}
+
+export interface TimestampFilterableColumn extends BaseFilterableColumn {
+  filterType: 'timestamp';
+  value: string;
+}
+
+export interface EnumFilterableColumn extends BaseFilterableColumn {
+  filterType: 'enum';
+  value: string;
+}
+
+export type FilterableColumn =
+  | StringFilterableColumn
+  | NumberFilterableColumn
+  | TimestampFilterableColumn
+  | EnumFilterableColumn;
+
+export type FilterableObject<TFilter> = {
+  [K in keyof TFilter]: FilterableColumn;
+};
+
+interface FilterBarProps<TFilter extends FilterableObject<TFilter>> {
+  onSubmit: (filters: TFilter) => void;
   filter: TFilter;
   filterKeyToName: (key: keyof TFilter) => string;
 }
 
-export function FilterBar<TFilter extends { [K in keyof TFilter]: unknown }>({
-  onSearch,
+export function FilterBar<TFilter extends FilterableObject<TFilter>>({
+  onSubmit,
   filter,
-  filterKeyToName,
 }: FilterBarProps<TFilter>) {
   useEffect(() => {
     setFilterState(filter);
@@ -25,13 +59,15 @@ export function FilterBar<TFilter extends { [K in keyof TFilter]: unknown }>({
   const handleFilterChange = (propertyName: string, newValue: string) => {
     setFilterState((prevFilters) => ({
       ...prevFilters,
-      [propertyName]: newValue,
+      [propertyName]: {
+
+      },
     }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSearch(filterState);
+    onSubmit(filterState);
   };
 
   return (
@@ -40,9 +76,9 @@ export function FilterBar<TFilter extends { [K in keyof TFilter]: unknown }>({
         <FilterInput
           key={key}
           propertyName={key}
-          value={filterState[key as keyof TFilter] as string}
+          value={filterState[key as keyof TFilter].value}
           onChange={handleFilterChange}
-          placeholder={`Filter by ${filterKeyToName(key as keyof TFilter)}`}
+          placeholder={`Filter by ${filterState[key as keyof TFilter].placeholder}`}
         />
       ))}
       <Button type="submit">
