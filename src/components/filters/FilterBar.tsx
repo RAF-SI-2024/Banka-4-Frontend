@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import FilterInput from './FilterInput';
+import FilterStringInput from './FilterInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
@@ -73,7 +73,7 @@ export function FilterBar<TFilter extends FilterableObject<TFilter>>({
   return (
     <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
       {Object.keys(filter).map((key) => (
-        <FilterInput
+        <FilterStringInput
           key={key}
           propertyName={key}
           value={filterState[key as keyof TFilter].value}
