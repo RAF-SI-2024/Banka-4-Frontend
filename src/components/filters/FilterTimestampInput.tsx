@@ -9,6 +9,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { ChevronDown } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 export interface FilterTimestampInputProps<TFilterKey> {
   propertyName: TFilterKey;
@@ -31,8 +33,16 @@ const FilterTimestampInput = <TFilterKey,>({
     <div className="filter-input w-full">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full text-left">
-            {value ? value : placeholder || `Filter by ${String(propertyName)}`}
+          <Button variant="outline" className="w-full ">
+            <div className="flex w-full flex-row items-center justify-between">
+              <p
+                className={`w-full text-left ${value == null ? 'text-gray-400' : ''}`}>
+                {value
+                  ? value
+                  : placeholder || `Filter by ${String(propertyName)}`}
+              </p>
+              <ChevronDown className="text-gray-400" aria-hidden="true" />
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
