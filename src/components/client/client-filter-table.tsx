@@ -42,8 +42,8 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
   const client = useHttpClient();
 
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
-      'clients',
-      { pageSize: 8, page: 0 }
+    'clients',
+    { pageSize: 8, page: 0 }
   );
   const [searchFilter, setSearchFilter] = useState<ClientFilter>({
     firstName: '',
@@ -61,10 +61,10 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
         phone: searchFilter.phone || '',
       };
       const response = await searchClients(
-          client,
-          sanitizedFilters,
-          pageSize,
-          page
+        client,
+        sanitizedFilters,
+        pageSize,
+        page
       );
       return response.data;
     },
@@ -72,27 +72,27 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
   });
 
   return (
-      <>
-        <FilterBar<ClientFilter, typeof clientFilterColumns>
-            onSubmit={(filter) => {
-              setPage(0);
-              setSearchFilter(filter);
-            }}
-            filter={searchFilter}
-            columns={clientFilterColumns}
-        />
-        <DataTable<ClientResponseDto>
-            onRowClick={(row) => props.onRowClick(row.original)}
-            columns={clientsColumns}
-            data={data?.content ?? []}
-            isLoading={isLoading}
-            pageCount={data?.page.totalPages ?? 0}
-            pagination={{ page, pageSize }}
-            onPaginationChange={(newPagination) => {
-              setPage(newPagination.page);
-              setPageSize(newPagination.pageSize);
-            }}
-        />
-      </>
+    <>
+      <FilterBar<ClientFilter, typeof clientFilterColumns>
+        onSubmit={(filter) => {
+          setPage(0);
+          setSearchFilter(filter);
+        }}
+        filter={searchFilter}
+        columns={clientFilterColumns}
+      />
+      <DataTable<ClientResponseDto>
+        onRowClick={(row) => props.onRowClick(row.original)}
+        columns={clientsColumns}
+        data={data?.content ?? []}
+        isLoading={isLoading}
+        pageCount={data?.page.totalPages ?? 0}
+        pagination={{ page, pageSize }}
+        onPaginationChange={(newPagination) => {
+          setPage(newPagination.page);
+          setPageSize(newPagination.pageSize);
+        }}
+      />
+    </>
   );
 }
