@@ -51,7 +51,8 @@ const FilterTimestampInput = <TFilterKey,>({
             />
             <div className="p-2 flex justify-center">
               <Button
-                  variant="ghost"
+                  className={"w-full"}
+                  variant="destructive"
                   onClick={() => {
                     onChange(propertyName, '');
                     setOpen(false);
