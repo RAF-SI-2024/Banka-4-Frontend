@@ -2,19 +2,19 @@
 
 import React from 'react';
 
-export interface FilterNumberInputProps {
-  propertyName: string;
+export interface FilterNumberInputProps<TFilterKey> {
+  propertyName: TFilterKey;
   value: number;
-  onChange: (propertyName: string, newValue: number) => void;
+  onChange: (propertyName: keyof TFilterKey, newValue: number) => void;
   placeholder?: string;
 }
 
-const FilterNumberInput: React.FC<FilterNumberInputProps> = ({
-  propertyName,
-  value,
-  onChange,
-  placeholder,
-}) => {
+const FilterNumberInput = <TFilterKey,>({
+                                       propertyName,
+                                       value,
+                                       onChange,
+                                       placeholder,
+                                     }: FilterNumberInputProps<TFilterKey>) => {
   return null;
 };
 
