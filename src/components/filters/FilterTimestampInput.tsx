@@ -31,7 +31,7 @@ const FilterTimestampInput = <TFilterKey,>({
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full text-left">
             {value
-              ? dayjs(value).format('yyyy-MM-dd')
+              ? dayjs(value).format('YYYY-MM-DD')
               : placeholder || `Filter by ${propertyName}`}
           </Button>
         </PopoverTrigger>
