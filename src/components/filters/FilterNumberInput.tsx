@@ -9,6 +9,7 @@ export interface FilterNumberInputProps<TFilterKey> {
   placeholder?: string;
 }
 
+// TODO: implement
 const FilterNumberInput = <TFilterKey,>({
   propertyName,
   value,
