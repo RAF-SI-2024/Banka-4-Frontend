@@ -45,7 +45,7 @@ const FilterEnumInput = <TFilterKey, T extends string>({
 
           <SelectContent>
             <SelectItem key="clear" value="_____CLEAR_____">
-
+              &nbsp;
             </SelectItem>
 
             {options.map((option) => (
