@@ -93,7 +93,7 @@ const LoansOverviewPage: React.FC = () => {
               <DataTable
                   columns={loansColumns}
                   data={data?.content ?? []}
-                  isLoading={true}
+                  isLoading={isLoading}
                   pageCount={data?.page.totalPages ?? 0}
                   pagination={{ page, pageSize }}
                   onPaginationChange={(newPagination) => {
