@@ -63,6 +63,12 @@ const ClientGroups: SidebarGroupType[] = [
         icon: List,
         privileges: [],
       },
+      {
+        title: 'Request',
+        url: '/c/loans/request',
+        icon: Plus,
+        privileges: [],
+      },
     ],
   },
   {
