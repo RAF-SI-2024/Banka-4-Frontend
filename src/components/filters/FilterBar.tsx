@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import FilterStringInput from './FilterInput';
+import FilterStringInput from './FilterStringInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 

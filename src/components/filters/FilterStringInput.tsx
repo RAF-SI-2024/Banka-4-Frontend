@@ -3,14 +3,14 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 
-export interface FilterInputProps {
+export interface FilterStringInputProps {
   propertyName: string;
   value: string;
   onChange: (propertyName: string, newValue: string) => void;
   placeholder?: string;
 }
 
-const FilterInput: React.FC<FilterInputProps> = ({
+const FilterStringInput: React.FC<FilterStringInputProps> = ({
   propertyName,
   value,
   onChange,
@@ -30,4 +30,4 @@ const FilterInput: React.FC<FilterInputProps> = ({
   );
 };
 
-export default FilterInput;
+export default FilterStringInput;
