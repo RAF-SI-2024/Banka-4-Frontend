@@ -55,7 +55,7 @@ const LoansOverviewPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['loans', page, pageSize, searchFilter],
     queryFn: async () =>
-        (await searchAllLoans(client, searchFilter, pageSize, page)).data,
+      (await searchAllLoans(client, searchFilter, pageSize, page)).data,
   });
 
   const { dispatch } = useBreadcrumb();
@@ -71,40 +71,41 @@ const LoansOverviewPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-      <GuardBlock requiredUserType="employee">
-        <div className="p-8">
-          <Card className="max-w-[900px] mx-auto">
-            <CardHeader>
-              <h1 className="text-2xl font-bold">Loans Overview</h1>
-              <CardDescription>
-                This table provides a clear and well-structured overview of loans,
-                making it easy to review key details and track relevant information.
-              </CardDescription>
-              <FilterBar<LoanFilter, typeof loanFilterColumns>
-                     onSubmit={(filter) => {
-                    setPage(0);
-                    setSearchFilter(filter);
-                  }}
-                  filter={searchFilter}
-                  columns={loanFilterColumns}
-              />
-            </CardHeader>
-            <CardContent className="rounded-lg overflow-hidden">
-              <DataTable
-                  columns={loansColumns}
-                  data={data?.content ?? []}
-                  isLoading={isLoading}
-                  pageCount={data?.page.totalPages ?? 0}
-                  pagination={{ page, pageSize }}
-                  onPaginationChange={(newPagination) => {
-                    setPage(newPagination.page);
-                    setPageSize(newPagination.pageSize);
-                  }}
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </GuardBlock>
+    <GuardBlock requiredUserType="employee">
+      <div className="p-8">
+        <Card className="max-w-[900px] mx-auto">
+          <CardHeader>
+            <h1 className="text-2xl font-bold">Loans Overview</h1>
+            <CardDescription>
+              This table provides a clear and well-structured overview of loans,
+              making it easy to review key details and track relevant
+              information.
+            </CardDescription>
+            <FilterBar<LoanFilter, typeof loanFilterColumns>
+              onSubmit={(filter) => {
+                setPage(0);
+                setSearchFilter(filter);
+              }}
+              filter={searchFilter}
+              columns={loanFilterColumns}
+            />
+          </CardHeader>
+          <CardContent className="rounded-lg overflow-hidden">
+            <DataTable
+              columns={loansColumns}
+              data={data?.content ?? []}
+              isLoading={isLoading}
+              pageCount={data?.page.totalPages ?? 0}
+              pagination={{ page, pageSize }}
+              onPaginationChange={(newPagination) => {
+                setPage(newPagination.page);
+                setPageSize(newPagination.pageSize);
+              }}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </GuardBlock>
   );
 };
 
