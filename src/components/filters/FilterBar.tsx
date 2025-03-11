@@ -28,6 +28,7 @@ export interface TimestampFilterDefinition extends BaseFilterDefinition {
 export interface EnumFilterDefinition extends BaseFilterDefinition {
   filterType: 'enum';
   options: string[];
+  optionToString?: (option: string) => string;
 }
 
 export type FilterDefinition =
