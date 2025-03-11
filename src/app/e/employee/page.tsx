@@ -25,7 +25,6 @@ interface EmployeeFilter {
   position: string;
 }
 
-
 const employeeFilterColumns: Record<keyof EmployeeFilter, FilterDefinition> = {
   firstName: {
     filterType: 'string',

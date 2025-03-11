@@ -24,7 +24,6 @@ interface AccountFilter {
   accountType: string;
 }
 
-
 const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
   accountNumber: {
     filterType: 'string',
