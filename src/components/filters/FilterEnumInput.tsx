@@ -32,7 +32,7 @@ const FilterEnumInput = <TFilterKey, T extends string>({
         value={value}
         onValueChange={(newValue) => onChange(propertyName, newValue as T)}
       >
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full h-full">
           <SelectValue placeholder={placeholder || `Select ${propertyName}`} />
         </SelectTrigger>
         <SelectContent>
