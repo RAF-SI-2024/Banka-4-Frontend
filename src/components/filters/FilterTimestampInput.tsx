@@ -3,22 +3,26 @@
 import * as React from 'react';
 import dayjs from 'dayjs';
 import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
-export interface FilterTimestampInputProps {
-  propertyName: string;
+export interface FilterTimestampInputProps<TFilterKey> {
+  propertyName: TFilterKey;
   value: Date | null;
-  onChange: (propertyName: string, newValue: string) => void;
+  onChange: (propertyName: TFilterKey, newValue: string) => void;
   placeholder?: string;
 }
 
-const FilterTimestampInput: React.FC<FilterTimestampInputProps> = ({
-                                                                     propertyName,
-                                                                     value,
-                                                                     onChange,
-                                                                     placeholder,
-                                                                   }) => {
+const FilterTimestampInput = <TFilterKey,>({
+  propertyName,
+  value,
+  onChange,
+  placeholder,
+}: FilterTimestampInputProps<TFilterKey>) => {
   const [open, setOpen] = React.useState(false);
 
   return (
