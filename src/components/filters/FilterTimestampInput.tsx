@@ -35,7 +35,8 @@ const FilterTimestampInput = <TFilterKey,>({
           <Button variant="outline" className="w-full ">
             <div className="flex w-full flex-row items-center justify-between">
               <p
-                className={`w-full text-left ${value == null ? 'text-gray-400' : ''}`}>
+                className={`w-full text-left ${value == null ? 'text-gray-400' : ''}`}
+              >
                 {value
                   ? value
                   : placeholder || `Filter by ${String(propertyName)}`}
