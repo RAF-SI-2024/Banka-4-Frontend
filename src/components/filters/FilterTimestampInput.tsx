@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export interface FilterTimestampInputProps {
   propertyName: string;
-  value: Date;
+  value: Date | null;
   onChange: (propertyName: string, newValue: string) => void;
   placeholder?: string;
 }
@@ -34,7 +34,7 @@ const FilterTimestampInput: React.FC<FilterTimestampInputProps> = ({
         <PopoverContent className="w-auto p-0">
           <Calendar
             mode="single"
-            selected={value}
+            selected={value ?? undefined}
             onSelect={(date) => {
               if (date) {
                 onChange(propertyName, dayjs(date).toISOString());
