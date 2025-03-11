@@ -16,7 +16,7 @@ import { searchEmployees } from '@/api/employee';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
-import FilterBar from '@/components/filters/FilterBar';
+import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 
 interface EmployeeFilter {
   firstName: string;
@@ -38,6 +38,25 @@ const employeeFilterKeyToName = (key: keyof EmployeeFilter): string => {
   }
 };
 
+const employeeFilterColumns: Record<keyof EmployeeFilter, FilterDefinition> = {
+  firstName: {
+    filterType: 'string',
+    placeholder: 'Enter first name',
+  },
+  lastName: {
+    filterType: 'string',
+    placeholder: 'Enter last name',
+  },
+  email: {
+    filterType: 'string',
+    placeholder: 'Enter email',
+  },
+  position: {
+    filterType: 'string',
+    placeholder: 'Enter position',
+  },
+};
+
 const EmployeeOverviewPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
     'employees',
@@ -52,7 +71,6 @@ const EmployeeOverviewPage: React.FC = () => {
   });
 
   const router = useRouter();
-
   const client = useHttpClient();
 
   const { data, isLoading } = useQuery({
@@ -81,7 +99,7 @@ const EmployeeOverviewPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <GuardBlock requiredUserType={'employee'} requiredPrivileges={['ADMIN']}>
+    <GuardBlock requiredUserType="employee" requiredPrivileges={['ADMIN']}>
       <div className="p-8">
         <Card className="max-w-[900px] mx-auto">
           <CardHeader>
@@ -90,13 +108,14 @@ const EmployeeOverviewPage: React.FC = () => {
               This table provides a clear and organized overview of key employee
               details for quick reference and easy access.
             </CardDescription>
-            <FilterBar<EmployeeFilter>
+            <FilterBar<EmployeeFilter, typeof employeeFilterColumns>
               filterKeyToName={employeeFilterKeyToName}
-              onSearch={(filter) => {
+              onSubmit={(filter) => {
                 setPage(0);
                 setSearchFilter(filter);
               }}
               filter={searchFilter}
+              columns={employeeFilterColumns}
             />
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
@@ -108,7 +127,7 @@ const EmployeeOverviewPage: React.FC = () => {
               data={data?.content ?? []}
               isLoading={isLoading}
               pageCount={data?.page.totalPages ?? 0}
-              pagination={{ page: page, pageSize }}
+              pagination={{ page, pageSize }}
               onPaginationChange={(newPagination) => {
                 setPage(newPagination.page);
                 setPageSize(newPagination.pageSize);
