@@ -57,7 +57,7 @@ const FilterTimestampInput = <TFilterKey,>({
             }}
             initialFocus
           />
-          <div className="p-2 flex justify-center">
+          <div className={`p-2 flex justify-center ${value == null || value.length == 0 ? "hidden": ""}`}>
             <Button
               className={'w-full'}
               variant="destructive"
