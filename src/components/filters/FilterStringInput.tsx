@@ -3,26 +3,26 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 
-export interface FilterStringInputProps {
-  propertyName: string;
+export interface FilterStringInputProps<TFilterKey> {
+  propertyName: TFilterKey;
   value: string;
-  onChange: (propertyName: string, newValue: string) => void;
+  onChange: (propertyName: TFilterKey, newValue: string) => void;
   placeholder?: string;
 }
 
-const FilterStringInput: React.FC<FilterStringInputProps> = ({
-  propertyName,
-  value,
-  onChange,
-  placeholder,
-}) => {
+const FilterStringInput = <TFilterKey,>({
+                                       propertyName,
+                                       value,
+                                       onChange,
+                                       placeholder,
+                                     }: FilterStringInputProps<TFilterKey>) => {
   return (
     <div className="filter-input w-full">
       <Input
-        className={'w-full'}
+        className="w-full"
         type="text"
-        name={propertyName}
-        placeholder={placeholder || `Filter by ${propertyName}`}
+        name={String(propertyName)}
+        placeholder={placeholder || `Filter by ${String(propertyName)}`}
         value={value}
         onChange={(e) => onChange(propertyName, e.target.value)}
       />
