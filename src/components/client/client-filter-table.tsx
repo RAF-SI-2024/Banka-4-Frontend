@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FilterBar from '@/components/filters/FilterBar';
+import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { ClientResponseDto } from '@/api/response/client';
 import { clientsColumns } from '@/ui/dataTables/client/clientColumns';
@@ -28,6 +28,25 @@ const clientFilterKeyToName = (key: keyof ClientFilter): string => {
   }
 };
 
+const clientFilterColumns: Record<keyof ClientFilter, FilterDefinition> = {
+  firstName: {
+    filterType: 'string',
+    placeholder: 'Enter first name',
+  },
+  lastName: {
+    filterType: 'string',
+    placeholder: 'Enter last name',
+  },
+  email: {
+    filterType: 'string',
+    placeholder: 'Enter email',
+  },
+  phone: {
+    filterType: 'string',
+    placeholder: 'Enter phone number',
+  },
+};
+
 interface ClientFilterTableProps {
   onRowClick: (client: ClientResponseDto) => void;
 }
@@ -36,8 +55,8 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
   const client = useHttpClient();
 
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
-    'clients',
-    { pageSize: 8, page: 0 }
+      'clients',
+      { pageSize: 8, page: 0 }
   );
   const [searchFilter, setSearchFilter] = useState<ClientFilter>({
     firstName: '',
@@ -55,10 +74,10 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
         phone: searchFilter.phone || '',
       };
       const response = await searchClients(
-        client,
-        sanitizedFilters,
-        pageSize,
-        page
+          client,
+          sanitizedFilters,
+          pageSize,
+          page
       );
       return response.data;
     },
@@ -66,27 +85,28 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
   });
 
   return (
-    <>
-      <FilterBar<ClientFilter>
-        filterKeyToName={clientFilterKeyToName}
-        onSearch={(filter) => {
-          setPage(0);
-          setSearchFilter(filter);
-        }}
-        filter={searchFilter}
-      />
-      <DataTable<ClientResponseDto>
-        onRowClick={(row) => props.onRowClick(row.original)}
-        columns={clientsColumns}
-        data={data?.content ?? []}
-        isLoading={isLoading}
-        pageCount={data?.page.totalPages ?? 0}
-        pagination={{ page: page, pageSize }}
-        onPaginationChange={(newPagination) => {
-          setPage(newPagination.page);
-          setPageSize(newPagination.pageSize);
-        }}
-      />
-    </>
+      <>
+        <FilterBar<ClientFilter, typeof clientFilterColumns>
+            filterKeyToName={clientFilterKeyToName}
+            onSubmit={(filter) => {
+              setPage(0);
+              setSearchFilter(filter);
+            }}
+            filter={searchFilter}
+            columns={clientFilterColumns}
+        />
+        <DataTable<ClientResponseDto>
+            onRowClick={(row) => props.onRowClick(row.original)}
+            columns={clientsColumns}
+            data={data?.content ?? []}
+            isLoading={isLoading}
+            pageCount={data?.page.totalPages ?? 0}
+            pagination={{ page, pageSize }}
+            onPaginationChange={(newPagination) => {
+              setPage(newPagination.page);
+              setPageSize(newPagination.pageSize);
+            }}
+        />
+      </>
   );
 }
