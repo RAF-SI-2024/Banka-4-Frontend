@@ -97,7 +97,7 @@ export function FilterBar<
           <FilterTimestampInput
             key={String(key)}
             propertyName={key}
-            value={value as Date | null}
+            value={value as string}
             onChange={handleFilterChange}
             placeholder={placeholder}
           />
