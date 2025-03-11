@@ -8,54 +8,53 @@ import FilterEnumInput from './FilterEnumInput';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 
-export interface BaseFilterableColumn {
+export interface BaseFilterDefinition {
   filterType: 'string' | 'number' | 'timestamp' | 'enum';
   placeholder: string;
 }
 
-export interface StringFilterableColumn extends BaseFilterableColumn {
+export interface StringFilterDefinition extends BaseFilterDefinition {
   filterType: 'string';
-  value: string;
 }
 
-export interface NumberFilterableColumn extends BaseFilterableColumn {
+export interface NumberFilterDefinition extends BaseFilterDefinition {
   filterType: 'number';
-  value: number;
 }
 
-export interface TimestampFilterableColumn extends BaseFilterableColumn {
+export interface TimestampFilterDefinition extends BaseFilterDefinition {
   filterType: 'timestamp';
-  // Using Date or null for timestamp filters
-  value: Date | null;
 }
 
-export interface EnumFilterableColumn extends BaseFilterableColumn {
+export interface EnumFilterDefinition extends BaseFilterDefinition {
   filterType: 'enum';
-  value: string;
   options: string[];
 }
 
-export type FilterableColumn =
-  | StringFilterableColumn
-  | NumberFilterableColumn
-  | TimestampFilterableColumn
-  | EnumFilterableColumn;
+export type FilterDefinition =
+    | StringFilterDefinition
+    | NumberFilterDefinition
+    | TimestampFilterDefinition
+    | EnumFilterDefinition;
 
-export type FilterableObject<TFilter> = {
-  [K in keyof TFilter]: FilterableColumn;
+export type FilterBarProps<
+    TFilter, // filter values (e.g. { firstName: string; age: number; ... })
+    TColumns extends Record<keyof TFilter, FilterDefinition>
+> = {
+  onSubmit: (filters: TFilter) => void;
+  filter: TFilter; // values only
+  columns: TColumns; // definitions for each filter field
+  filterKeyToName: (key: keyof TFilter) => string;
 };
 
-interface FilterBarProps<TFilter extends FilterableObject<TFilter>> {
-  onSubmit: (filters: TFilter) => void;
-  filter: TFilter;
-  filterKeyToName: (key: keyof TFilter) => string;
-}
-
-export function FilterBar<TFilter extends FilterableObject<TFilter>>({
-                                                                       onSubmit,
-                                                                       filter,
-                                                                       filterKeyToName,
-                                                                     }: FilterBarProps<TFilter>) {
+export function FilterBar<
+    TFilter,
+    TColumns extends Record<keyof TFilter, FilterDefinition>
+>({
+    onSubmit,
+    filter,
+    columns,
+    filterKeyToName,
+  }: FilterBarProps<TFilter, TColumns>) {
   const [filterState, setFilterState] = useState<TFilter>(filter);
 
   useEffect(() => {
@@ -63,89 +62,62 @@ export function FilterBar<TFilter extends FilterableObject<TFilter>>({
   }, [filter]);
 
   const handleFilterChange = (
-    propertyName: keyof TFilter,
-    newValue: string | Date | number
+      propertyName: keyof TFilter,
+      newValue: string | Date | number | null
   ) => {
-    setFilterState((prevFilters) => {
-      const column = prevFilters[propertyName];
-      switch (column.filterType) {
-        case 'timestamp':
-          return {
-            ...prevFilters,
-            [propertyName]: {
-              ...column,
-              value: newValue ? (newValue as Date) : null,
-            },
-          };
-        case 'number':
-          return {
-            ...prevFilters,
-            [propertyName]: {
-              ...column,
-              value:
-                typeof newValue === 'number'
-                  ? newValue
-                  : parseFloat(newValue as string),
-            },
-          };
-        default:
-          return {
-            ...prevFilters,
-            [propertyName]: {
-              ...column,
-              value: newValue,
-            },
-          };
-      }
-    });
+    setFilterState((prevFilters) => ({
+      ...prevFilters,
+      [propertyName]: newValue,
+    }));
   };
 
   const renderFilterInput = (key: keyof TFilter) => {
-    const column = filterState[key];
+    const columnDef = columns[key];
+    const value = filterState[key];
     const placeholder =
-      column.placeholder || `Filter by ${filterKeyToName(key)}`;
+        columnDef.placeholder || `Filter by ${filterKeyToName(key)}`;
 
-    switch (column.filterType) {
+    switch (columnDef.filterType) {
       case 'string':
         return (
-          <FilterStringInput
-            key={String(key)}
-            propertyName={(key)}
-            value={(column as StringFilterableColumn).value}
-            onChange={handleFilterChange}
-            placeholder={placeholder}
-          />
+            <FilterStringInput
+                key={String(key)}
+                propertyName={key}
+                value={value as string}
+                onChange={handleFilterChange}
+                placeholder={placeholder}
+            />
         );
       case 'number':
         return (
-          <FilterNumberInput<keyof TFilter>
-            key={String(key)}
-            propertyName={(key)}
-            value={(column as NumberFilterableColumn).value}
-            onChange={handleFilterChange}
-            placeholder={placeholder}
-          />
+            <FilterNumberInput<keyof TFilter>
+                key={String(key)}
+                propertyName={key}
+                value={value as number}
+                onChange={handleFilterChange}
+                placeholder={placeholder}
+            />
         );
       case 'timestamp':
         return (
-          <FilterTimestampInput
-            key={String(key)}
-            propertyName={(key)}
-            value={(column as TimestampFilterableColumn).value}
-            onChange={handleFilterChange}
-            placeholder={placeholder}
-          />
+            <FilterTimestampInput
+                key={String(key)}
+                propertyName={key}
+                value={value as Date | null}
+                onChange={handleFilterChange}
+                placeholder={placeholder}
+            />
         );
       case 'enum':
         return (
-          <FilterEnumInput
-            key={String(key)}
-            propertyName={(key)}
-            value={(column as EnumFilterableColumn).value}
-            onChange={handleFilterChange}
-            placeholder={placeholder}
-            options={(column as EnumFilterableColumn).options}
-          />
+            <FilterEnumInput
+                key={String(key)}
+                propertyName={key}
+                value={value as string}
+                onChange={handleFilterChange}
+                placeholder={placeholder}
+                options={(columnDef as EnumFilterDefinition).options}
+            />
         );
       default:
         return null;
@@ -158,15 +130,15 @@ export function FilterBar<TFilter extends FilterableObject<TFilter>>({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
-      {Object.keys(filter).map((key) =>
-        renderFilterInput(key as keyof TFilter)
-      )}
-      <Button type="submit">
-        Search
-        <Search className="w-4 h-4 mr-1" />
-      </Button>
-    </form>
+      <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
+        {Object.keys(columns).map((key) =>
+            renderFilterInput(key as keyof TFilter)
+        )}
+        <Button type="submit">
+          Search
+          <Search className="w-4 h-4 mr-1" />
+        </Button>
+      </form>
   );
 }
 
