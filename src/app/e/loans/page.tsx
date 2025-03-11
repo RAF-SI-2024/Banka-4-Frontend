@@ -23,16 +23,6 @@ interface LoanFilter {
   status: string;
 }
 
-const loanFilterKeyToName = (key: keyof LoanFilter): string => {
-  switch (key) {
-    case 'type':
-      return 'type';
-    case 'loanNumber':
-      return 'loan number';
-    case 'status':
-      return 'status';
-  }
-};
 
 const LoansOverviewPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams('loans', {
@@ -79,7 +69,6 @@ const LoansOverviewPage: React.FC = () => {
               information.
             </CardDescription>
             <FilterBar<LoanFilter>
-              filterKeyToName={loanFilterKeyToName}
               onSearch={(filter) => {
                 setPage(0);
                 setSearchFilter(filter);
