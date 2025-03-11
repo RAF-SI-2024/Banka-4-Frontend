@@ -15,19 +15,6 @@ export interface ClientFilter {
   phone: string;
 }
 
-const clientFilterKeyToName = (key: keyof ClientFilter): string => {
-  switch (key) {
-    case 'firstName':
-      return 'First Name';
-    case 'lastName':
-      return 'Last Name';
-    case 'email':
-      return 'Email';
-    case 'phone':
-      return 'Phone Number';
-  }
-};
-
 const clientFilterColumns: Record<keyof ClientFilter, FilterDefinition> = {
   firstName: {
     filterType: 'string',
@@ -87,7 +74,6 @@ export default function ClientFilterTable(props: ClientFilterTableProps) {
   return (
       <>
         <FilterBar<ClientFilter, typeof clientFilterColumns>
-            filterKeyToName={clientFilterKeyToName}
             onSubmit={(filter) => {
               setPage(0);
               setSearchFilter(filter);
