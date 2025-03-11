@@ -1,6 +1,52 @@
+'use client';
+
+import * as React from 'react';
+import dayjs from 'dayjs';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+
 export interface FilterTimestampInputProps {
   propertyName: string;
-  value: string;
+  value: Date;
   onChange: (propertyName: string, newValue: string) => void;
   placeholder?: string;
 }
+
+const FilterTimestampInput: React.FC<FilterTimestampInputProps> = ({
+                                                                     propertyName,
+                                                                     value,
+                                                                     onChange,
+                                                                     placeholder,
+                                                                   }) => {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <div className="filter-input w-full">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="w-full text-left">
+            {value
+              ? dayjs(value).format('yyyy-MM-dd')
+              : placeholder || `Filter by ${propertyName}`}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar
+            mode="single"
+            selected={value}
+            onSelect={(date) => {
+              if (date) {
+                onChange(propertyName, dayjs(date).toISOString());
+                setOpen(false);
+              }
+            }}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
+
+export default FilterTimestampInput;
