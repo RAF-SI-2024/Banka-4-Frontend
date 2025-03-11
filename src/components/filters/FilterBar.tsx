@@ -117,7 +117,7 @@ export function FilterBar<
             value={value as string}
             onChange={handleFilterChange}
             placeholder={placeholder}
-                 optionToString={columnDef.optionToString}
+            optionToString={columnDef.optionToString}
             options={columnDef.options}
           />
         );
