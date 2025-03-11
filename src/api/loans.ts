@@ -1,5 +1,5 @@
 import { Axios } from 'axios';
-import { LoansResponseDto } from './response/loan';
+import { LoansResponseDto } from './response/loans';
 
 //TODO: define LoanFilters interface
 export interface LoanFilters {
@@ -18,3 +18,18 @@ export const searchLoans = async (
   client.get<LoansResponseDto>(`/loans/me`, {
     params: { ...filters, page, size },
   });
+
+export const searchAllLoans = async (
+  client: Axios,
+  filters: {
+    type: string;
+    loanNumber: string;
+    status: string;
+  },
+  rowsPerPage: number,
+  currentPage: number
+) => {
+  return client.get<LoansResponseDto>('/loans/search', {
+    params: { ...filters, size: rowsPerPage, page: currentPage },
+  });
+};

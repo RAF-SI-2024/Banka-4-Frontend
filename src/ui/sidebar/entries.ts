@@ -10,6 +10,7 @@ import {
   Plus,
   UserPlus,
   Users,
+  CircleDollarSign,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -143,6 +144,21 @@ const EmployeeGroups: SidebarGroupType[] = [
         url: '/e/employee/new',
         icon: UserPlus,
         privileges: ['ADMIN'],
+      },
+    ],
+  },
+  {
+    title: 'Loans',
+    url: '/e',
+    icon: CircleDollarSign,
+    isActive: false,
+    userType: 'employee',
+    items: [
+      {
+        title: 'Overview',
+        url: '/e/loans',
+        icon: List,
+        privileges: [],
       },
     ],
   },
