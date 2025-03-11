@@ -35,7 +35,7 @@ const FilterTimestampInput = <TFilterKey,>({
           <Button variant="outline" className="w-full ">
             <div className="flex w-full flex-row items-center justify-between">
               <p
-                className={`w-full text-left  ${value == null || value.length == 0 ?   'text-gray-500 font-normal' : ''}`}
+                className={`w-full text-left  ${value == null || value.length == 0 ? 'text-gray-500 font-normal' : ''}`}
               >
                 {value
                   ? value
@@ -57,7 +57,9 @@ const FilterTimestampInput = <TFilterKey,>({
             }}
             initialFocus
           />
-          <div className={`p-2 flex justify-center ${value == null || value.length == 0 ? "hidden": ""}`}>
+          <div
+            className={`p-2 flex justify-center ${value == null || value.length == 0 ? 'hidden' : ''}`}
+          >
             <Button
               className={'w-full'}
               variant="destructive"
