@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 export interface FilterNumberInputProps<TFilterKey> {
   propertyName: TFilterKey;
   value: number;
