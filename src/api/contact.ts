@@ -17,11 +17,10 @@ export const deleteContact = async (client: Axios, id: string) =>
 
 export const searchContacts = async (
   client: Axios,
-  filters: { nickname: string; accountNumber: string },
   rowsPerPage: number,
   currentPage: number
 ) => {
   return client.get<Pageable<ClientContactDto>>('/client-contact', {
-    params: { ...filters, size: rowsPerPage, page: currentPage },
+    params: { size: rowsPerPage, page: currentPage },
   });
 };

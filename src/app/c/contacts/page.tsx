@@ -18,16 +18,17 @@ import ContactFormDialog, {
   ContactFormAction,
 } from '@/components/contacts/contact-form-dialog';
 import { DeleteDialog } from '@/components/DeleteDialog';
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
 import {
-  searchContacts,
-  postNewContact,
-  updateContact,
   deleteContact,
+  postNewContact,
+  searchContacts,
+  updateContact,
 } from '@/api/contact';
 import GuardBlock from '@/components/GuardBlock';
 import { toastRequestError } from '@/api/errors';
+import { EditContactRequest } from '@/api/request/contact';
 
 const ContactsPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
@@ -61,12 +62,7 @@ const ContactsPage: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['contact', page, pageSize],
     queryFn: async () => {
-      const response = await searchContacts(
-        client,
-        { nickname: '', accountNumber: '' },
-        pageSize,
-        page
-      );
+      const response = await searchContacts(client, pageSize, page);
       return response.data;
     },
     staleTime: 5000,
@@ -95,10 +91,7 @@ const ContactsPage: React.FC = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: async (data: {
-      id: string;
-      updateData: Partial<ClientContactDto>;
-    }) => await updateContact(client, data.id, data.updateData),
+    mutationFn: async (data: { id: string; updateData: EditContactRequest }) =>
       await updateContact(client, data.id, data.updateData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });

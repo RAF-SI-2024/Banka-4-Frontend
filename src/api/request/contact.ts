@@ -3,4 +3,4 @@ export interface NewContactRequest {
   accountNumber: string;
 }
 
-export type EditContactRequest = Partial<NewContactRequest>;
+export type EditContactRequest = NewContactRequest;
