@@ -99,6 +99,7 @@ const ContactsPage: React.FC = () => {
       id: string;
       updateData: Partial<ClientContactDto>;
     }) => await updateContact(client, data.id, data.updateData),
+      await updateContact(client, data.id, data.updateData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });
     },
@@ -181,7 +182,6 @@ const ContactsPage: React.FC = () => {
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            {/* FilterBar removed per feedback */}
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable<ClientContactDto>
