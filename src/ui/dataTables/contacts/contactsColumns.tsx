@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Edit2, Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { formatAccountNumber } from '@/lib/account-utils';
 
 export interface ClientContactDto {
   id: string;
@@ -43,7 +44,7 @@ export const createContactsColumns = (
   {
     accessorKey: 'accountNumber',
     header: 'Account Number',
-    cell: (info) => info.getValue(),
+    cell: (info) => formatAccountNumber(info.getValue() as string),
   },
   {
     id: 'actions',

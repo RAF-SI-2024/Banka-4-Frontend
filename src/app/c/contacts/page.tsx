@@ -14,9 +14,9 @@ import { DataTable } from '@/components/dataTable/DataTable';
 import { ClientContactDto } from '@/api/response/contact';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import { createContactsColumns } from '@/ui/dataTables/contacts/contactsColumns';
-import ContactForm, {
+import ContactFormCard, {
   ContactFormAction,
-} from '@/components/contacts/contact-form';
+} from '@/components/contacts/contact-form-card';
 import { DeleteDialog } from '@/components/DeleteDialog';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
@@ -181,20 +181,22 @@ const ContactsPage: React.FC = () => {
 
       {showClientForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-black rounded-lg p-6 shadow-2xl">
-            <ContactForm
-              contact={
-                selectedContact
-                  ? {
-                      nickname: selectedContact.nickname,
-                      accountNumber: selectedContact.accountNumber,
-                    }
-                  : null
-              }
-              onSubmit={handleContactSubmit}
-              onCancel={handleContactCancel}
-            />
-          </div>
+          <ContactFormCard
+            contact={
+              selectedContact
+                ? {
+                    nickname: selectedContact.nickname,
+                    accountNumber: selectedContact.accountNumber,
+                  }
+                : null
+            }
+            onSubmit={handleContactSubmit}
+            onCancel={handleContactCancel}
+            isPending={
+              createMutation.status === 'pending' ||
+              updateMutation.status === 'pending'
+            }
+          />
         </div>
       )}
 
