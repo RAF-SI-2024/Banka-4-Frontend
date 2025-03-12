@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import {
   Card,
@@ -9,7 +10,6 @@ import {
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { ClientContactDto } from '@/api/response/contact';
 import useTablePageParams from '@/hooks/useTablePageParams';
@@ -18,7 +18,7 @@ import ContactFormCard, {
   ContactFormAction,
 } from '@/components/contacts/contact-form-card';
 import { DeleteDialog } from '@/components/DeleteDialog';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
 import {
   searchContacts,
@@ -27,21 +27,7 @@ import {
   deleteContact,
 } from '@/api/contact';
 import GuardBlock from '@/components/GuardBlock';
-
-interface ContactFilter {
-  nickname: string;
-  accountNumber: string;
-}
-
-// Prihvaćena verzija "njihova":
-const contactFilterKeyToName = (key: keyof ContactFilter): string => {
-  switch (key) {
-    case 'nickname':
-      return 'Nickname';
-    case 'accountNumber':
-      return 'Account Number';
-  }
-};
+import { toastRequestError } from '@/api/errors';
 
 const ContactsPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
@@ -51,10 +37,7 @@ const ContactsPage: React.FC = () => {
       page: 0,
     }
   );
-  const [searchFilter, setSearchFilter] = useState<ContactFilter>({
-    nickname: '',
-    accountNumber: '',
-  });
+
   const [showClientForm, setShowClientForm] = useState(false);
   const [selectedContact, setSelectedContact] =
     useState<ClientContactDto | null>(null);
@@ -74,12 +57,13 @@ const ContactsPage: React.FC = () => {
 
   const client = useHttpClient();
   const queryClient = useQueryClient();
+
   const { data, isLoading } = useQuery({
-    queryKey: ['contact', page, pageSize, searchFilter],
+    queryKey: ['contact', page, pageSize],
     queryFn: async () => {
       const response = await searchContacts(
         client,
-        searchFilter,
+        { nickname: '', accountNumber: '' },
         pageSize,
         page
       );
@@ -90,37 +74,82 @@ const ContactsPage: React.FC = () => {
 
   const pageCount = data?.page.totalPages ?? 0;
 
-  // Prihvaćena verzija "njihova":
   const handleEdit = (contact: ClientContactDto) => {
     setSelectedContact(contact);
     setShowClientForm(true);
   };
 
-  // Prihvaćena verzija "njihova":
   const handleDelete = (contact: ClientContactDto) => {
     setSelectedContact(contact);
     setShowDeleteDialog(true);
   };
 
-  // Prihvaćena verzija "njihova":
-  const handleContactSubmit = async (action: ContactFormAction) => {
-    try {
-      if (action.update) {
-        if (!selectedContact) {
-          throw new Error('No contact selected for update');
-        }
-        console.log('Update contact with data:', action.data);
-        await updateContact(client, selectedContact.id, action.data);
-      } else {
-        console.log('Create new contact with data:', action.data);
-        await postNewContact(client, action.data);
-      }
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => await deleteContact(client, id),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });
-    } catch (error) {
-      console.error('API call failed:', error);
-    } finally {
-      setShowClientForm(false);
-      setSelectedContact(null);
+    },
+    onError: (error) => {
+      toastRequestError(error);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: {
+      id: string;
+      updateData: Partial<ClientContactDto>;
+    }) => await updateContact(client, data.id, data.updateData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['contact'] });
+    },
+    onError: (error) => {
+      toastRequestError(error);
+    },
+  });
+
+  const createMutation = useMutation({
+    mutationFn: async (data: { nickname: string; accountNumber: string }) =>
+      await postNewContact(client, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['contact'] });
+    },
+    onError: (error) => {
+      toastRequestError(error);
+    },
+  });
+
+  const handleDeleteConfirm = () => {
+    if (!selectedContact) return;
+    deleteMutation.mutate(selectedContact.id, {
+      onSettled: () => {
+        setShowDeleteDialog(false);
+        setSelectedContact(null);
+      },
+    });
+  };
+
+  const handleContactSubmit = (action: ContactFormAction) => {
+    if (action.update) {
+      if (!selectedContact) {
+        toastRequestError(new Error('No contact selected for update'));
+        return;
+      }
+      updateMutation.mutate(
+        { id: selectedContact.id, updateData: action.data },
+        {
+          onSettled: () => {
+            setShowClientForm(false);
+            setSelectedContact(null);
+          },
+        }
+      );
+    } else {
+      createMutation.mutate(action.data, {
+        onSettled: () => {
+          setShowClientForm(false);
+          setSelectedContact(null);
+        },
+      });
     }
   };
 
@@ -153,14 +182,7 @@ const ContactsPage: React.FC = () => {
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            <FilterBar<ContactFilter, typeof contactFilterKeyToName>
-              onSubmit={(filter) => {
-                setPage(0);
-                setSearchFilter(filter);
-              }}
-              filter={searchFilter}
-              columns={contactFilterKeyToName}
-            />
+            {/* FilterBar removed per feedback */}
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable<ClientContactDto>
@@ -204,18 +226,7 @@ const ContactsPage: React.FC = () => {
         <DeleteDialog
           open={showDeleteDialog}
           itemName={selectedContact.nickname}
-          onConfirm={async () => {
-            try {
-              console.log('Deleting contact', selectedContact.id);
-              await deleteContact(client, selectedContact.id);
-              queryClient.invalidateQueries({ queryKey: ['contact'] });
-            } catch (error) {
-              console.error('Delete failed:', error);
-            } finally {
-              setShowDeleteDialog(false);
-              setSelectedContact(null);
-            }
-          }}
+          onConfirm={handleDeleteConfirm}
           onCancel={() => {
             setShowDeleteDialog(false);
             setSelectedContact(null);
