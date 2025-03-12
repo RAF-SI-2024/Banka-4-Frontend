@@ -23,9 +23,7 @@ const contactSchema = z.object({
 
 export type ContactFormValues = z.infer<typeof contactSchema>;
 
-export type ContactFormAction =
-  | { update: true; data: ContactFormValues }
-  | { update: false; data: ContactFormValues };
+export type ContactFormAction = { update: boolean; data: ContactFormValues };
 
 export interface ContactFormProps {
   contact?: ContactFormValues | null;
