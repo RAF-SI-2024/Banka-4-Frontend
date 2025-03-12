@@ -22,7 +22,7 @@ export const ContactsActions = ({
 }: ContactsActionsProps) => {
   return (
     <div className="flex justify-end items-center space-x-2">
-      <Button onClick={() => onEdit(contact)}>
+      <Button variant={'outline'} onClick={() => onEdit(contact)}>
         <Edit2 className="h-4 w-4" />
       </Button>
       <Button onClick={() => onDelete(contact)} variant={'destructive'}>
