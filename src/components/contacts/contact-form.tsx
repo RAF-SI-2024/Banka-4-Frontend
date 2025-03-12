@@ -14,7 +14,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getDirtyValues } from '@/lib/form-utils';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Loader } from 'lucide-react';
 
@@ -26,7 +25,7 @@ const contactSchema = z.object({
 export type ContactFormValues = z.infer<typeof contactSchema>;
 
 export type ContactFormAction =
-  | { update: true; data: Partial<ContactFormValues> }
+  | { update: true; data: ContactFormValues }
   | { update: false; data: ContactFormValues };
 
 interface ContactFormProps {
@@ -53,14 +52,7 @@ export default function ContactForm({
   const isEdit = Boolean(contact);
 
   const _onSubmit = (data: ContactFormValues) => {
-    if (isEdit) {
-      onSubmit({
-        update: true,
-        data: getDirtyValues(form.formState.dirtyFields, data),
-      });
-    } else {
-      onSubmit({ update: false, data });
-    }
+    onSubmit({ update: isEdit, data });
   };
 
   return (
