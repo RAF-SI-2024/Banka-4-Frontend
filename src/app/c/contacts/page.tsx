@@ -14,9 +14,9 @@ import { DataTable } from '@/components/dataTable/DataTable';
 import { ClientContactDto } from '@/api/response/contact';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import { createContactsColumns } from '@/ui/dataTables/contacts/contactsColumns';
-import ContactFormCard, {
+import ContactFormDialog, {
   ContactFormAction,
-} from '@/components/contacts/contact-form-card';
+} from '@/components/contacts/contact-form-dialog';
 import { DeleteDialog } from '@/components/DeleteDialog';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
@@ -201,26 +201,24 @@ const ContactsPage: React.FC = () => {
         </Card>
       </div>
 
-      {showClientForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <ContactFormCard
-            contact={
-              selectedContact
-                ? {
-                    nickname: selectedContact.nickname,
-                    accountNumber: selectedContact.accountNumber,
-                  }
-                : null
-            }
-            onSubmit={handleContactSubmit}
-            onCancel={handleContactCancel}
-            isPending={
-              createMutation.status === 'pending' ||
-              updateMutation.status === 'pending'
-            }
-          />
-        </div>
-      )}
+      <ContactFormDialog
+        open={showClientForm}
+        onOpenChange={setShowClientForm}
+        contact={
+          selectedContact
+            ? {
+                nickname: selectedContact.nickname,
+                accountNumber: selectedContact.accountNumber,
+              }
+            : null
+        }
+        onSubmit={handleContactSubmit}
+        onCancel={handleContactCancel}
+        isPending={
+          createMutation.status === 'pending' ||
+          updateMutation.status === 'pending'
+        }
+      />
 
       {showDeleteDialog && selectedContact && (
         <DeleteDialog
