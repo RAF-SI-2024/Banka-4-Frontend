@@ -131,8 +131,7 @@ const ContactsPage: React.FC = () => {
   const handleContactSubmit = (action: ContactFormAction) => {
     if (action.update) {
       if (!selectedContact) {
-        toastRequestError(new Error('No contact selected for update'));
-        return;
+        throw Error('No contact selected for update');
       }
       updateMutation.mutate(
         { id: selectedContact.id, updateData: action.data },
