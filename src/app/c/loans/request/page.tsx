@@ -90,28 +90,18 @@ export default function RequestLoanPage() {
 
   return (
     <GuardBlock requiredUserType="client">
-      <div className="flex justify-center items-center pt-8">
-        <Card className="w-full max-w-[900px]">
-          <CardHeader>
-            <CardTitle>Loan Request</CardTitle>
-            <CardDescription>
-              Submit a new loan request using the form below.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <LoanFormCard
-              onSubmit={handleLoanSubmit}
-              onCancel={() => {}}
-              isPending={isLoading}
-              accounts={accounts}
-            />
-            {error && (
-              <p className="text-red-500 mt-4">
-                Failed to load accounts. Please try again later.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+      <div className={'flex justify-center py-8'}>
+        <LoanFormCard
+          onSubmit={handleLoanSubmit}
+          onCancel={() => {}}
+          isPending={isLoading}
+          accounts={accounts}
+        />
+        {error && (
+          <p className="text-red-500 mt-4">
+            Failed to load accounts. Please try again later.
+          </p>
+        )}
       </div>
     </GuardBlock>
   );
