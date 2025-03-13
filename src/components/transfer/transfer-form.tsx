@@ -35,6 +35,7 @@ interface Account {
 interface TransferFormProps {
   accounts: Account[];
   onSubmit: (transferData: TransferFormValues) => void;
+  isPending: boolean;
 }
 
 const transferSchema = z.object({
@@ -43,11 +44,12 @@ const transferSchema = z.object({
   fromAmount: z.coerce.number({ invalid_type_error: 'Invalid amount' }),
 });
 
-type TransferFormValues = z.infer<typeof transferSchema>;
+export type TransferFormValues = z.infer<typeof transferSchema>;
 
 export default function TransferForm({
   accounts,
   onSubmit,
+  isPending,
 }: TransferFormProps) {
   const form = useForm({
     resolver: zodResolver(transferSchema),
@@ -190,7 +192,7 @@ export default function TransferForm({
           <Button
             type="submit"
             className="px-3 py-1 text-sm"
-            disabled={!fromAccount || !filteredToAccounts.length}
+            disabled={!fromAccount || !filteredToAccounts.length || isPending}
           >
             Continue
           </Button>
