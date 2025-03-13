@@ -10,14 +10,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 export type { LoanFormAction, LoanFormValues };
 
 export interface LoanFormCardProps {
-  defaultValues?: Partial<LoanFormValues>;
   isPending: boolean;
   onSubmit: (action: LoanFormAction) => void;
   accounts: { accountNumber: string; currency: string }[];
 }
 
 export default function LoanFormCard({
-  defaultValues,
   isPending,
   onSubmit,
   accounts,
@@ -32,7 +30,6 @@ export default function LoanFormCard({
       </CardHeader>
       <CardContent>
         <LoanForm
-          defaultValues={defaultValues}
           onSubmit={onSubmit}
           isPending={isPending}
           accounts={accounts}
