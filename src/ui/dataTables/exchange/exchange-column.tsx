@@ -1,30 +1,30 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ExchangeDto } from '@/api/response/exchange';
+import { exchange } from '@/api/response/exchange';
 
-export const exchangeColumns: ColumnDef<ExchangeDto>[] = [
-    {
-        accessorKey: 'base',
-        header: 'Base',
-        cell: (info) => info.getValue(),
-    },
-    {
-        accessorKey: 'quote',
-        header: 'Quote',
-        cell: (info) => info.getValue(),
-    },
-    {
-        accessorKey: 'buy',
-        header: 'Buy',
-        cell: (info) => info.getValue(),
-    },
-    {
-        accessorKey: 'neutral',
-        header: 'Neutral',
-        cell: (info) => info.getValue(),
-    },
-    {
-        accessorKey: 'sell',
-        header: 'Sell',
-        cell: (info) => info.getValue(),
-    }
+export const exchangeColumns: ColumnDef<exchange>[] = [
+  {
+    accessorKey: 'Base',
+    header: 'Base',
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: 'Quote',
+    header: 'Quote',
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: 'Buy',
+    header: 'Buy',
+    cell: (info) => (info.getValue() as number).toFixed(2),
+  },
+  {
+    accessorKey: 'Neutral',
+    header: 'Neutral',
+    cell: (info) => (info.getValue() as number).toFixed(2),
+  },
+  {
+    accessorKey: 'Sell',
+    header: 'Sell',
+    cell: (info) => (info.getValue() as number).toFixed(2),
+  },
 ];
