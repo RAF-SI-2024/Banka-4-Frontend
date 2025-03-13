@@ -22,8 +22,8 @@ import { NewLoanRequest } from '@/api/request/loan';
 import { LoanRequestResponseDto } from '@/api/response/loan';
 import { toast } from 'sonner';
 
-import { getClientAccounts } from '@/api/account';
 import { AccountDto } from '@/api/response/account';
+import { getClientAccounts } from '@/api/account';
 
 export default function RequestLoanPage() {
   const { dispatch } = useBreadcrumb();
@@ -41,24 +41,19 @@ export default function RequestLoanPage() {
   }, [dispatch]);
 
   const {
-    data: accountsData,
-    isLoading: isAccountsLoading,
-    isError: isAccountsError,
-    error: accountsError,
-  } = useQuery<AccountDto[], Error>({
-    queryKey: ['client-accounts'],
-    queryFn: async () => {
-      const response = await getClientAccounts(client);
-      return response.data; // AccountDto[]
-    },
-    staleTime: 5000,
+    data: accountsData = [],
+    isLoading,
+    error,
+  } = useQuery<AccountDto[]>({
+    queryKey: ['accounts'],
+    queryFn: async () => (await getClientAccounts(client)).data,
   });
 
   React.useEffect(() => {
-    if (isAccountsError && accountsError) {
-      toastRequestError(accountsError);
+    if (error) {
+      toastRequestError(error);
     }
-  }, [isAccountsError, accountsError]);
+  }, [error]);
 
   const accounts = useMemo(() => {
     if (!accountsData) return [];
@@ -75,14 +70,12 @@ export default function RequestLoanPage() {
   >({
     mutationFn: async (data: NewLoanRequest) => {
       const response = await requestLoan(client, data);
-      return response.data; // LoanResponseDto
+      return response.data;
     },
     onSuccess: (loanResponse) => {
       toast.success(
         loanResponse.message || 'Loan request processed successfully!'
       );
-
-      // queryClient.invalidateQueries({ queryKey: ['loans'] });
     },
     onError: (error) => {
       toastRequestError(error);
@@ -109,10 +102,10 @@ export default function RequestLoanPage() {
             <LoanFormCard
               onSubmit={handleLoanSubmit}
               onCancel={() => {}}
-              isPending={isAccountsLoading}
+              isPending={isLoading}
               accounts={accounts}
             />
-            {isAccountsError && (
+            {error && (
               <p className="text-red-500 mt-4">
                 Failed to load accounts. Please try again later.
               </p>
