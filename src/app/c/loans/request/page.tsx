@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import GuardBlock from '@/components/GuardBlock';
 import {
   Card,
@@ -14,8 +14,20 @@ import LoanFormCard, {
 } from '@/components/loans/loan-form-card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useHttpClient } from '@/context/HttpClientContext';
+import { toastRequestError } from '@/api/errors';
+import { requestLoan } from '@/api/loan';
+import { NewLoanRequest } from '@/api/request/loan';
+import { LoanRequestResponseDto } from '@/api/response/loan';
+import { toast } from 'sonner';
+
+import { getClientAccounts } from '@/api/account';
+import { AccountDto } from '@/api/response/account';
+
 export default function RequestLoanPage() {
   const { dispatch } = useBreadcrumb();
+  const client = useHttpClient();
 
   useEffect(() => {
     dispatch({
@@ -28,17 +40,60 @@ export default function RequestLoanPage() {
     });
   }, [dispatch]);
 
-  function handleLoanSubmit(action: LoanFormAction) {
-    console.log('Creating new loan request with data:', action.data);
-    // API call will be added later.
-  }
+  const {
+    data: accountsData,
+    isLoading: isAccountsLoading,
+    isError: isAccountsError,
+    error: accountsError,
+  } = useQuery<AccountDto[], Error>({
+    queryKey: ['client-accounts'],
+    queryFn: async () => {
+      const response = await getClientAccounts(client);
+      return response.data; // AccountDto[]
+    },
+    staleTime: 5000,
+  });
 
-  // Pass a static array of accounts as a prop (in a real scenario, fetched from API)
-  const accounts = [
-    { accountNumber: '35123456789012345000', currency: 'RSD' },
-    { accountNumber: '35123456789012345001', currency: 'EUR' },
-    { accountNumber: '35123456789012345002', currency: 'RSD' },
-  ];
+  React.useEffect(() => {
+    if (isAccountsError && accountsError) {
+      toastRequestError(accountsError);
+    }
+  }, [isAccountsError, accountsError]);
+
+  const accounts = useMemo(() => {
+    if (!accountsData) return [];
+    return accountsData.map((acc) => ({
+      accountNumber: acc.accountNumber,
+      currency: acc.currency.code,
+    }));
+  }, [accountsData]);
+
+  const createLoanMutation = useMutation<
+    LoanRequestResponseDto,
+    Error,
+    NewLoanRequest
+  >({
+    mutationFn: async (data: NewLoanRequest) => {
+      const response = await requestLoan(client, data);
+      return response.data; // LoanResponseDto
+    },
+    onSuccess: (loanResponse) => {
+      toast.success(
+        loanResponse.message || 'Loan request processed successfully!'
+      );
+
+      // queryClient.invalidateQueries({ queryKey: ['loans'] });
+    },
+    onError: (error) => {
+      toastRequestError(error);
+    },
+  });
+
+  function handleLoanSubmit(action: LoanFormAction) {
+    createLoanMutation.mutate(action.data, {
+      onSettled: () => {},
+    });
+  }
 
   return (
     <GuardBlock requiredUserType="client">
@@ -54,9 +109,14 @@ export default function RequestLoanPage() {
             <LoanFormCard
               onSubmit={handleLoanSubmit}
               onCancel={() => {}}
-              isPending={false}
+              isPending={isAccountsLoading}
               accounts={accounts}
             />
+            {isAccountsError && (
+              <p className="text-red-500 mt-4">
+                Failed to load accounts. Please try again later.
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
