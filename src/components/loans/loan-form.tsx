@@ -24,7 +24,6 @@ import { Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   ALL_DEFAULT_PERIODS,
-  ALL_DEFAULT_PERIODS_,
   ALL_EMPLOYMENT_STATUSES,
   ALL_EMPLOYMENT_STATUSES_,
   ALL_INTEREST_TYPES,
@@ -32,7 +31,6 @@ import {
   ALL_LOAN_TYPES,
   ALL_LOAN_TYPES_,
   ALL_MORTGAGE_PERIODS,
-  ALL_MORTGAGE_PERIODS_,
 } from '@/types/loan';
 import { currencyOptions } from '@/types/currency';
 import { SomePartials } from '@/types/utils';

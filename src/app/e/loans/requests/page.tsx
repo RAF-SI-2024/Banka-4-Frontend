@@ -12,21 +12,20 @@ import { LoanRequestDto } from '@/api/response/loan';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DataTable } from '@/components/dataTable/DataTable';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 import {
-  LoanFilters,
-  searchAllLoanRequests,
   approveLoan,
+  LoanFilters,
   rejectLoan,
+  searchAllLoanRequests,
 } from '@/api/loans';
 import { loanRequestColumns } from '@/ui/dataTables/loans/loansOverviewColums';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { LoanStatus, LoanType } from '@/types/loan';
-import { ALL_LOAN_STATUSES, ALL_LOAN_TYPES } from '@/types/loan';
+import { ALL_LOAN_TYPES, LoanType } from '@/types/loan';
 
 interface LoanFilter {
   loanType?: LoanType;
