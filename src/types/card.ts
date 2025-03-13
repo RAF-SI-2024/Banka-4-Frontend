@@ -1,4 +1,4 @@
-export interface Card {
+export interface CardInfo {
   cardNumber: string;
   cardType: string;
   cardName: string;

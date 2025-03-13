@@ -18,3 +18,4 @@ export interface CardResponseDto {
 }
 
 export type EmployeeCardResponseDto = Pageable<CardResponseDto>;
+export type CardsResponseDto = Pageable<CardResponseDto>;
