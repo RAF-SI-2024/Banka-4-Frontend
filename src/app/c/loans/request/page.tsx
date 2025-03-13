@@ -9,7 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import LoanForm, { LoanFormAction } from '@/components/loans/loan-form';
+import LoanFormCard, {
+  LoanFormAction,
+} from '@/components/loans/loan-form-card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
 export default function RequestLoanPage() {
@@ -27,13 +29,16 @@ export default function RequestLoanPage() {
   }, [dispatch]);
 
   function handleLoanSubmit(action: LoanFormAction) {
-    if (action.update) {
-      console.log('Updating existing loan request with data:', action.data);
-    } else {
-      console.log('Creating new loan request with data:', action.data);
-    }
-    // Adding API call later
+    console.log('Creating new loan request with data:', action.data);
+    // API call will be added later.
   }
+
+  // Pass a static array of accounts as a prop (in a real scenario, fetched from API)
+  const accounts = [
+    { accountNumber: '35123456789012345000', currency: 'RSD' },
+    { accountNumber: '35123456789012345001', currency: 'EUR' },
+    { accountNumber: '35123456789012345002', currency: 'RSD' },
+  ];
 
   return (
     <GuardBlock requiredUserType="client">
@@ -46,10 +51,11 @@ export default function RequestLoanPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <LoanForm
-              isUpdate={false}
+            <LoanFormCard
               onSubmit={handleLoanSubmit}
-              isPending={false} // Za sada
+              onCancel={() => {}}
+              isPending={false}
+              accounts={accounts}
             />
           </CardContent>
         </Card>
