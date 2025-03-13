@@ -1,15 +1,18 @@
+import { EmploymentStatus, InterestType, LoanType } from '@/types/loan';
+import { Currency } from '@/types/currency';
+
 /**
  * DTO for creating a new loan request.
  * Matches the POST /loans request body from Swagger.
  */
 export interface NewLoanRequest {
-  loanType: string;
-  interestType: string;
+  loanType: LoanType;
+  interestType: InterestType;
   amount: number;
-  currency: string;
+  currency: Currency;
   purposeOfLoan: string;
   monthlyIncome: number;
-  employmentStatus: string;
+  employmentStatus: EmploymentStatus;
   employmentPeriod: number;
   repaymentPeriod: number;
   contactPhone: string;

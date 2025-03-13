@@ -22,65 +22,95 @@ import {
 } from '@/components/ui/select';
 import { Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  ALL_DEFAULT_PERIODS,
+  ALL_DEFAULT_PERIODS_,
+  ALL_EMPLOYMENT_STATUSES,
+  ALL_EMPLOYMENT_STATUSES_,
+  ALL_INTEREST_TYPES,
+  ALL_INTEREST_TYPES_,
+  ALL_LOAN_TYPES,
+  ALL_LOAN_TYPES_,
+  ALL_MORTGAGE_PERIODS,
+  ALL_MORTGAGE_PERIODS_,
+} from '@/types/loan';
+import { currencyOptions } from '@/types/currency';
+import { SomePartials } from '@/types/utils';
+import { numberEnum } from '@/lib/form-utils';
 
-const loanTypes = [
-  'CASH',
-  'MORTGAGE',
-  'AUTO',
-  'REFINANCING',
-  'STUDENT',
-] as const;
-const interestTypes = ['FIXED', 'VARIABLE', 'COMPOUND'] as const;
-const employmentStatuses = ['PERMANENT', 'TEMPORARY', 'UNEMPLOYED'] as const;
-const currencies = [
-  'RSD',
-  'EUR',
-  'CHF',
-  'USD',
-  'GBP',
-  'JPY',
-  'CAD',
-  'AUD',
-] as const;
-
-const mortgagePeriods = [60, 120, 180, 240, 300, 360];
-const defaultPeriods = [12, 24, 36, 48, 60, 72, 84];
-
-const loanFormSchema = z.object({
-  loanType: z.enum(loanTypes),
-  interestType: z.enum(interestTypes),
-  amount: z.coerce
-    .number({ invalid_type_error: 'Amount is required' })
-    .min(1, 'Amount must be at least 1'),
-  currency: z.enum(currencies),
-  purposeOfLoan: z.string().min(1, 'Purpose is required'),
-  monthlyIncome: z.coerce
-    .number({ invalid_type_error: 'Monthly income is required' })
-    .min(0, 'Income cannot be negative'),
-  employmentStatus: z.enum(employmentStatuses),
-  employmentPeriod: z.coerce
-    .number({ invalid_type_error: 'Employment period is required' })
-    .min(0, 'Employment period cannot be negative'),
-  repaymentPeriod: z.coerce
-    .number({ invalid_type_error: 'Repayment period is required' })
-    .min(1, 'Repayment period must be at least 1'),
-  contactPhone: z.string().min(1, 'Contact phone is required'),
-  accountNumber: z.string().min(1, 'Account number is required'),
-});
+const loanFormSchema = z
+  .object({
+    loanType: z.enum(ALL_LOAN_TYPES_),
+    interestType: z.enum(ALL_INTEREST_TYPES_),
+    amount: z.coerce
+      .number({ invalid_type_error: 'Amount is required' })
+      .min(1, 'Amount must be at least 1'),
+    currency: z.enum(currencyOptions),
+    purposeOfLoan: z.string().min(1, 'Purpose is required'),
+    monthlyIncome: z.coerce
+      .number({ invalid_type_error: 'Monthly income is required' })
+      .min(0, 'Income cannot be negative'),
+    employmentStatus: z.enum(ALL_EMPLOYMENT_STATUSES_),
+    employmentPeriod: z.coerce
+      .number({ invalid_type_error: 'Employment period is required' })
+      .min(0, 'Employment period cannot be negative'),
+    repaymentPeriod: z.union([
+      z.number().superRefine(numberEnum(ALL_MORTGAGE_PERIODS)),
+      z.number().superRefine(numberEnum(ALL_DEFAULT_PERIODS)),
+    ]),
+    contactPhone: z
+      .string()
+      .regex(/^(\+3816|06)(\d{7,8}|(77|78)\d{5,6})$/, 'Invalid phone number'),
+    accountNumber: z.string().min(1, 'Account number is required'),
+  })
+  .refine(
+    (data) => {
+      if (data.loanType === 'MORTGAGE') {
+        return ALL_MORTGAGE_PERIODS.some((p) => p === data.repaymentPeriod);
+      } else {
+        return ALL_DEFAULT_PERIODS.some((p) => p === data.repaymentPeriod);
+      }
+    },
+    {
+      message: 'Please select a valid repayment period',
+      path: ['repaymentPeriod'],
+    }
+  );
 
 export type LoanFormValues = z.infer<typeof loanFormSchema>;
 
 export type LoanFormAction = { data: LoanFormValues };
 
 export interface LoanFormProps {
-  defaultValues?: Partial<LoanFormValues>;
+  defaultValues?: SomePartials<
+    LoanFormValues,
+    [
+      'loanType',
+      'repaymentPeriod',
+      'employmentStatus',
+      'interestType',
+      'currency',
+      'employmentPeriod',
+    ]
+  >;
   isPending: boolean;
   onSubmit: (action: LoanFormAction) => void;
   accounts: { accountNumber: string; currency: string }[];
 }
 
 export default function LoanForm({
-  defaultValues,
+  defaultValues = {
+    loanType: undefined,
+    interestType: undefined,
+    amount: 0,
+    currency: undefined,
+    purposeOfLoan: '',
+    monthlyIncome: 0,
+    employmentStatus: undefined,
+    employmentPeriod: undefined,
+    contactPhone: '',
+    accountNumber: '',
+  },
   isPending,
   onSubmit,
   accounts,
@@ -109,7 +139,7 @@ export default function LoanForm({
   };
 
   const availableRepaymentPeriods =
-    currentLoanType === 'MORTGAGE' ? mortgagePeriods : defaultPeriods;
+    currentLoanType === 'MORTGAGE' ? ALL_MORTGAGE_PERIODS : ALL_DEFAULT_PERIODS;
 
   return (
     <Form {...form}>
@@ -123,7 +153,9 @@ export default function LoanForm({
           name="loanType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loan Type <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Loan Type <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -133,7 +165,7 @@ export default function LoanForm({
                     <SelectValue placeholder="Select loan type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {loanTypes.map((type) => (
+                    {ALL_LOAN_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -152,7 +184,9 @@ export default function LoanForm({
           name="interestType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Interest Type <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Interest Type <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -162,7 +196,7 @@ export default function LoanForm({
                     <SelectValue placeholder="Select interest type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {interestTypes.map((it) => (
+                    {ALL_INTEREST_TYPES.map((it) => (
                       <SelectItem key={it} value={it}>
                         {it}
                       </SelectItem>
@@ -181,12 +215,15 @@ export default function LoanForm({
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Amount <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Amount <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   step="100" // Increased step to 100
                   placeholder="Enter amount"
+                  min={1}
                   onChange={(e) => {
                     const val = e.target.value;
                     field.onChange(val === '' ? undefined : +val);
@@ -205,7 +242,9 @@ export default function LoanForm({
           name="currency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Currency <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Currency <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -215,7 +254,7 @@ export default function LoanForm({
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
-                    {currencies.map((cur) => (
+                    {currencyOptions.map((cur) => (
                       <SelectItem key={cur} value={cur}>
                         {cur}
                       </SelectItem>
@@ -234,7 +273,9 @@ export default function LoanForm({
           name="purposeOfLoan"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Purpose <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Purpose <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter purpose" />
               </FormControl>
@@ -249,12 +290,15 @@ export default function LoanForm({
           name="monthlyIncome"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Monthly Income <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Monthly Income <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   step="100" // Increased step to 100
                   placeholder="Enter monthly income"
+                  min={1}
                   onChange={(e) => {
                     const val = e.target.value;
                     field.onChange(val === '' ? undefined : +val);
@@ -273,7 +317,9 @@ export default function LoanForm({
           name="employmentStatus"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Employment Status <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Employment Status <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -283,7 +329,7 @@ export default function LoanForm({
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    {employmentStatuses.map((status) => (
+                    {ALL_EMPLOYMENT_STATUSES.map((status) => (
                       <SelectItem key={status} value={status}>
                         {status}
                       </SelectItem>
@@ -302,11 +348,15 @@ export default function LoanForm({
           name="employmentPeriod"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Employment Period (years) <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Employment Period (years){' '}
+                <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   step="1"
+                  min={0}
                   placeholder="0"
                   onChange={(e) => {
                     const val = e.target.value;
@@ -326,7 +376,9 @@ export default function LoanForm({
           name="repaymentPeriod"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Repayment Period <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Repayment Period <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(val) => field.onChange(Number(val))}
@@ -355,7 +407,9 @@ export default function LoanForm({
           name="contactPhone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact Phone <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Contact Phone <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Input {...field} placeholder="+381..." />
               </FormControl>
@@ -370,7 +424,9 @@ export default function LoanForm({
           name="accountNumber"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Account Number <span className={'text-red-500'}>*</span></FormLabel>
+              <FormLabel>
+                Account Number <span className={'text-red-500'}>*</span>
+              </FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>

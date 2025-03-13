@@ -1,3 +1,5 @@
+import * as z from 'zod'
+
 // https://stackoverflow.com/questions/77310521/how-to-only-submit-data-change-in-react-hook-form
 // Map RHF's dirtyFields over the `data` received by `handleSubmit` and return the changed subset of that data.
 export function getDirtyValues<
@@ -21,4 +23,18 @@ export function getDirtyValues<
   }, {});
 
   return dirtyValues;
+}
+
+export function numberEnum<T extends number>(values: readonly T[]) {
+  const set = new Set<unknown>(values);
+  return (v: number, ctx: z.RefinementCtx): v is T => {
+    if (!set.has(v)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.invalid_enum_value,
+        received: v,
+        options: [...values]
+      });
+    }
+    return z.NEVER;
+  };
 }
