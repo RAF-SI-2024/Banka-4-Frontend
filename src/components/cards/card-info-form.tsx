@@ -2,10 +2,10 @@
 
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-dropdown-menu';
-import { Card } from '@/types/card';
+import { CardInfo } from '@/types/card';
 import { formatCardNumber } from '@/lib/card-number-utils';
 
-export function CardInfoForm(card: Card) {
+export function CardInfoForm(card: CardInfo) {
   return (
     <form className="grid grid-cols-2 gap-6">
       <div className="flex flex-col">

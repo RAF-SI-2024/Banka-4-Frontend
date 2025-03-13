@@ -5,14 +5,14 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/ui/dialog';
-import { Card } from '../../types/card';
+import { CardInfo } from '../../types/card';
 import { Button } from '@/components/ui/button';
 import { CardInfoForm } from './card-info-form';
 
 export type CardInfoDialogProps = {
   open: boolean;
   onClose: () => void;
-  item: Card;
+  item: CardInfo;
 };
 
 export const CardInfoDialog = ({
