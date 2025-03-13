@@ -123,7 +123,7 @@ export default function LoanForm({
           name="loanType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loan Type</FormLabel>
+              <FormLabel>Loan Type <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -152,7 +152,7 @@ export default function LoanForm({
           name="interestType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Interest Type</FormLabel>
+              <FormLabel>Interest Type <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -181,7 +181,7 @@ export default function LoanForm({
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Amount</FormLabel>
+              <FormLabel>Amount <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -205,7 +205,7 @@ export default function LoanForm({
           name="currency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Currency</FormLabel>
+              <FormLabel>Currency <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -234,7 +234,7 @@ export default function LoanForm({
           name="purposeOfLoan"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Purpose</FormLabel>
+              <FormLabel>Purpose <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Enter purpose" />
               </FormControl>
@@ -249,7 +249,7 @@ export default function LoanForm({
           name="monthlyIncome"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Monthly Income</FormLabel>
+              <FormLabel>Monthly Income <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -273,7 +273,7 @@ export default function LoanForm({
           name="employmentStatus"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Employment Status</FormLabel>
+              <FormLabel>Employment Status <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
@@ -302,7 +302,7 @@ export default function LoanForm({
           name="employmentPeriod"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Employment Period (years)</FormLabel>
+              <FormLabel>Employment Period (years) <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -326,7 +326,7 @@ export default function LoanForm({
           name="repaymentPeriod"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Repayment Period</FormLabel>
+              <FormLabel>Repayment Period <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(val) => field.onChange(Number(val))}
@@ -355,7 +355,7 @@ export default function LoanForm({
           name="contactPhone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contact Phone</FormLabel>
+              <FormLabel>Contact Phone <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Input {...field} placeholder="+381..." />
               </FormControl>
@@ -370,7 +370,7 @@ export default function LoanForm({
           name="accountNumber"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Account Number</FormLabel>
+              <FormLabel>Account Number <span className={'text-red-500'}>*</span></FormLabel>
               <FormControl>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>
