@@ -2,24 +2,16 @@
 
 import React, { useEffect, useMemo } from 'react';
 import GuardBlock from '@/components/GuardBlock';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import LoanFormCard, {
   LoanFormAction,
 } from '@/components/loans/loan-form-card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { toastRequestError } from '@/api/errors';
 import { requestLoan } from '@/api/loan';
 import { NewLoanRequest } from '@/api/request/loan';
-import { LoanRequestResponseDto } from '@/api/response/loan';
 import { toast } from 'sonner';
 
 import { AccountDto } from '@/api/response/account';
@@ -44,16 +36,17 @@ export default function RequestLoanPage() {
     data: accountsData = [],
     isLoading,
     error,
+    isError,
   } = useQuery<AccountDto[]>({
     queryKey: ['accounts'],
     queryFn: async () => (await getClientAccounts(client)).data,
   });
 
   React.useEffect(() => {
-    if (error) {
+    if (isError) {
       toastRequestError(error);
     }
-  }, [error]);
+  }, [isError, error]);
 
   const accounts = useMemo(() => {
     if (!accountsData) return [];
@@ -63,18 +56,14 @@ export default function RequestLoanPage() {
     }));
   }, [accountsData]);
 
-  const createLoanMutation = useMutation<
-    LoanRequestResponseDto,
-    Error,
-    NewLoanRequest
-  >({
+  const createLoanMutation = useMutation({
     mutationFn: async (data: NewLoanRequest) => {
       const response = await requestLoan(client, data);
       return response.data;
     },
-    onSuccess: (loanResponse) => {
+    onSuccess: () => {
       toast.success(
-        loanResponse.message || 'Loan request processed successfully!'
+        'Loan request processed successfully. One of our employees will get right to it!'
       );
     },
     onError: (error) => {

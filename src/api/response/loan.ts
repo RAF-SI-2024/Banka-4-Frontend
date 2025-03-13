@@ -33,9 +33,5 @@ export interface LoanRequestDto {
   loanNumber: number;
 }
 
-export interface LoanRequestResponseDto {
-  message?: string;
-}
-
 export type LoansResponseDto = Pageable<LoanDto>;
 export type LoanRequestsResponseDto = Pageable<LoanRequestDto>;
