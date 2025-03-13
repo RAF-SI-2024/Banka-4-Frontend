@@ -21,7 +21,6 @@ export default function LoanFormCard({
   defaultValues,
   isPending,
   onSubmit,
-  onCancel,
   accounts,
 }: LoanFormCardProps) {
   return (
