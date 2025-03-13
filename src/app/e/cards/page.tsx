@@ -45,6 +45,10 @@ const EmployeeManageCardsPage: React.FC = () => {
   });
 
   const cardFilterColumns: Record<keyof CardFilter, FilterDefinition> = {
+    accountNumber: {
+      filterType: 'string',
+      placeholder: 'Enter account number',
+    },
     cardNumber: {
       filterType: 'string',
       placeholder: 'Enter card number',
