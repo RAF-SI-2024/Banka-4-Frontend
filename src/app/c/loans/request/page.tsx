@@ -82,7 +82,6 @@ export default function RequestLoanPage() {
       <div className={'flex justify-center py-8'}>
         <LoanFormCard
           onSubmit={handleLoanSubmit}
-          onCancel={() => {}}
           isPending={isLoading}
           accounts={accounts}
         />

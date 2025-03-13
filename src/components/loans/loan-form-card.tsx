@@ -13,7 +13,6 @@ export interface LoanFormCardProps {
   defaultValues?: Partial<LoanFormValues>;
   isPending: boolean;
   onSubmit: (action: LoanFormAction) => void;
-  onCancel: () => void;
   accounts: { accountNumber: string; currency: string }[];
 }
 
