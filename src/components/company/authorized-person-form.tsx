@@ -45,13 +45,21 @@ export type AuthorizedPersonFormValues = z.infer<typeof formSchema>;
 export interface AuthorizedPersonFormProps {
   onSubmitAction: (values: AuthorizedPersonFormValues) => void;
   isPending: boolean;
-  defaultValues: SomePartial<AuthorizedPersonFormValues, 'dateOfBirth'>;
+  defaultValues?: SomePartial<AuthorizedPersonFormValues, 'dateOfBirth'>;
 }
 
 export default function AuthorizedPersonForm({
   onSubmitAction,
   isPending,
-  defaultValues,
+  defaultValues = {
+    firstName: '',
+    lastName: '',
+    dateOfBirth: undefined,
+    email: '',
+    phoneNumber: '',
+    address: '',
+    gender: 'MALE',
+  },
 }: AuthorizedPersonFormProps) {
   const form = useForm<AuthorizedPersonFormValues>({
     resolver: zodResolver(formSchema),

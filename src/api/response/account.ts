@@ -2,6 +2,7 @@ import { ClientResponseDto } from './client';
 import { CompanyResponseDto } from './company';
 import { EmployeeResponseDto } from './employee';
 import { Pageable } from '@/types/pageable';
+import { AccountType } from '@/types/account';
 
 export interface AccountDto {
   id: string;
@@ -12,7 +13,7 @@ export interface AccountDto {
   createdDate: Date;
   expirationDate: Date;
   active: boolean;
-  accountType: string;
+  accountType: AccountType;
   monthlyLimit: number;
   dailyLimit: number;
   currency: CurrencyDto;

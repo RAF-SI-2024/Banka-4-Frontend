@@ -1,7 +1,7 @@
 import { CardsResponseDto, EmployeeCardResponseDto } from './response/cards';
 import { Axios } from 'axios';
 import { CardStatus } from '@/types/card';
-import { AuthorizedUserDto } from './request/authorized-user';
+import { CreateCardRequest } from '@/api/request/card';
 
 export const searchCards = async (
   client: Axios,
@@ -24,19 +24,8 @@ export const searchClientCards = async (
     params: { ...filters, page, size },
   });
 
-export const createCard = async (
-  client: Axios,
-  requestData: {
-    accountNumber: string;
-    authorizedUser?: AuthorizedUserDto | null;
-  },
-  otp: string
-) => {
-  return client.post('/cards/create', requestData, {
-    headers: {
-      'X-2FA-CODE': otp,
-    },
-  });
+export const createCard = async (client: Axios, data: CreateCardRequest) => {
+  return client.post('/cards/create', data);
 };
 
 export const blockCard = async (client: Axios, cardNumber: string) =>
