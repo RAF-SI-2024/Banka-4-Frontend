@@ -54,7 +54,7 @@ const OnboardingPage: React.FC = () => {
         content: otpCode,
       });
       // If successful, complete the onboarding.
-      handleCompleteOnboarding();
+      await handleCompleteOnboarding();
     } catch (error) {
       console.error('OTP verification failed', error);
       setVerifyError('OTP verification failed. Please try again.');
