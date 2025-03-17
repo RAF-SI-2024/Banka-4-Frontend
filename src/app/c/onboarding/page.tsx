@@ -62,7 +62,7 @@ const OnboardingPage: React.FC = () => {
   };
 
   const handleCompleteOnboarding = async () => {
-    router.push('/');
+    router.push('/c/');
   };
 
   if (loading)
