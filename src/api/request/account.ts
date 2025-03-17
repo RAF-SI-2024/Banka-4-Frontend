@@ -7,6 +7,7 @@ export interface NewAccountDto {
   company: NewCompanyDto | null;
   availableBalance: number;
   currency: Currency;
+  createCard: boolean;
 }
 
 export interface NewCompanyDto {
