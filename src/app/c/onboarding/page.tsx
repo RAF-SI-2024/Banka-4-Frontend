@@ -74,6 +74,9 @@ const OnboardingPage: React.FC = () => {
     return <div>Loading me...</div>;
 
 
+  if(me.type === 'client' && me.me.has2FA)
+    redirect('/c/');
+
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
