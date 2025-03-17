@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQRCode } from 'next-qrcode';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TwoFASetupResponse } from '@/api/response/2fa';
+import {useMe} from "@/hooks/use-me";
 
 const OnboardingPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -18,6 +19,10 @@ const OnboardingPage: React.FC = () => {
   const { Canvas } = useQRCode();
 
   const client = useHttpClient();
+
+  const me =useMe();
+
+
 
   useEffect(() => {
     async function fetch2FASetup() {
@@ -64,6 +69,10 @@ const OnboardingPage: React.FC = () => {
   const handleCompleteOnboarding = async () => {
     router.push('/c/');
   };
+
+  if(me.state != "logged-in")
+    return <div>Loading me...</div>;
+
 
   if (loading)
     return (
