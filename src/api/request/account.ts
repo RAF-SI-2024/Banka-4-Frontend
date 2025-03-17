@@ -32,3 +32,10 @@ export interface NewClientDto {
   address: string;
   privilege: Privilege[];
 }
+
+export interface SetAccountLimitsDto {
+  accountNumber: string;
+  daily: number;
+  monthly: number;
+  otpCode: string;
+}

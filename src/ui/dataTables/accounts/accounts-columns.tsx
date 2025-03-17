@@ -44,6 +44,8 @@ export const accountsColumns: ColumnDef<AccountDto>[] = [
             type: row.original.accountType,
             availableBalance: row.original.availableBalance,
             reservedBalance: 0 /* TODO: this is 0 for now. Should be changed in the later sprints */,
+            monthlyLimit: row.original.monthlyLimit,
+            dailyLimit: row.original.dailyLimit,
           }}
         />
         <Link href={`/c/transactions?an=${row.original.accountNumber}`}>

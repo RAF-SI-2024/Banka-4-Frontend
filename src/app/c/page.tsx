@@ -109,6 +109,8 @@ export default function ClientPage() {
             availableBalance: account.availableBalance,
             reservedBalance: 0,
             company: account.company,
+            dailyLimit: account.dailyLimit,
+            monthlyLimit: account.monthlyLimit,
           }))}
           onSelect={(accountNumber: string) => {
             const account =

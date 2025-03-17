@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
 import { AccountDto, AccountOverviewResponseDto } from './response/account';
-import { NewAccountDto } from '@/api/request/account';
+import { NewAccountDto, SetAccountLimitsDto } from '@/api/request/account';
 
 export const getAccountById = async (client: Axios, id: string) =>
   client.get<AccountDto>(`/account/${id}`);
@@ -28,3 +28,8 @@ export const getAccounts = async (client: Axios) => {
 
 export const postNewAccount = async (client: Axios, data: NewAccountDto) =>
   client.post<void>('/account', data);
+
+export const setAccountLimits = async (
+  client: Axios,
+  data: SetAccountLimitsDto
+) => client.put<void>('/account/set-limits', data);

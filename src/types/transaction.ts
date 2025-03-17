@@ -1,3 +1,4 @@
+import { MaybePromise } from './MaybePromise';
 import { CompanyResponseDto } from '@/api/response/company';
 
 export interface TransactionCarouselItem {
@@ -8,5 +9,8 @@ export interface TransactionCarouselItem {
   type: string;
   availableBalance: number;
   reservedBalance: number;
+  monthlyLimit: number;
+  dailyLimit: number;
+  onClickChangeLimits?: () => MaybePromise<unknown>;
   company?: CompanyResponseDto;
 }

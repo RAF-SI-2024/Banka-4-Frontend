@@ -18,6 +18,15 @@ import Link from 'next/link';
 import { formatAccountNumber } from '@/lib/account-utils';
 import { AccountInfoDialog } from '@/components/account/account-info-dialog';
 import { TransactionCarouselItem } from '@/types/transaction';
+import { useMutation } from '@tanstack/react-query';
+import { SetAccountLimitsDto } from '@/api/request/account';
+import { useHttpClient } from '@/context/HttpClientContext';
+import { setAccountLimits } from '@/api/account';
+import { toast } from 'sonner';
+import { toastRequestError } from '@/api/errors';
+import { ChangeAccountLimitsDialog } from './account-limits-dialog';
+import { Dialog2FA } from '../Dialog2FA';
+import { AccountLimitsFormValues } from './account-limits-form';
 
 export function AccountCarousel({
   items,
@@ -27,7 +36,37 @@ export function AccountCarousel({
   onSelect: (accountNumber: string) => void;
 }) {
   const [api, setApi] = useState<CarouselApi>();
-
+  const client = useHttpClient();
+  const initialChangeLimitsState = {
+    formDialogOpen: false,
+    otpDialogOpen: false,
+    formData: undefined,
+    currentAccount: undefined,
+  };
+  const [changeLimitsState, setChangeLimitsState] = useState<{
+    formData: AccountLimitsFormValues | undefined;
+    currentAccount:
+      | {
+          accountNumber: string;
+          monthly: number;
+          daily: number;
+        }
+      | undefined;
+    formDialogOpen: boolean;
+    otpDialogOpen: boolean;
+  }>(initialChangeLimitsState);
+  const { isPending, mutate: mutateAccountLimits } = useMutation({
+    mutationFn: async (data: SetAccountLimitsDto) =>
+      setAccountLimits(client, data),
+    onSuccess: () => {
+      toast.success('Account limits changed successfully.');
+      setChangeLimitsState(initialChangeLimitsState);
+    },
+    onError: (error) => {
+      toastRequestError(error);
+      setChangeLimitsState((prev) => ({ ...prev, otpDialogOpen: false }));
+    },
+  });
   useEffect(() => {
     if (!api) {
       return;
@@ -40,6 +79,40 @@ export function AccountCarousel({
 
   return (
     <div className="flex justify-center py-8">
+      <ChangeAccountLimitsDialog
+        open={changeLimitsState.formDialogOpen}
+        onOpenChange={(n) =>
+          setChangeLimitsState((prev) => ({ ...prev, formDialogOpen: n }))
+        }
+        formProps={{
+          isPending: isPending,
+          onSubmit: (data) =>
+            setChangeLimitsState((prev) => ({
+              ...prev,
+              otpDialogOpen: true,
+              formData: data,
+            })),
+          defaultValues: { ...changeLimitsState.currentAccount },
+        }}
+      />
+      <Dialog2FA
+        open={changeLimitsState.otpDialogOpen}
+        onSubmit={async (otp) => {
+          if (
+            changeLimitsState.formData &&
+            changeLimitsState.formData.accountNumber ===
+              changeLimitsState.currentAccount?.accountNumber
+          ) {
+            await mutateAccountLimits({
+              ...changeLimitsState.formData,
+              otpCode: otp,
+            });
+          }
+        }}
+        onCancel={() =>
+          setChangeLimitsState((prev) => ({ ...prev, otpDialogOpen: false }))
+        }
+      />
       <Carousel className="w-full max-w-xl" setApi={setApi}>
         <CarouselContent>
           {items.map((item) => (
@@ -65,7 +138,22 @@ export function AccountCarousel({
                         <span>New Payment</span>
                       </Link>
                     </Button>
-                    <AccountInfoDialog item={item} />
+                    <AccountInfoDialog
+                      item={{
+                        ...item,
+                        onClickChangeLimits: () => {
+                          setChangeLimitsState((prev) => ({
+                            ...prev,
+                            formDialogOpen: true,
+                            currentAccount: {
+                              monthly: item.monthlyLimit,
+                              daily: item.dailyLimit,
+                              accountNumber: item.accountNumber,
+                            },
+                          }));
+                        },
+                      }}
+                    />
                   </CardContent>
                 </Card>
               </div>

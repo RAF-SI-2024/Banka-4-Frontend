@@ -4,9 +4,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { formatAccountNumber } from '@/lib/account-utils';
 import { TransactionCarouselItem } from '@/types/transaction';
+import { Button } from '../ui/button';
 
 /* TODO: we should use another type here, works for now, time rush */
-export function ViewAccountForm(transaction: TransactionCarouselItem) {
+export function ViewAccountForm(props: TransactionCarouselItem) {
   return (
     <form className="grid grid-cols-2 gap-6">
       <div className="flex flex-col">
@@ -15,7 +16,7 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="AccNum"
           className={'disabled:cursor-default'}
-          value={formatAccountNumber(transaction.accountNumber)}
+          value={formatAccountNumber(props.accountNumber)}
         />
       </div>
       <div className="flex flex-col">
@@ -24,7 +25,7 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="owner"
           className={'disabled:cursor-default'}
-          value={transaction.owner}
+          value={props.owner}
         />
       </div>
       <div className="flex flex-col">
@@ -33,7 +34,7 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="type"
           className={'disabled:cursor-default'}
-          value={transaction.type}
+          value={props.type}
         />
       </div>
       <div className="flex flex-col">
@@ -42,7 +43,7 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="avRes"
           className={'disabled:cursor-default'}
-          value={`${transaction.availableBalance.toLocaleString()} ${transaction.currencyCode}`}
+          value={`${props.availableBalance.toLocaleString()} ${props.currencyCode}`}
         />
       </div>
       <div className="flex flex-col">
@@ -51,7 +52,7 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="resRes"
           className={'disabled:cursor-default'}
-          value={`${transaction.reservedBalance.toLocaleString()} ${transaction.currencyCode}`}
+          value={`${props.reservedBalance.toLocaleString()} ${props.currencyCode}`}
         />
       </div>
       <div className="flex flex-col">
@@ -60,8 +61,42 @@ export function ViewAccountForm(transaction: TransactionCarouselItem) {
           disabled
           type="EDate"
           className={'disabled:cursor-default'}
-          value={`${transaction.balance.toLocaleString()} ${transaction.currencyCode}`}
+          value={`${props.balance.toLocaleString()} ${props.currencyCode}`}
         />
+      </div>
+      <div className="col-span-2">
+        <div className="flex flex-row">
+          <h2 className="font-semibold text-xl mb-4">Limits</h2>
+          {props.onClickChangeLimits != null && (
+            <Button
+              className="ml-auto"
+              onClick={async (e) => {
+                e.preventDefault();
+                await props.onClickChangeLimits?.();
+              }}
+            >
+              Change
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-row gap-6">
+          <div className="flex flex-col flex-1">
+            <Label>Daily Limit:</Label>
+            <Input
+              disabled
+              className={'disabled:cursor-default'}
+              value={`${props.monthlyLimit.toLocaleString()} ${props.currencyCode}`}
+            />
+          </div>
+          <div className="flex flex-col flex-1">
+            <Label>Monthly Limit:</Label>
+            <Input
+              disabled
+              className={'disabled:cursor-default'}
+              value={`${props.dailyLimit.toLocaleString()} ${props.currencyCode}`}
+            />
+          </div>
+        </div>
       </div>
       {(transaction.type === 'CheckingBusiness' ||
         transaction.type === 'FxBusiness') &&
