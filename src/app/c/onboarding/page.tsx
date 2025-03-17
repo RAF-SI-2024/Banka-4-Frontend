@@ -7,7 +7,7 @@ import { useHttpClient } from '@/context/HttpClientContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TwoFASetupResponse } from '@/api/response/2fa';
-import {useMe} from "@/hooks/use-me";
+import { useMe } from '@/hooks/use-me';
 
 const OnboardingPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -20,9 +20,7 @@ const OnboardingPage: React.FC = () => {
 
   const client = useHttpClient();
 
-  const me =useMe();
-
-
+  const me = useMe();
 
   useEffect(() => {
     async function fetch2FASetup() {
@@ -70,12 +68,9 @@ const OnboardingPage: React.FC = () => {
     router.push('/c/');
   };
 
-  if(me.state != "logged-in")
-    return <div>Loading me...</div>;
+  if (me.state != 'logged-in') return <div>Loading me...</div>;
 
-
-  if(me.type === 'client' && me.me.has2FA)
-    redirect('/c/');
+  if (me.type === 'client' && me.me.has2FA) redirect('/c/');
 
   if (loading)
     return (
