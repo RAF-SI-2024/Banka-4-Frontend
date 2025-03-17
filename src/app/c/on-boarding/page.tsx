@@ -49,7 +49,7 @@ const OnboardingPage: React.FC = () => {
         try {
             // Call the verify-new-authenticator endpoint with the OTP code.
             await client.post('/verify/verify-new-authenticator', { content: otpCode });
-            // If successful, complete the onboarding.
+            // If successful, complete the on-boarding.
             handleCompleteOnboarding();
         } catch (error) {
             console.error('OTP verification failed', error);
