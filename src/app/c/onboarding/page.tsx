@@ -62,7 +62,7 @@ const OnboardingPage: React.FC = () => {
     };
 
     if (loading) return <div className="flex items-center justify-center min-h-screen">Loading 2FA setup...</div>;
-    if (!qrData) return <div className="flex items-center justify-center min-h-screen">Error loading 2FA setup data.</div>;
+    if (!qrData) return <div className="flex items-center justify-center min-h-screen">Error loading 2FA setup.</div>;
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
