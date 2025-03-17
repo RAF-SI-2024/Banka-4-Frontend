@@ -61,7 +61,7 @@ const OnboardingPage: React.FC = () => {
         router.push('/');
     };
 
-    if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    if (loading) return <div className="flex items-center justify-center min-h-screen">Loading 2FA setup...</div>;
     if (!qrData) return <div className="flex items-center justify-center min-h-screen">Error loading 2FA setup data.</div>;
 
     return (
