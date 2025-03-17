@@ -51,6 +51,9 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
     }
   }
 
+  if(me.type === 'client' && !me.me.has2FA)
+    redirect('/c/onboarding');
+
   return <>{children}</>;
 };
 
