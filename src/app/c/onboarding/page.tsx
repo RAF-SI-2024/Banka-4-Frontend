@@ -119,7 +119,7 @@ const OnboardingPage: React.FC = () => {
           <p className="text-gray-700 text-center mb-4">
             Enter the OTP code from your authenticator app:
           </p>
-          <div className={"flex space-x-1 items-center mb-8 "}>
+          <div className={'flex space-x-1 items-center mb-8 '}>
             <Input
               type="text"
               value={otpCode}
