@@ -56,7 +56,7 @@ export function AccountCarousel({
                   </CardHeader>
                   <CardContent className="flex justify-center space-x-4">
                     <Button variant="default">
-                      <Link href={`#`}>
+                      <Link href={`/c/transactions/new-payment`}>
                         <span>New Payment</span>
                       </Link>
                     </Button>
