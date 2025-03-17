@@ -88,6 +88,7 @@ export default function NewAccountPage() {
       company: company,
       availableBalance: accountData.amount,
       currency: accountData.currency,
+      createCard: accountData.makeCard,
     };
 
     createAccount(requestData);
