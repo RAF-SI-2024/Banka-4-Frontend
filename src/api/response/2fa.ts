@@ -1,4 +1,4 @@
 export interface TwoFASetupResponse {
-    tokenSecret: string;
-    url: string;
+  tokenSecret: string;
+  url: string;
 }
