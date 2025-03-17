@@ -12,7 +12,7 @@ export interface ClientResponseDto {
   address: string;
   privileges: Privilege[];
   has2FA: boolean;
-  
+
   // TODO(marko): add accounts field
 }
 
