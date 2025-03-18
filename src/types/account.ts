@@ -1,4 +1,5 @@
 import { MaybePromise } from './MaybePromise';
+import { CompanyResponseDto } from '@/api/response/company';
 
 export const ALL_ACCOUNT_TYPES_ = [
   'CheckingPersonal',
@@ -21,4 +22,5 @@ export interface AccountCarouselItem {
   monthlyLimit: number;
   dailyLimit: number;
   onClickChangeLimits?: () => MaybePromise<unknown>;
+  company?: CompanyResponseDto;
 }
