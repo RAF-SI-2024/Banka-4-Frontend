@@ -11,7 +11,6 @@ export const searchAccounts = async (
     accountNumber: string;
     firstName: string;
     lastName: string;
-    accountType: string;
   },
   rowsPerPage: number,
   currentPage: number

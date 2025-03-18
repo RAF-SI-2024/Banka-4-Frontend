@@ -22,7 +22,6 @@ interface AccountFilter {
   accountNumber: string;
   firstName: string;
   lastName: string;
-  accountType: AccountType | '';
 }
 
 const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
@@ -38,11 +37,6 @@ const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
     filterType: 'string',
     placeholder: 'Enter last name',
   },
-  accountType: {
-    filterType: 'enum',
-    placeholder: 'Select account type',
-    options: ALL_ACCOUNT_TYPES,
-  },
 };
 
 const AccountOverviewPage: React.FC = () => {
@@ -55,7 +49,6 @@ const AccountOverviewPage: React.FC = () => {
     accountNumber: '',
     firstName: '',
     lastName: '',
-    accountType: '',
   });
 
   const client = useHttpClient();
