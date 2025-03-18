@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import LoginBlock from '@/components/LoginBlock';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,61 +42,65 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex justify-center items-center pt-16">
-      <Tabs defaultValue={'client'}>
-        <TabsList className={'w-full'}>
-          <TabsTrigger className={'w-full'} value="client">
-            Client
-          </TabsTrigger>
-          <TabsTrigger className={'w-full'} value="employee">
-            Employee
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value={'client'}>
-          <Card className="w-[348px] shadow-md">
-            <CardHeader className="space-y-2">
-              <CardTitle>Client Login</CardTitle>
-              <CardDescription>
-                Securely access your account and manage your finances with ease.
-              </CardDescription>
-            </CardHeader>
+    <LoginBlock>
+      <div className="flex justify-center items-center pt-16">
+        <Tabs defaultValue={'client'}>
+          <TabsList className={'w-full'}>
+            <TabsTrigger className={'w-full'} value="client">
+              Client
+            </TabsTrigger>
+            <TabsTrigger className={'w-full'} value="employee">
+              Employee
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value={'client'}>
+            <Card className="w-[348px] shadow-md">
+              <CardHeader className="space-y-2">
+                <CardTitle>Client Login</CardTitle>
+                <CardDescription>
+                  Securely access your account and manage your finances with
+                  ease.
+                </CardDescription>
+              </CardHeader>
 
-            <CardContent>
-              <LoginForm
-                enabled={!isPending}
-                onSubmitAction={(vals) =>
-                  doLogin({
-                    ...vals,
-                    userType: 'client',
-                  })
-                }
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value={'employee'}>
-          <Card className="w-[348px] shadow-md">
-            <CardHeader className="space-y-2">
-              <CardTitle>Employee Login</CardTitle>
-              <CardDescription>
-                Securely access your account and manage your finances with ease.
-              </CardDescription>
-            </CardHeader>
+              <CardContent>
+                <LoginForm
+                  enabled={!isPending}
+                  onSubmitAction={(vals) =>
+                    doLogin({
+                      ...vals,
+                      userType: 'client',
+                    })
+                  }
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value={'employee'}>
+            <Card className="w-[348px] shadow-md">
+              <CardHeader className="space-y-2">
+                <CardTitle>Employee Login</CardTitle>
+                <CardDescription>
+                  Securely access your account and manage your finances with
+                  ease.
+                </CardDescription>
+              </CardHeader>
 
-            <CardContent>
-              <LoginForm
-                enabled={!isPending}
-                onSubmitAction={(vals) =>
-                  doLogin({
-                    ...vals,
-                    userType: 'employee',
-                  })
-                }
-              />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+              <CardContent>
+                <LoginForm
+                  enabled={!isPending}
+                  onSubmitAction={(vals) =>
+                    doLogin({
+                      ...vals,
+                      userType: 'employee',
+                    })
+                  }
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </LoginBlock>
   );
 }

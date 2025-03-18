@@ -5,6 +5,7 @@ import { AppNavigationMenu } from '@/components/ui/navbar';
 import Image from 'next/image';
 import bankimgdark from './public/bankimgdark.png';
 import bankimglight from './public/bankimglight.png';
+import LoginBlock from '@/components/LoginBlock';
 
 export default function Home() {
   const { resolvedTheme } = useTheme();
@@ -17,7 +18,7 @@ export default function Home() {
   if (!mounted) return null;
 
   return (
-    <>
+    <LoginBlock>
       <AppNavigationMenu />
 
       <div className="flex flex-col md:flex-row items-center justify-between px-20 mt-3">
@@ -39,6 +40,6 @@ export default function Home() {
           )}
         </div>
       </div>
-    </>
+    </LoginBlock>
   );
 }
