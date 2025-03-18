@@ -3,11 +3,11 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { formatAccountNumber } from '@/lib/account-utils';
-import { TransactionCarouselItem } from '@/types/transaction';
+import { AccountCarouselItem } from '@/types/account';
 import { Button } from '../ui/button';
 
 /* TODO: we should use another type here, works for now, time rush */
-export function ViewAccountForm(props: TransactionCarouselItem) {
+export function ViewAccountForm(props: AccountCarouselItem) {
   return (
     <form className="grid grid-cols-2 gap-6">
       <div className="flex flex-col">

@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { formatAccountNumber } from '@/lib/account-utils';
 import { AccountInfoDialog } from '@/components/account/account-info-dialog';
-import { TransactionCarouselItem as AccountCarouselItem } from '@/types/transaction';
+import { AccountCarouselItem } from '@/types/account';
 import { useMutation } from '@tanstack/react-query';
 import { SetAccountLimitsDto } from '@/api/request/account';
 import { useHttpClient } from '@/context/HttpClientContext';
