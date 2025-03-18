@@ -34,7 +34,6 @@ export interface NewClientDto {
 }
 
 export interface SetAccountLimitsDto {
-  accountNumber: string;
   daily: number;
   monthly: number;
   otpCode: string;

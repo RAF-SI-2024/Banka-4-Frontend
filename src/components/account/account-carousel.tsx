@@ -17,7 +17,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { formatAccountNumber } from '@/lib/account-utils';
 import { AccountInfoDialog } from '@/components/account/account-info-dialog';
-import { TransactionCarouselItem } from '@/types/transaction';
+import { TransactionCarouselItem as AccountCarouselItem } from '@/types/transaction';
 import { useMutation } from '@tanstack/react-query';
 import { SetAccountLimitsDto } from '@/api/request/account';
 import { useHttpClient } from '@/context/HttpClientContext';
@@ -32,7 +32,7 @@ export function AccountCarousel({
   items,
   onSelect,
 }: {
-  items: TransactionCarouselItem[];
+  items: AccountCarouselItem[];
   onSelect: (accountNumber: string) => void;
 }) {
   const [api, setApi] = useState<CarouselApi>();
@@ -56,8 +56,13 @@ export function AccountCarousel({
     otpDialogOpen: boolean;
   }>(initialChangeLimitsState);
   const { isPending, mutate: mutateAccountLimits } = useMutation({
-    mutationFn: async (data: SetAccountLimitsDto) =>
-      setAccountLimits(client, data),
+    mutationFn: async ({
+      accountNumber,
+      data,
+    }: {
+      accountNumber: string;
+      data: SetAccountLimitsDto;
+    }) => setAccountLimits(client, accountNumber, data),
     onSuccess: () => {
       toast.success('Account limits changed successfully.');
       setChangeLimitsState(initialChangeLimitsState);
@@ -103,9 +108,13 @@ export function AccountCarousel({
             changeLimitsState.formData.accountNumber ===
               changeLimitsState.currentAccount?.accountNumber
           ) {
+            const accountNumber = changeLimitsState.formData.accountNumber;
             await mutateAccountLimits({
-              ...changeLimitsState.formData,
-              otpCode: otp,
+              accountNumber,
+              data: {
+                ...changeLimitsState.formData,
+                otpCode: otp,
+              },
             });
           }
         }}

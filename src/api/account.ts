@@ -31,5 +31,6 @@ export const postNewAccount = async (client: Axios, data: NewAccountDto) =>
 
 export const setAccountLimits = async (
   client: Axios,
+  accountNumber: string,
   data: SetAccountLimitsDto
-) => client.put<void>('/account/set-limits', data);
+) => client.put<void>(`/account/set-limits/${accountNumber}`, data);
