@@ -49,6 +49,12 @@ const ClientGroups: SidebarGroupType[] = [
         icon: HandCoins,
         privileges: [],
       },
+      {
+        title: 'Tranfer History',
+        url: '/c/transactions/transfer-history',
+        icon: List,
+        privileges: [],
+      },
     ],
   },
   {
