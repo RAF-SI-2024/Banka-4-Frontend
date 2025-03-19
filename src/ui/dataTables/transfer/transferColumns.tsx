@@ -3,22 +3,26 @@ import { transferStatusToString, TransferDto } from '@/api/response/transfer';
 import { Badge } from '@/components/ui/badge';
 import { formatDateTime } from '@/lib/utils';
 import { formatAccountNumber } from '@/lib/account-utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export const transferColumns: ColumnDef<TransferDto>[] = [
   {
-    accessorKey: "transactionNumber",
-    header: "Transfer Number",
+    accessorKey: 'transactionNumber',
+    header: 'Transfer Number',
     cell: ({ row }) => {
       const transactionNumber = row.original.transactionNumber;
       return (
         <Tooltip>
           <TooltipTrigger>
-            <span className="truncate w-20 inline-block">{transactionNumber.slice(0, 8)}...</span>
+            <span className="truncate w-20 inline-block">
+              {transactionNumber.slice(0, 8)}...
+            </span>
           </TooltipTrigger>
-          <TooltipContent>
-            {transactionNumber}
-          </TooltipContent>
+          <TooltipContent>{transactionNumber}</TooltipContent>
         </Tooltip>
       );
     },
