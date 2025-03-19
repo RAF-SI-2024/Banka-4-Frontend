@@ -24,6 +24,7 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 
 export type Dialog2FAProps = {
   open: boolean;
@@ -52,6 +53,10 @@ export const Dialog2FA = ({
       otp: '',
     },
   });
+
+  useEffect(() => {
+    form.resetField('otp');
+  }, [open]);
 
   return (
     <Dialog
