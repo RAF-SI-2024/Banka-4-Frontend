@@ -143,9 +143,6 @@ const OnboardingPage: React.FC = () => {
           )}
         </div>
 
-        <div className="flex justify-center">
-          <Button onClick={handleCompleteOnboarding}>I have set up 2FA</Button>
-        </div>
       </div>
     </div>
   );
