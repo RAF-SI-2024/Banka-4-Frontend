@@ -64,7 +64,6 @@ export default function EditClientPage() {
       toast('Client updated successfully');
       router.push('/e/client');
     },
-    onError: (error) => toastRequestError(error),
   });
 
   if (!isSuccess) {

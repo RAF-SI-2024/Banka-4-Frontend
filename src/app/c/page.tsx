@@ -15,7 +15,6 @@ import {
   CardRequestAction,
   CardsTableCard,
 } from '@/components/client-landing-page/cards-table-card';
-import { toastRequestError } from '@/api/errors';
 import { toast } from 'sonner';
 import { CreateCardRequest } from '@/api/request/card';
 import moment from 'moment';
@@ -53,7 +52,6 @@ export default function ClientPage() {
   const { mutate: doBlockCard } = useMutation({
     mutationFn: async (cardNumber: string) =>
       await blockCard(client, cardNumber),
-    onError: (error) => toastRequestError(error),
     onSuccess: () => {
       toast.success('card blocked successfully!');
       queryClient.invalidateQueries({ queryKey: ['cards'], exact: false });
@@ -63,7 +61,6 @@ export default function ClientPage() {
   const { mutate: doCreateCard } = useMutation({
     mutationFn: async (data: CreateCardRequest) =>
       await createCard(client, data),
-    onError: (error) => toastRequestError(error),
     onSuccess: () => {
       toast.success('card created successfully!');
       queryClient.invalidateQueries({ queryKey: ['cards'], exact: false });

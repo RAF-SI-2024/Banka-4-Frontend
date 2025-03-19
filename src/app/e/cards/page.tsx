@@ -24,7 +24,6 @@ import useTablePageParams from '@/hooks/useTablePageParams';
 import { FilterBar, FilterDefinition } from '@/components/filters/FilterBar';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { CardResponseDto } from '@/api/response/cards';
-import { toastRequestError } from '@/api/errors';
 import { toast } from 'sonner';
 import { ALL_CARD_STATUSES } from '@/types/card';
 
@@ -88,7 +87,6 @@ const EmployeeManageCardsPage: React.FC = () => {
       });
       toast('Card blocked successfully');
     },
-    onError: (error) => toastRequestError(error),
   });
 
   const { mutate: doUnblock } = useMutation({
@@ -102,7 +100,6 @@ const EmployeeManageCardsPage: React.FC = () => {
       });
       toast('Card blocked successfully');
     },
-    onError: (error) => toastRequestError(error),
   });
 
   const { mutate: doDeactivate } = useMutation({
@@ -117,7 +114,6 @@ const EmployeeManageCardsPage: React.FC = () => {
       });
       toast('Card blocked successfully');
     },
-    onError: (error) => toastRequestError(error),
   });
 
   const handleBlockUnblock = (card: CardResponseDto) => {

@@ -15,7 +15,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postNewEmployee } from '@/api/employee';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { NewEmployeeRequest } from '@/api/request/employee';
-import { toastRequestError } from '@/api/errors';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import GuardBlock from '@/components/GuardBlock';
@@ -40,7 +39,6 @@ export default function NewEmployeePage() {
   const { isPending, mutate: doNewEmployee } = useMutation({
     mutationFn: async (data: NewEmployeeRequest) =>
       postNewEmployee(client, data),
-    onError: (error) => toastRequestError(error),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['employee'],

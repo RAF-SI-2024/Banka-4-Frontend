@@ -66,9 +66,6 @@ export default function RequestLoanPage() {
         'Loan request processed successfully. One of our employees will get right to it!'
       );
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   function handleLoanSubmit(action: LoanFormAction) {

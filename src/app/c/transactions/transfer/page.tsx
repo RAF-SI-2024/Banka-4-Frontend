@@ -63,9 +63,6 @@ export default function TransferPage() {
     onSuccess: () => {
       toast.success('transfer was successful!');
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const handleTransferSubmit = (formData: TransferFormValues) => {

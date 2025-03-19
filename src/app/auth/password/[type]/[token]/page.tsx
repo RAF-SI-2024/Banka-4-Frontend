@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { VerifyPasswordRequest } from '@/api/request/auth';
-import { toastRequestError } from '@/api/errors';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { verifyPassword } from '@/api/auth';
 
@@ -64,9 +63,6 @@ export default function PasswordPage() {
         isReset ? 'Password reset successfully!' : 'Password set successfully!'
       );
       router.replace('/auth/login');
-    },
-    onError: (error) => {
-      toastRequestError(error);
     },
   });
 

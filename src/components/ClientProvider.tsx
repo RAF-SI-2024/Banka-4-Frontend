@@ -1,5 +1,6 @@
 'use client';
 
+import { toastRequestError } from '@/api/errors';
 import {
   isServer,
   MutationCache,
@@ -22,6 +23,9 @@ function makeQueryClient() {
         queryClient.invalidateQueries({
           queryKey: mutation.options.mutationKey,
         });
+      },
+      onError: (error, _variables, _context, _mutation) => {
+        toastRequestError(error);
       },
     }),
   });

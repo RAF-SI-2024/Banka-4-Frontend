@@ -1,5 +1,4 @@
 'use client';
-import { toastRequestError } from '@/api/errors';
 import LoginForm, { LoginFormData } from '@/components/auth/login-form';
 import { useAuth } from '@/context/AuthContext';
 import { useMutation } from '@tanstack/react-query';
@@ -30,7 +29,6 @@ export default function LoginPage() {
     }) => {
       if (!auth.isLoggedIn) await auth.login(userType, email, password);
     },
-    onError: (err) => toastRequestError(err),
     onSuccess: (_, { userType }) => {
       if (userType === 'employee') {
         router.replace('/e/employee');

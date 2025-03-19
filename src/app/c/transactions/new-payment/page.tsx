@@ -19,7 +19,6 @@ import GuardBlock from '@/components/GuardBlock';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { toast, Toaster } from 'sonner';
 import { NewPaymentRequest } from '@/api/request/transaction';
-import { toastRequestError } from '@/api/errors';
 
 export default function NewPaymentPage() {
   const { dispatch } = useBreadcrumb();
@@ -57,7 +56,6 @@ export default function NewPaymentPage() {
     mutationKey: ['payment'],
     mutationFn: async (paymentRequest: NewPaymentRequest) =>
       await createPayment(client, paymentRequest),
-    onError: (error) => toastRequestError(error),
     onSuccess: () => {
       setIsDialogOpen(false);
       setPaymentData(null);

@@ -27,7 +27,6 @@ import {
   updateContact,
 } from '@/api/contact';
 import GuardBlock from '@/components/GuardBlock';
-import { toastRequestError } from '@/api/errors';
 import { EditContactRequest } from '@/api/request/contact';
 
 const ContactsPage: React.FC = () => {
@@ -85,9 +84,6 @@ const ContactsPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const updateMutation = useMutation({
@@ -96,9 +92,6 @@ const ContactsPage: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const createMutation = useMutation({
@@ -106,9 +99,6 @@ const ContactsPage: React.FC = () => {
       await postNewContact(client, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['contact'] });
-    },
-    onError: (error) => {
-      toastRequestError(error);
     },
   });
 

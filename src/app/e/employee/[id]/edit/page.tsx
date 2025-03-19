@@ -64,7 +64,6 @@ export default function EditEmployeePage() {
       toast('Employee updated successfully');
       router.push('/e/employee');
     },
-    onError: (error) => toastRequestError(error),
   });
 
   if (!isSuccess) {

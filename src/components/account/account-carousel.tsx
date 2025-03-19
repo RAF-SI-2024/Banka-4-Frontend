@@ -23,7 +23,6 @@ import { SetAccountLimitsDto } from '@/api/request/account';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { setAccountLimits } from '@/api/account';
 import { toast } from 'sonner';
-import { toastRequestError } from '@/api/errors';
 import { ChangeAccountLimitsDialog } from './account-limits-dialog';
 import { Dialog2FA } from '../Dialog2FA';
 import { AccountLimitsFormValues } from './account-limits-form';
@@ -69,7 +68,6 @@ export function AccountCarousel({
       setChangeLimitsState(initialChangeLimitsState);
     },
     onError: (error) => {
-      toastRequestError(error);
       setChangeLimitsState((prev) => ({ ...prev, otpDialogOpen: false }));
     },
   });

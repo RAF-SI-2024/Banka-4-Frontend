@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useMutation } from '@tanstack/react-query';
-import { toastRequestError } from '@/api/errors';
 import {
   Form,
   FormControl,
@@ -43,7 +42,6 @@ export default function ForgotPasswordDialog() {
   const { isPending, mutate: doForgotPassword } = useMutation({
     mutationFn: async (email: string) =>
       await forgotPassword(httpClient, email),
-    onError: (error) => toastRequestError(error),
     onSuccess: () => {
       toast('Reset password email sent.');
     },
