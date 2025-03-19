@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -61,21 +61,29 @@ export default function NewTransactionForm({
   isPending,
   recipients,
   accounts,
-  defaultValues = {
+  defaultValues,
+}: NewTransactionFormProps) {
+  const finalDefaultValues: NewTransactionFormValues = {
     recipientName: '',
     recipientAccount: '',
     amount: 0,
     referenceNumber: '',
-    paymentCode: undefined,
+    paymentCode: '289', // Preselect Payment Code "289"
     paymentPurpose: '',
     payerAccount: '',
     saveRecipient: true,
-  },
-}: NewTransactionFormProps) {
+    ...(defaultValues || {}),
+  };
+
   const form = useForm<NewTransactionFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues,
+    defaultValues: finalDefaultValues,
     mode: 'onBlur',
+  });
+
+  const watchedRecipientName = useWatch({
+    control: form.control,
+    name: 'recipientName',
   });
 
   function _onSubmit(data: NewTransactionFormValues) {
@@ -94,7 +102,7 @@ export default function NewTransactionForm({
     if (selectedRecipient) {
       form.setValue(
         'recipientName',
-        selectedRecipient.nickname == 'New recipient'
+        selectedRecipient.nickname === 'New recipient'
           ? ''
           : selectedRecipient.nickname
       );
@@ -130,6 +138,7 @@ export default function NewTransactionForm({
           </Select>
         </div>
       </div>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(_onSubmit)}
@@ -181,7 +190,7 @@ export default function NewTransactionForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Recipient Name <span className="text-red-500 ">*</span>
+                  Recipient Name <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Recipient Name" />
@@ -272,7 +281,6 @@ export default function NewTransactionForm({
                       <SelectValue placeholder="Select a payment code" />
                     </SelectTrigger>
                   </FormControl>
-
                   <SelectContent>
                     {Object.keys(PAYMENT_CODE_MAP).map((code) => (
                       <SelectItem
@@ -280,9 +288,7 @@ export default function NewTransactionForm({
                         value={code}
                         className="max-w-[600px] whitespace-normal"
                       >
-                        {code}
-                        {' - '}
-                        {PAYMENT_CODE_MAP[code]}
+                        {code} - {PAYMENT_CODE_MAP[code]}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -293,17 +299,19 @@ export default function NewTransactionForm({
           />
 
           <div className="flex items-end justify-between w-full col-span-2">
+            {/* Save as new recipient */}
             <FormField
               control={form.control}
               name="saveRecipient"
               render={({ field }) => (
-                <FormItem className={'flex gap-4 items-center'}>
+                <FormItem className="flex gap-4 items-center">
                   <Switch
-                    id={'saveRecipient'}
+                    id="saveRecipient"
                     onCheckedChange={field.onChange}
                     checked={field.value}
+                    disabled={watchedRecipientName !== ''}
                   />
-                  <FormLabel htmlFor={'saveRecipient'} className={'!mt-0'}>
+                  <FormLabel htmlFor="saveRecipient" className="!mt-0">
                     Save as new recipient
                   </FormLabel>
                 </FormItem>
