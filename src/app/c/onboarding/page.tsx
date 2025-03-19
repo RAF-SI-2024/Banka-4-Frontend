@@ -74,9 +74,7 @@ const OnboardingPage: React.FC = () => {
   // If user isn't logged in yet, show a loading state.
   if (me.state !== 'logged-in') return <div>Loading me...</div>;
   // If user already has 2FA, redirect them away.
-  if (me.type === 'client'  && me.me.has2FA)
-    redirect('/c/');
-
+  if (me.type === 'client' && me.me.has2FA) redirect('/c/');
 
   if (isLoading)
     return (
