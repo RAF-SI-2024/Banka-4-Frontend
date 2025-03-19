@@ -2,13 +2,14 @@
 
 import {
   isServer,
+  MutationCache,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 
 function makeQueryClient() {
-  return new QueryClient({
+  const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         // With SSR, we usually want to set some default staleTime
@@ -16,7 +17,15 @@ function makeQueryClient() {
         staleTime: 60 * 1000,
       },
     },
+    mutationCache: new MutationCache({
+      onSuccess: (_data, _vars, _ctxt, mutation) => {
+        queryClient.invalidateQueries({
+          queryKey: mutation.options.mutationKey,
+        });
+      },
+    }),
   });
+  return queryClient;
 }
 
 let browserQueryClient: QueryClient | undefined = undefined;

@@ -56,6 +56,7 @@ export function AccountCarousel({
     otpDialogOpen: boolean;
   }>(initialChangeLimitsState);
   const { isPending, mutate: mutateAccountLimits } = useMutation({
+    mutationKey: ['accounts'],
     mutationFn: async ({
       accountNumber,
       data,
