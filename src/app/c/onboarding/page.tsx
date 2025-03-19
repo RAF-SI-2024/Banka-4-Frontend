@@ -76,7 +76,6 @@ const OnboardingPage: React.FC = () => {
   // If user already has 2FA, redirect them away.
   if (me.type === 'client' && me.me.has2FA) {
     redirect('/c/');
-    return null;
   }
 
   if (isLoading)
