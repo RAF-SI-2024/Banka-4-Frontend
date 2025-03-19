@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQRCode } from 'next-qrcode';
 import { redirect, useRouter } from 'next/navigation';
 import { useHttpClient } from '@/context/HttpClientContext';
@@ -8,37 +8,43 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TwoFASetupResponse } from '@/api/response/2fa';
 import { useMe } from '@/hooks/use-me';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const OnboardingPage: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [qrData, setQrData] = useState<TwoFASetupResponse | null>(null);
   const [copyStatus, setCopyStatus] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [verifyError, setVerifyError] = useState('');
   const router = useRouter();
   const { Canvas } = useQRCode();
-
   const client = useHttpClient();
-
   const me = useMe();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    async function fetch2FASetup() {
-      try {
-        // Call the regenerate authenticator endpoint from TotpController.
-        const response = await client.get<TwoFASetupResponse>(
-          '/verify/regenerate-authenticator'
-        );
-        setQrData(response.data);
-      } catch (error) {
-        console.error('Error fetching 2FA setup data', error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  // Fetch 2FA setup data using React Query.
+  const {
+    data: qrData,
+    isLoading,
+    error,
+  } = useQuery<TwoFASetupResponse>({
+    queryKey: ['2fa'],
+    queryFn: async () => {
+      const response = await client.get<TwoFASetupResponse>(
+        '/verify/regenerate-authenticator'
+      );
+      return response.data;
+    },
 
-    fetch2FASetup();
-  }, [client]);
+    enabled: me.state === 'logged-in' && me.type === 'client' && !me.me.has2FA,
+  });
+
+  // Mutation to verify the OTP code.
+  const verifyOTPMutation = useMutation({
+    mutationFn: async (otp: string) => {
+      await client.post('/verify/verify-new-authenticator', { content: otp });
+    },
+    onSuccess: async () => {
+    },
+  });
 
   const handleCopy = () => {
     if (qrData?.tokenSecret) {
@@ -52,27 +58,20 @@ const OnboardingPage: React.FC = () => {
   const handleVerifyOTP = async () => {
     setVerifyError('');
     try {
-      // Call the verify-new-authenticator endpoint with the OTP code.
-      await client.post('/verify/verify-new-authenticator', {
-        content: otpCode,
-      });
-      // If successful, complete the onboarding.
-      await handleCompleteOnboarding();
+      await verifyOTPMutation.mutateAsync(otpCode);
+      handleCompleteOnboarding();
     } catch (error) {
       console.error('OTP verification failed', error);
       setVerifyError('OTP verification failed. Please try again.');
     }
   };
 
-  const handleCompleteOnboarding = async () => {
+  const handleCompleteOnboarding = () => {
     router.push('/c/');
   };
 
-  if (me.state != 'logged-in') return <div>Loading me...</div>;
 
-  if (me.type === 'client' && me.me.has2FA) redirect('/c/');
-
-  if (loading)
+  if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-screen">
         Loading 2FA setup...
@@ -126,13 +125,13 @@ const OnboardingPage: React.FC = () => {
           <p className="text-gray-700 text-center mb-4">
             Enter the OTP code from your authenticator app:
           </p>
-          <div className={'flex space-x-1 items-center mb-8 '}>
+          <div className="flex space-x-1 items-center mb-8">
             <Input
               type="text"
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value)}
               placeholder="Enter OTP code"
-              className="w-full "
+              className="w-full"
             />
             <div className="flex justify-center">
               <Button onClick={handleVerifyOTP}>Verify OTP</Button>
@@ -150,5 +149,4 @@ const OnboardingPage: React.FC = () => {
     </div>
   );
 };
-
 export default OnboardingPage;
