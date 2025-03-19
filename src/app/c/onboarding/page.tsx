@@ -76,7 +76,7 @@ const OnboardingPage: React.FC = () => {
   // If user already has 2FA, redirect them away.
   if (me.type === 'client' && me.me.has2FA) {
     redirect('/c/');
-      return null;
+    return null;
   }
 
   if (isLoading)
@@ -142,14 +142,13 @@ const OnboardingPage: React.FC = () => {
               className="w-full"
             />
             <div className="flex justify-center">
-                <Button onClick={handleVerifyOTP}>Verify OTP</Button>
+              <Button onClick={handleVerifyOTP}>Verify OTP</Button>
             </div>
           </div>
           {verifyError && (
             <p className="text-red-500 text-center mt-2">{verifyError}</p>
           )}
         </div>
-
       </div>
     </div>
   );
