@@ -50,7 +50,7 @@ const ClientGroups: SidebarGroupType[] = [
         privileges: [],
       },
       {
-        title: 'Tranfer History',
+        title: 'Transfer History',
         url: '/c/transactions/transfer-history',
         icon: List,
         privileges: [],
