@@ -71,6 +71,13 @@ const OnboardingPage: React.FC = () => {
     router.push('/c/');
   };
 
+  // If user isn't logged in yet, show a loading state.
+  if (me.state !== 'logged-in') return <div>Loading me...</div>;
+  // If user already has 2FA, redirect them away.
+  if (me.type === 'client' && me.me.has2FA) {
+    redirect('/c/');
+      return null;
+  }
 
   if (isLoading)
     return (
@@ -135,7 +142,7 @@ const OnboardingPage: React.FC = () => {
               className="w-full"
             />
             <div className="flex justify-center">
-              <Button onClick={handleVerifyOTP}>Verify OTP</Button>
+                <Button onClick={handleVerifyOTP}>Verify OTP</Button>
             </div>
           </div>
           {verifyError && (
