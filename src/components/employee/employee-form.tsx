@@ -177,6 +177,7 @@ export default function EmployeeForm({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
+                      disabled={{ after: new Date() }}
                       initialFocus
                     />
                   </PopoverContent>
