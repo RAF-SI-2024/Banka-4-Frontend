@@ -1,5 +1,3 @@
-import { Pageable } from '@/types/pageable';
-
 export interface ExchangeDto {
   lastUpdatedISO8061withTimezone: string;
   lastUpdatedUnix: number;
@@ -12,9 +10,7 @@ export interface ExchangeDto {
 export interface exchange {
   Base: string;
   Quote: string;
-  Bid: number;
+  Buy: number;
   Neutral: number;
-  Ask: number;
+  Sell: number;
 }
-
-export type ExchangeResponseDto = Pageable<ExchangeDto>;
