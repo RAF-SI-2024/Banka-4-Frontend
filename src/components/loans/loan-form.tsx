@@ -32,7 +32,7 @@ import {
   ALL_LOAN_TYPES_,
   ALL_MORTGAGE_PERIODS,
 } from '@/types/loan';
-import { currencyOptions } from '@/types/currency';
+import { ALL_CURRENCIES, ALL_CURRENCIES_ } from '@/types/currency';
 import { SomePartials } from '@/types/utils';
 import { numberEnum } from '@/lib/form-utils';
 
@@ -43,7 +43,7 @@ const loanFormSchema = z
     amount: z.coerce
       .number({ invalid_type_error: 'Amount is required' })
       .min(1, 'Amount must be at least 1'),
-    currency: z.enum(currencyOptions),
+    currency: z.enum(ALL_CURRENCIES_),
     purposeOfLoan: z.string().min(1, 'Purpose is required'),
     monthlyIncome: z.coerce
       .number({ invalid_type_error: 'Monthly income is required' })
@@ -252,7 +252,7 @@ export default function LoanForm({
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
-                    {currencyOptions.map((cur) => (
+                    {ALL_CURRENCIES.map((cur) => (
                       <SelectItem key={cur} value={cur}>
                         {cur}
                       </SelectItem>

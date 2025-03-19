@@ -16,12 +16,12 @@ import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
 import GuardBlock from '@/components/GuardBlock';
 import { searchAccounts } from '@/api/account';
+import { AccountType, ALL_ACCOUNT_TYPES } from '@/types/account';
 
 interface AccountFilter {
   accountNumber: string;
   firstName: string;
   lastName: string;
-  accountType: string;
 }
 
 const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
@@ -37,10 +37,6 @@ const accountFilterColumns: Record<keyof AccountFilter, FilterDefinition> = {
     filterType: 'string',
     placeholder: 'Enter last name',
   },
-  accountType: {
-    filterType: 'string',
-    placeholder: 'Enter account type',
-  },
 };
 
 const AccountOverviewPage: React.FC = () => {
@@ -53,7 +49,6 @@ const AccountOverviewPage: React.FC = () => {
     accountNumber: '',
     firstName: '',
     lastName: '',
-    accountType: '',
   });
 
   const client = useHttpClient();

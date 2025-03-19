@@ -56,3 +56,7 @@ export const getAllClientContacts = async (
     params: { size: rowsPerPage, page: currentPage },
   });
 };
+
+export const getSavedClientContacts = async (client: Axios) => {
+  return client.get<ClientContactResponseDto[]>('/client-contact/me', {});
+};

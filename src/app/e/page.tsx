@@ -1,6 +1,7 @@
 'use client';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useEffect } from 'react';
+import GuardBlock from '@/components/GuardBlock';
 
 export default function EmployeeHomePage() {
   const { dispatch } = useBreadcrumb();
@@ -11,5 +12,9 @@ export default function EmployeeHomePage() {
     });
   }, [dispatch]);
 
-  return <h1>Hi!</h1>;
+  return (
+    <GuardBlock requiredUserType={'employee'}>
+      <h1>Hi!</h1>{' '}
+    </GuardBlock>
+  );
 }

@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Dialog2FA } from '@/components/Dialog2FA';
 import { getAccounts } from '@/api/account';
-import { createPayment, getAllClientContacts } from '@/api/client';
+import { createPayment, getSavedClientContacts } from '@/api/client';
 import GuardBlock from '@/components/GuardBlock';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { toast, Toaster } from 'sonner';
@@ -49,8 +49,7 @@ export default function NewPaymentPage() {
   const { data: recipients, isLoading: isLoadingRecipients } = useQuery({
     queryKey: ['recipients'],
     queryFn: async () => {
-      /* TODO(marko): replace this with get all clients api that will be implemented. */
-      return (await getAllClientContacts(client, 10, 0)).data;
+      return (await getSavedClientContacts(client)).data;
     },
   });
 
@@ -105,7 +104,7 @@ export default function NewPaymentPage() {
             <NewTransactionForm
               onSubmitAction={handleCreatePayment}
               accounts={accounts ?? []}
-              recipients={recipients?.content ?? []}
+              recipients={recipients ?? []}
               isPending={isPending || isLoadingAccounts || isLoadingRecipients}
             />
             <Dialog2FA

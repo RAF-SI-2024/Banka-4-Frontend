@@ -21,11 +21,11 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Switch } from '../ui/switch';
-import { currencyOptions } from '@/types/currency';
+import { ALL_CURRENCIES, ALL_CURRENCIES_ } from '@/types/currency';
 
 const formSchema = z.object({
   amount: z.coerce.number().min(0),
-  currency: z.enum(currencyOptions),
+  currency: z.enum(ALL_CURRENCIES_),
   makeCard: z.boolean(),
 });
 
@@ -84,7 +84,7 @@ export default function AccountForm({ onSubmit, isPending }: AccountFormProps) {
                     <SelectValue placeholder="Select currency" />
                   </SelectTrigger>
                   <SelectContent>
-                    {currencyOptions.map((currency) => (
+                    {ALL_CURRENCIES.map((currency) => (
                       <SelectItem key={currency} value={currency}>
                         {currency}
                       </SelectItem>
