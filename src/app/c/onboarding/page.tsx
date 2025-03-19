@@ -71,13 +71,7 @@ const OnboardingPage: React.FC = () => {
     router.push('/c/');
   };
 
-  // If user isn't logged in yet, show a loading state.
-  if (me.state !== 'logged-in') return <div>Loading me...</div>;
-  // If user already has 2FA, redirect them away.
-  if (me.type === 'client' && me.me.has2FA) {
-    redirect('/c/');
-    return null;
-  }
+
   if (isLoading)
     return (
       <div className="flex items-center justify-center min-h-screen">
