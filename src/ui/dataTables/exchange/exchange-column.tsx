@@ -13,8 +13,8 @@ export const exchangeColumns: ColumnDef<exchange>[] = [
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: 'Buy',
-    header: 'Buy',
+    accessorKey: 'Bid',
+    header: 'Bid',
     cell: (info) => (info.getValue() as number).toFixed(2),
   },
   {
@@ -23,8 +23,8 @@ export const exchangeColumns: ColumnDef<exchange>[] = [
     cell: (info) => (info.getValue() as number).toFixed(2),
   },
   {
-    accessorKey: 'Sell',
-    header: 'Sell',
+    accessorKey: 'Ask',
+    header: 'Ask',
     cell: (info) => (info.getValue() as number).toFixed(2),
   },
 ];
