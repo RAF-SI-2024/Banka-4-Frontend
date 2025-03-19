@@ -26,6 +26,7 @@ import { AccountDto } from '@/api/response/account';
 import { Switch } from '@/components/ui/switch';
 import { SomePartial } from '@/types/utils';
 import { ClientContactResponseDto } from '@/api/response/client';
+import { formatAccountNumber } from '@/lib/account-utils';
 
 export type NewTransactionFormValues = z.infer<typeof formSchema>;
 
@@ -156,7 +157,14 @@ export default function NewTransactionForm({
                   <SelectContent>
                     {accounts.map((account, index) => (
                       <SelectItem key={index} value={account.accountNumber}>
-                        {account.accountNumber}
+                        <div className="flex items-center w-full">
+                          <span>
+                            {formatAccountNumber(account.accountNumber)}
+                          </span>
+                          <span className="ml-auto pl-8">
+                            {account.currency.code}
+                          </span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
