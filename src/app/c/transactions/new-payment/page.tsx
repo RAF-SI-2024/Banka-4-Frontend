@@ -112,7 +112,6 @@ export default function NewPaymentPage() {
             />
           </CardContent>
         </Card>
-        <Toaster />
       </div>
     </GuardBlock>
   );
