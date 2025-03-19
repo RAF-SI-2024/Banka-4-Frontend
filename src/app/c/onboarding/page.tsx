@@ -29,11 +29,10 @@ const OnboardingPage: React.FC = () => {
     queryKey: ['2fa'],
     queryFn: async () => {
       const response = await client.get<TwoFASetupResponse>(
-        '/verify/regenerate-authenticator'
+          '/verify/regenerate-authenticator'
       );
       return response.data;
     },
-
     enabled: me.state === 'logged-in' && me.type === 'client' && !me.me.has2FA,
   });
 
@@ -50,9 +49,9 @@ const OnboardingPage: React.FC = () => {
   const handleCopy = () => {
     if (qrData?.tokenSecret) {
       navigator.clipboard
-        .writeText(qrData.tokenSecret)
-        .then(() => setCopyStatus('Copied!'))
-        .catch(() => setCopyStatus('Copy failed'));
+          .writeText(qrData.tokenSecret)
+          .then(() => setCopyStatus('Copied!'))
+          .catch(() => setCopyStatus('Copy failed'));
     }
   };
 
@@ -74,80 +73,86 @@ const OnboardingPage: React.FC = () => {
   // If user isn't logged in yet, show a loading state.
   if (me.state !== 'logged-in') return <div>Loading me...</div>;
   // If user already has 2FA, redirect them away.
-  if (me.type === 'client' && me.me.has2FA) redirect('/c/');
+  if (me.type === 'client' && me.me.has2FA) {
+    redirect('/c/');
+    return null;
+  }
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        Loading 2FA setup...
-      </div>
+        <div className="flex items-center justify-center min-h-screen">
+          Loading 2FA setup...
+        </div>
     );
   if (!qrData)
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        Error loading 2FA setup.
-      </div>
+        <div className="flex items-center justify-center min-h-screen">
+          Error loading 2FA setup.
+        </div>
     );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4   py-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center">
-          Set Up Two-Factor Authentication (2FA)
-        </h1>
-        <p className="text-gray-700 text-center mb-6">
-          Scan the QR code below with your Google Authenticator app:
-        </p>
-
-        <div className="flex justify-center mb-6">
-          <Canvas
-            text={qrData.url}
-            options={{
-              errorCorrectionLevel: 'M',
-              width: 256,
-              margin: 3,
-              color: {
-                dark: '#000000',
-                light: '#ffffff',
-              },
-            }}
-          />
-        </div>
-
-        <p className="text-center text-gray-600 mb-4">
-          Or manually enter this secret:{' '}
-          <span className="font-semibold">{qrData.tokenSecret}</span>
-        </p>
-
-        <div className="flex justify-center mb-6">
-          <Button onClick={handleCopy}>{copyStatus || 'Copy Secret'}</Button>
-        </div>
-
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-center">
-            Verify your authenticator
-          </h2>
-          <p className="text-gray-700 text-center mb-4">
-            Enter the OTP code from your authenticator app:
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4 py-4">
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 w-full max-w-md">
+          <h1 className="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-gray-100">
+            Set Up Two-Factor Authentication (2FA)
+          </h1>
+          <p className="text-gray-700 dark:text-gray-300 text-center mb-6">
+            Scan the QR code below with your Google Authenticator app:
           </p>
-          <div className="flex space-x-1 items-center mb-8">
-            <Input
-              type="text"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="Enter OTP code"
-              className="w-full"
+
+          <div className="flex justify-center mb-6">
+            <Canvas
+                text={qrData.url}
+                options={{
+                  errorCorrectionLevel: 'M',
+                  width: 256,
+                  margin: 3,
+                  color: {
+                    dark: '#000000',
+                    light: '#ffffff',
+                  },
+                }}
             />
-            <div className="flex justify-center">
-              <Button onClick={handleVerifyOTP}>Verify OTP</Button>
-            </div>
           </div>
-          {verifyError && (
-            <p className="text-red-500 text-center mt-2">{verifyError}</p>
-          )}
+
+          <p className="text-center text-gray-600 dark:text-gray-200 mb-4">
+            Or manually enter this secret:{' '}
+            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            {qrData.tokenSecret}
+          </span>
+          </p>
+
+          <div className="flex justify-center mb-6">
+            <Button onClick={handleCopy}>{copyStatus || 'Copy Secret'}</Button>
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-2 text-center text-gray-900 dark:text-gray-100">
+              Verify your authenticator
+            </h2>
+            <p className="text-gray-700 dark:text-gray-300 text-center mb-4">
+              Enter the OTP code from your authenticator app:
+            </p>
+            <div className="flex space-x-1 items-center mb-8">
+              <Input
+                  type="text"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  placeholder="Enter OTP code"
+                  className="w-full"
+              />
+              <div className="flex justify-center">
+                <Button onClick={handleVerifyOTP}>Verify OTP</Button>
+              </div>
+            </div>
+            {verifyError && (
+                <p className="text-red-500 text-center mt-2">{verifyError}</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
   );
 };
+
 export default OnboardingPage;
