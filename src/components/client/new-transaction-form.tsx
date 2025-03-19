@@ -126,7 +126,10 @@ export default function NewTransactionForm({
                 (
                   recipient:
                     | ClientContactResponseDto
-                    | { nickname: string; accountNumber: string },
+                    | {
+                        nickname: string;
+                        accountNumber: string;
+                      },
                   index: number
                 ) => (
                   <SelectItem key={index} value={recipient.nickname}>
@@ -166,12 +169,12 @@ export default function NewTransactionForm({
                   <SelectContent>
                     {accounts.map((account, index) => (
                       <SelectItem key={index} value={account.accountNumber}>
-                        <div className="flex items-center w-full">
+                        <div className="space-x-1">
                           <span>
                             {formatAccountNumber(account.accountNumber)}
                           </span>
-                          <span className="ml-auto pl-8">
-                            {account.currency.code}
+                          <span className="text-muted-foreground">
+                            ({account.currency.code})
                           </span>
                         </div>
                       </SelectItem>
