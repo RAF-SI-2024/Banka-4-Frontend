@@ -10,7 +10,7 @@ import {
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   blockCard,
   CardFilter,
@@ -77,41 +77,29 @@ const EmployeeManageCardsPage: React.FC = () => {
   const [currentAction, setCurrentAction] = useState<CardAction>();
 
   const { mutate: doBlock } = useMutation({
-    mutationKey: ['card', currentCard?.cardNumber],
+    mutationKey: ['card'],
     mutationFn: async (cardNumber: string) => blockCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      queryClient.invalidateQueries({
-        queryKey: ['card'],
-        exact: false,
-      });
       toast('Card blocked successfully');
     },
   });
 
   const { mutate: doUnblock } = useMutation({
-    mutationKey: ['card', currentCard?.cardNumber],
+    mutationKey: ['card'],
     mutationFn: async (cardNumber: string) => unblockCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      queryClient.invalidateQueries({
-        queryKey: ['card'],
-        exact: false,
-      });
       toast('Card blocked successfully');
     },
   });
 
   const { mutate: doDeactivate } = useMutation({
-    mutationKey: ['card', currentCard?.cardNumber],
+    mutationKey: ['card'],
     mutationFn: async (cardNumber: string) =>
       deactivateCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      queryClient.invalidateQueries({
-        queryKey: ['card'],
-        exact: false,
-      });
       toast('Card blocked successfully');
     },
   });
@@ -135,7 +123,6 @@ const EmployeeManageCardsPage: React.FC = () => {
   };
 
   const client = useHttpClient();
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['card', page, pageSize, cardFilter],

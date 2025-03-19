@@ -67,17 +67,13 @@ const LoansRequestsPage: React.FC = () => {
   });
 
   const approveMutation = useMutation({
+    mutationKey: ['loan-requests'],
     mutationFn: (loanNumber: number) => approveLoan(client, loanNumber),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loan-requests'] });
-    },
   });
 
   const rejectMutation = useMutation({
+    mutationKey: ['loan-requests'],
     mutationFn: (loanNumber: number) => rejectLoan(client, loanNumber),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['loan-requests'] });
-    },
   });
 
   const { dispatch } = useBreadcrumb();

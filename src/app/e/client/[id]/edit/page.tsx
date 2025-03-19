@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useHttpClient } from '@/context/HttpClientContext';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { toastRequestError } from '@/api/errors';
 import { toast } from 'sonner';
@@ -28,7 +28,6 @@ export default function EditClientPage() {
   const params = useParams<EditClientParams>();
   const { dispatch } = useBreadcrumb();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const client = useHttpClient();
   const {
@@ -57,10 +56,6 @@ export default function EditClientPage() {
     mutationFn: async (data: EditClientRequest) =>
       updateClientById(client, params.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['client'],
-        exact: false,
-      });
       toast('Client updated successfully');
       router.push('/e/client');
     },

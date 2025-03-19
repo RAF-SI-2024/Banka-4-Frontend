@@ -18,7 +18,7 @@ import ContactFormDialog, {
   ContactFormAction,
 } from '@/components/contacts/contact-form-dialog';
 import { DeleteDialog } from '@/components/DeleteDialog';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
 import {
   deleteContact,
@@ -56,7 +56,6 @@ const ContactsPage: React.FC = () => {
   }, [dispatch]);
 
   const client = useHttpClient();
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['contact', page, pageSize],
@@ -80,26 +79,20 @@ const ContactsPage: React.FC = () => {
   };
 
   const deleteMutation = useMutation({
+    mutationKey: ['contact'],
     mutationFn: async (id: string) => await deleteContact(client, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contact'] });
-    },
   });
 
   const updateMutation = useMutation({
+    mutationKey: ['contact'],
     mutationFn: async (data: { id: string; updateData: EditContactRequest }) =>
       await updateContact(client, data.id, data.updateData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contact'] });
-    },
   });
 
   const createMutation = useMutation({
+    mutationKey: ['contact'],
     mutationFn: async (data: { nickname: string; accountNumber: string }) =>
       await postNewContact(client, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['contact'] });
-    },
   });
 
   const handleDeleteConfirm = () => {

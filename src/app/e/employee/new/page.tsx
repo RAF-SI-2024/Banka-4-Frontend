@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import { useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { postNewEmployee } from '@/api/employee';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { NewEmployeeRequest } from '@/api/request/employee';
@@ -23,7 +23,6 @@ export default function NewEmployeePage() {
   const { dispatch } = useBreadcrumb();
   const client = useHttpClient();
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     dispatch({
@@ -37,13 +36,10 @@ export default function NewEmployeePage() {
   }, [dispatch]);
 
   const { isPending, mutate: doNewEmployee } = useMutation({
+    mutationKey: ['employee'],
     mutationFn: async (data: NewEmployeeRequest) =>
       postNewEmployee(client, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['employee'],
-        exact: false,
-      });
       toast.success('Employee created successfully');
       router.push('/e/employee');
     },

@@ -50,20 +50,20 @@ export default function ClientPage() {
   }, [isSuccess, setSelectedAccount, accounts]);
 
   const { mutate: doBlockCard } = useMutation({
+    mutationKey: ['cards'],
     mutationFn: async (cardNumber: string) =>
       await blockCard(client, cardNumber),
     onSuccess: () => {
       toast.success('card blocked successfully!');
-      queryClient.invalidateQueries({ queryKey: ['cards'], exact: false });
     },
   });
 
   const { mutate: doCreateCard } = useMutation({
+    mutationKey: ['cards'],
     mutationFn: async (data: CreateCardRequest) =>
       await createCard(client, data),
     onSuccess: () => {
       toast.success('card created successfully!');
-      queryClient.invalidateQueries({ queryKey: ['cards'], exact: false });
     },
   });
 

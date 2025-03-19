@@ -57,10 +57,6 @@ export default function EditEmployeePage() {
     mutationFn: async (data: EditEmployeeRequest) =>
       updateEmployeeById(client, params.id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['employee'],
-        exact: false,
-      });
       toast('Employee updated successfully');
       router.push('/e/employee');
     },
