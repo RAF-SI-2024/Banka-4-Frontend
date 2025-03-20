@@ -292,17 +292,31 @@ export default function LoanForm({
                 Monthly Income <span className={'text-red-500'}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  step="100" // Increased step to 100
-                  placeholder="Enter monthly income"
-                  min={1}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    field.onChange(val === '' ? undefined : +val);
-                  }}
-                  value={field.value === undefined ? '' : String(field.value)}
-                />
+                <div className="relative">
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '10px',
+                      transform: 'translateY(-50%)',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {currentCurrency}
+                  </span>
+                  <Input
+                    type="number"
+                    step="100"
+                    placeholder="Enter monthly income"
+                    min={1}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      field.onChange(val === '' ? undefined : +val);
+                    }}
+                    value={field.value === undefined ? '' : String(field.value)}
+                    style={{ paddingLeft: '55px' }}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
