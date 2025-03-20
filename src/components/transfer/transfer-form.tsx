@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { InputFieldWithCurrenct } from '../ui/input-with-currency';
 
 interface Account {
   id: string;
@@ -169,7 +170,7 @@ export default function TransferForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <div className="flex items-center border rounded-md px-3 py-2">
+                {/* <div className="flex items-center border rounded-md px-3 py-2">
                   <Input
                     className="flex-1 border-none focus:ring-0 text-lg font-semibold"
                     placeholder="Enter amount"
@@ -180,7 +181,14 @@ export default function TransferForm({
                       ? selectedFromAccount.currency.code
                       : 'RSD'}
                   </span>
-                </div>
+                </div> */}
+
+                <InputFieldWithCurrenct currency={selectedFromAccount?.currency.code || 'RSD'} field={{...field, onChange: (e) => {
+                    const val = e.target.value;
+                    if (/^\d*$/.test(val)) { // Allows only numbers
+                      field.onChange(val === '' ? undefined : Number(val));
+                    }
+                  }}} />
               </FormControl>
               <FormMessage />
             </FormItem>
