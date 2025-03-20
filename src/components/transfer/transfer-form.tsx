@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -170,25 +169,18 @@ export default function TransferForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                {/* <div className="flex items-center border rounded-md px-3 py-2">
-                  <Input
-                    className="flex-1 border-none focus:ring-0 text-lg font-semibold"
-                    placeholder="Enter amount"
-                    {...field}
-                  />
-                  <span className="ml-2 font-medium text-gray-500 dark:text-gray-400">
-                    {selectedFromAccount
-                      ? selectedFromAccount.currency.code
-                      : 'RSD'}
-                  </span>
-                </div> */}
-
-                <InputFieldWithCurrenct currency={selectedFromAccount?.currency.code || 'RSD'} field={{...field, onChange: (e) => {
-                    const val = e.target.value;
-                    if (/^\d*$/.test(val)) { // Allows only numbers
-                      field.onChange(val === '' ? undefined : Number(val));
-                    }
-                  }}} />
+                <InputFieldWithCurrenct
+                  currency={selectedFromAccount?.currency.code || 'RSD'}
+                  field={{
+                    ...field,
+                    onChange: (e) => {
+                      const val = e.target.value;
+                      if (/^\d*$/.test(val)) {
+                        field.onChange(val === '' ? undefined : Number(val));
+                      }
+                    },
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

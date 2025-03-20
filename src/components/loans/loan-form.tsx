@@ -293,38 +293,18 @@ export default function LoanForm({
                 Monthly Income <span className={'text-red-500'}>*</span>
               </FormLabel>
               <FormControl>
-                {/* <div className="relative">
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '10px',
-                      transform: 'translateY(-50%)',
-                      pointerEvents: 'none',
-                    }}
-                  >
-                    {currentCurrency}
-                  </span>
-
-                  <Input
-                    type="number"
-                    step="100"
-                    placeholder="Enter monthly income"
-                    min={1}
-                    onChange={(e) => {
+                <InputFieldWithCurrenct
+                  currency={currentCurrency || 'RSD'}
+                  field={{
+                    ...field,
+                    onChange: (e) => {
                       const val = e.target.value;
-                      field.onChange(val === '' ? undefined : +val);
-                    }}
-                    value={field.value === undefined ? '' : String(field.value)}
-                    style={{ paddingLeft: '60px' }}
-                  />
-                </div> */}
-                <InputFieldWithCurrenct currency={currentCurrency || 'RSD'} field={{...field, onChange: (e) => {
-                                    const val = e.target.value;
-                                    if (/^\d*$/.test(val)) { // Allows only numbers
-                                      field.onChange(val === '' ? undefined : Number(val));
-                                    }
-                                  }}} />
+                      if (/^\d*$/.test(val)) {
+                        field.onChange(val === '' ? undefined : Number(val));
+                      }
+                    },
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
