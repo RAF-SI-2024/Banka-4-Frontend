@@ -297,12 +297,7 @@ export default function LoanForm({
                   currency={currentCurrency || 'RSD'}
                   field={{
                     ...field,
-                    onChange: (e) => {
-                      const val = e.target.value;
-                      if (/^\d*$/.test(val)) {
-                        field.onChange(val === '' ? undefined : Number(val));
-                      }
-                    },
+                    onChange: field.onChange,
                   }}
                 />
               </FormControl>

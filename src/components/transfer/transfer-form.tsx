@@ -173,12 +173,7 @@ export default function TransferForm({
                   currency={selectedFromAccount?.currency.code || 'RSD'}
                   field={{
                     ...field,
-                    onChange: (e) => {
-                      const val = e.target.value;
-                      if (/^\d*$/.test(val)) {
-                        field.onChange(val === '' ? undefined : Number(val));
-                      }
-                    },
+                    onChange: field.onChange,
                   }}
                 />
               </FormControl>
