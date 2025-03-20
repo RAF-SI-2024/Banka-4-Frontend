@@ -63,7 +63,7 @@ function SuccessIndicator() {
           'size-32 bg-emerald-600 text-white flex justify-center items-center rounded-full'
         }
       >
-        <ReactConfetti initialVelocityY={30} />
+        <ReactConfetti className="max-w-full" initialVelocityY={30} />
         <Check className={'!size-24'} />
       </div>
       <div className={'text-2xl'}>
