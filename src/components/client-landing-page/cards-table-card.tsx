@@ -175,7 +175,7 @@ export function CardsTableCard(props: CardsTableCardProps) {
                     setIs2FADialogOpen(true);
                   }}
                 >
-                  <Plus /> card for myself
+                  <Plus /> Create a card for myself
                 </Button>
                 <Button
                   onClick={() => {
@@ -183,7 +183,7 @@ export function CardsTableCard(props: CardsTableCardProps) {
                     setIsAuthorizedPersonDialogOpen(true);
                   }}
                 >
-                  <Plus /> card for someone else
+                  <Plus /> Create a card for someone else
                 </Button>
               </div>
             ) : (
@@ -193,7 +193,7 @@ export function CardsTableCard(props: CardsTableCardProps) {
                   setIs2FADialogOpen(true);
                 }}
               >
-                <Plus /> card
+                <Plus /> Create a card
               </Button>
             )}
           </div>
