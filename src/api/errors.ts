@@ -1,39 +1,67 @@
-/* user-service/src/main/java/rs/banka4/user_service/exceptions/ file listing,
- * with the exception of BaseException and ErrorResponseHandler.
- */
 import axios from 'axios';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+/* find user-service/src/main/java/rs/banka4/user_service/exceptions -type f \
+        -execdir grep -q 'extends[[:space:]]*'BaseApiException '{}' ';' \
+	 -print | xargs basename -s.java | sort
+ */
+
+/* Please keep list sorted and use the command provided above to generate it.
+ */
 const KNOWN_BACKEND_ERRORS = [
+  'AccountNotActive',
   'AccountNotFound',
+  'AuthorizedUserNotAllowed',
+  'CardLimitExceeded',
+  'ClientContactNotFound',
   'ClientNotFound',
   'CompanyNotFound',
-  'ContactNotFound',
+  'DuplicateAuthorization',
   'DuplicateCompanyName',
   'DuplicateCrn',
+  'DuplicateEmail',
   'DuplicateTin',
+  'DuplicateUsername',
   'EmployeeNotFound',
+  'ExceededDailyLimit',
+  'ExceededMonthlyLimit',
+  'ExpiredJwt',
+  'IllegalArgumentJwt',
+  'IncorrectCredentials',
   'InsufficientFunds',
+  'InterestRateAmountNotSupported',
+  'InvalidAccountOperation',
   'InvalidCurrency',
+  'InvalidData',
+  'InvalidLoanStatus',
+  'InvalidLoanType',
+  'LoanNotFound',
+  'LoanTypeNotFound',
+  'MalformedJwt',
+  'NoJwtProvided',
+  'NoLoansOnAccount',
+  'NoTotp',
+  'NoTotpException',
   'NonexistantSortByField',
   'NotAccountOwner',
-  'NullPageRequest',
-  'RouteNotFound',
-  'TransactionNotFound',
-  'UserNotFound',
-  'DuplicateEmail',
-  'DuplicateUsername',
-  'IncorrectCredentials',
-  'InvalidData',
   'NotActivated',
+  'NotActiveTotp',
   'NotAuthenticated',
   'NotFound',
+  'NotValidCardStatus',
+  'NotValidTotp',
+  'NullPageRequest',
   'PrivilegeDoesNotExist',
   'RateLimitExceeded',
+  'RefreshTokenRevoked',
+  'RouteNotFound',
+  'TransactionInvalidOrAlreadyProcessed',
+  'TransactionNotFound',
+  'Unauthorized',
+  'UnsupportedJwt',
+  'UserNotFound',
   'VerificationCodeExpiredOrInvalid',
-  'NoTotpException',
-  'NotValidTotpException',
 ] as const;
 
 export type KnownBackendErrors = (typeof KNOWN_BACKEND_ERRORS)[number];
@@ -74,36 +102,65 @@ export type GeneralAPIError =
     };
 
 export const apiErrorMessages: Readonly<Record<KnownBackendErrors, string>> = {
+  /* Please keep list sorted.  */
+  AccountNotActive: 'Your account is no longer active',
   AccountNotFound: "The account you're looking for doesn't exist.",
+  AuthorizedUserNotAllowed:
+    'You have too many credit cards in your name (however, you can give more cards to authorized users)',
+  CardLimitExceeded:
+    "You've reached the maximal number of credit cards you can have",
+  ClientContactNotFound: 'No contact details were found.',
   ClientNotFound: 'Client information could not be found.',
   CompanyNotFound: 'The specified company was not found.',
-  ContactNotFound: 'No contact details were found.',
+  DuplicateAuthorization: "You've already granted a credit car to this person",
   DuplicateCompanyName: 'A company with this name already exists.',
   DuplicateCrn: 'This company registration number is already in use.',
+  DuplicateEmail: 'The email you provided is already taken',
   DuplicateTin: 'This tax identification number is already registered.',
+  DuplicateUsername: 'The username you provided is already taken',
   EmployeeNotFound: 'The requested employee could not be found.',
+  ExceededDailyLimit: 'This transaction would exceed your daily limits',
+  ExceededMonthlyLimit: 'This transaction would exceed your montly limits',
+  ExpiredJwt: 'Session expired',
+  IllegalArgumentJwt: 'Internal server error',
+  IncorrectCredentials: 'Incorrect credentials',
   InsufficientFunds:
     'Your account has insufficient funds to complete this transaction.',
+  InterestRateAmountNotSupported: 'We cannot provide that interest rate',
+  InvalidAccountOperation: 'Invalid account operation.',
   InvalidCurrency: 'The selected currency is not supported.',
+  InvalidData: 'Invalid data',
+  InvalidLoanStatus: 'Internal error',
+  InvalidLoanType: 'Internal error',
+  LoanNotFound: 'No such loan.',
+  LoanTypeNotFound: 'The margins you requested cannot be issued',
+  MalformedJwt: 'Internal server error',
+  NoJwtProvided: 'Unauthorized',
+  /* Yes, seriously, they called "no active accounts" "NoLoansOnAccount".  */
+  NoLoansOnAccount: 'You have no active accounts',
+  NoTotp: "You don't have 2FA enabled on your account.",
   NonexistantSortByField: "The field you're trying to sort by does not exist.",
   NotAccountOwner: "You don't have permission to access this account.",
-  NullPageRequest:
-    'Invalid page request. Please provide valid pagination details.',
-  RouteNotFound: 'The requested route could not be found.',
-  TransactionNotFound: 'The specified transaction does not exist.',
-  UserNotFound: 'The user could not be found.',
-  DuplicateEmail: 'The email you provided is already taken',
-  DuplicateUsername: 'The username you provided is already taken',
-  IncorrectCredentials: 'Incorrect credentials',
-  InvalidData: 'Invalid data',
   NotActivated: 'Account not active',
+  NotActiveTotp: 'You must complete TOTP setup first',
   NotAuthenticated: 'Not logged in',
   NotFound: 'Not found',
+  NotValidCardStatus: 'Internal error',
+  NotValidTotp: 'Invalid TOTP code',
+  NullPageRequest:
+    'Invalid page request. Please provide valid pagination details.',
   PrivilegeDoesNotExist: 'Invalid privilege',
   RateLimitExceeded: 'Rate limit exceeded!',
+  RefreshTokenRevoked: 'Session terminated',
+  RouteNotFound: 'The requested route could not be found.',
+  TransactionInvalidOrAlreadyProcessed:
+    'Transaction invalid or already processed',
+  TransactionNotFound: 'The specified transaction does not exist.',
+  Unauthorized: 'You cannot do that',
+  UnsupportedJwt: 'Internal server error',
+  UserNotFound: 'The user could not be found.',
   VerificationCodeExpiredOrInvalid: 'Your verification code expired',
   NoTotpException: "You don't have 2FA enabled on your account.",
-  NotValidTotpException: 'TOTP code is invalid.',
 };
 export const UNKNOWN_ERROR_MESSAGE = 'An unknown error occurred';
 
