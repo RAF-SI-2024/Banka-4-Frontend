@@ -16,10 +16,12 @@ import { toast } from 'sonner';
 
 import { AccountDto } from '@/api/response/account';
 import { getClientAccounts } from '@/api/account';
+import { useRouter } from 'next/navigation';
 
 export default function RequestLoanPage() {
   const { dispatch } = useBreadcrumb();
   const client = useHttpClient();
+  const router = useRouter();
 
   useEffect(() => {
     dispatch({
@@ -62,9 +64,8 @@ export default function RequestLoanPage() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success(
-        'Loan request processed successfully. One of our employees will get right to it!'
-      );
+      toast.success('Loan was created successfully.');
+      router.push('/c/loans/request/success');
     },
   });
 

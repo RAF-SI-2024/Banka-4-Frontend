@@ -59,7 +59,7 @@ export default function NewPaymentPage() {
     onSuccess: () => {
       setIsDialogOpen(false);
       setPaymentData(null);
-      toast.success('payment made successfully.');
+      toast.success('Payment was successful.');
     },
   });
 

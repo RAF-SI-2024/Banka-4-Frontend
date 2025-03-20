@@ -119,7 +119,7 @@ export default function TransactionDetails({
       {fieldFormatter({
         name: 'Payment status',
         children: (
-          <Badge className="block mt-2 justify-center mr-auto w-min">
+          <Badge className="block mt-2 justify-center mr-auto w-fit">
             {paymentStatusToString(dto.status).toUpperCase()}
           </Badge>
         ),

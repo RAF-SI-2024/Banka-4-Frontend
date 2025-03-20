@@ -141,11 +141,9 @@ export function AccountCarousel({
                     </span>
                   </CardHeader>
                   <CardContent className="flex justify-center space-x-4">
-                    <Button variant="default">
-                      <Link href={`/c/transactions/new-payment`}>
-                        <span>New Payment</span>
-                      </Link>
-                    </Button>
+                    <Link href={`/c/transactions/new-payment`}>
+                      <Button variant="default">New Payment</Button>
+                    </Link>
                     <AccountInfoDialog
                       item={{
                         ...item,

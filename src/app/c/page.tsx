@@ -54,7 +54,7 @@ export default function ClientPage() {
     mutationFn: async (cardNumber: string) =>
       await blockCard(client, cardNumber),
     onSuccess: () => {
-      toast.success('card blocked successfully!');
+      toast.success('Card was blocked successfully.');
     },
   });
 
@@ -63,7 +63,7 @@ export default function ClientPage() {
     mutationFn: async (data: CreateCardRequest) =>
       await createCard(client, data),
     onSuccess: () => {
-      toast.success('card created successfully!');
+      toast.success('Card was created successfully.');
     },
   });
 

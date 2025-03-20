@@ -61,7 +61,7 @@ export default function TransferPage() {
     mutationFn: (transferData: NewTransferRequest) =>
       postNewTransfer(client, transferData),
     onSuccess: () => {
-      toast.success('transfer was successful!');
+      toast.success('Transfer was successful.');
     },
   });
 
