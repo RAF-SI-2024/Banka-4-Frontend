@@ -1,3 +1,4 @@
+import { Currency } from '@/types/currency';
 import { Pageable } from '@/types/pageable';
 
 export const transferStatusToString = (status: TransferStatus): string => {
@@ -17,9 +18,9 @@ export interface TransferDto {
   fromAccount: string;
   toAccount: string;
   fromAmount: number;
-  fromCurrency: string;
+  fromCurrency: Currency;
   toAmount: number;
-  toCurrency: string;
+  toCurrency: Currency;
   feeAmount: number;
   feeCurrency: string;
   paymentDateTime: string;
