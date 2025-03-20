@@ -43,7 +43,7 @@ export default function ForgotPasswordDialog() {
     mutationFn: async (email: string) =>
       await forgotPassword(httpClient, email),
     onSuccess: () => {
-      toast('Reset password email sent.');
+      toast.success('Reset password email sent.');
     },
   });
 

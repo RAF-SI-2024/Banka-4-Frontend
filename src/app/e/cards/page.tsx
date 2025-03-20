@@ -84,7 +84,7 @@ const EmployeeManageCardsPage: React.FC = () => {
     mutationFn: async (cardNumber: string) => blockCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      toast('Card blocked successfully');
+      toast.success('Card blocked successfully');
     },
   });
 
@@ -93,7 +93,7 @@ const EmployeeManageCardsPage: React.FC = () => {
     mutationFn: async (cardNumber: string) => unblockCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      toast('Card blocked successfully');
+      toast.success('Card blocked successfully');
     },
   });
 
@@ -103,7 +103,7 @@ const EmployeeManageCardsPage: React.FC = () => {
       deactivateCard(client, cardNumber),
     onSuccess: () => {
       resetState();
-      toast('Card blocked successfully');
+      toast.success('Card blocked successfully');
     },
   });
 

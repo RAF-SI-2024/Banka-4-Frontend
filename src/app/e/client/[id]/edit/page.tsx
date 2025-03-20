@@ -56,7 +56,7 @@ export default function EditClientPage() {
     mutationFn: async (data: EditClientRequest) =>
       updateClientById(client, params.id, data),
     onSuccess: () => {
-      toast('Client updated successfully');
+      toast.success('Client updated successfully');
       router.push('/e/client');
     },
   });
