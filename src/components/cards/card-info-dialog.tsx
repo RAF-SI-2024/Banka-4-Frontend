@@ -21,7 +21,12 @@ export const CardInfoDialog = ({
   item,
 }: CardInfoDialogProps) => {
   return (
-    <Dialog open={open}>
+    <Dialog
+      open={open}
+      onOpenChange={(n) => {
+        if (!n) onClose();
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle className={'text-2xl'}>Account Details</DialogTitle>
@@ -29,7 +34,7 @@ export const CardInfoDialog = ({
         <CardInfoForm {...item} />
         <DialogClose asChild>
           <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
+            Close
           </Button>
         </DialogClose>
       </DialogContent>
