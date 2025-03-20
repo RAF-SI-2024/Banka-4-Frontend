@@ -14,7 +14,7 @@ export const exchangeColumns: ColumnDef<exchange>[] = [
   },
   {
     accessorKey: 'Buy',
-    header: 'Bid',
+    header: 'Bid(Buy)',
     cell: (info) => (info.getValue() as number).toFixed(2),
   },
   {
@@ -24,7 +24,7 @@ export const exchangeColumns: ColumnDef<exchange>[] = [
   },
   {
     accessorKey: 'Sell',
-    header: 'Ask',
+    header: 'Ask(Sell)',
     cell: (info) => (info.getValue() as number).toFixed(2),
   },
 ];
