@@ -33,7 +33,7 @@ export default function AccountViewLimits(props: AccountViewLimitsProps) {
           <Input
             disabled
             className={'disabled:cursor-default'}
-            value={`${props.monthlyLimit.toLocaleString()} ${props.currencyCode}`}
+            value={`${props.dailyLimit.toLocaleString()} ${props.currencyCode}`}
           />
         </div>
         <div className="flex flex-col flex-1">
@@ -41,7 +41,7 @@ export default function AccountViewLimits(props: AccountViewLimitsProps) {
           <Input
             disabled
             className={'disabled:cursor-default'}
-            value={`${props.dailyLimit.toLocaleString()} ${props.currencyCode}`}
+            value={`${props.monthlyLimit.toLocaleString()} ${props.currencyCode}`}
           />
         </div>
       </div>
