@@ -34,7 +34,6 @@ const KNOWN_BACKEND_ERRORS = [
   'VerificationCodeExpiredOrInvalid',
   'NoTotpException',
   'NotValidTotpException',
-  'CardLimitExceededException',
 ] as const;
 
 export type KnownBackendErrors = (typeof KNOWN_BACKEND_ERRORS)[number];
@@ -105,7 +104,6 @@ export const apiErrorMessages: Readonly<Record<KnownBackendErrors, string>> = {
   VerificationCodeExpiredOrInvalid: 'Your verification code expired',
   NoTotpException: "You don't have 2FA enabled on your account.",
   NotValidTotpException: 'TOTP code is invalid.',
-  CardLimitExceededException: 'You already have the maximum number of cards.',
 };
 export const UNKNOWN_ERROR_MESSAGE = 'An unknown error occurred';
 
