@@ -304,6 +304,7 @@ export default function LoanForm({
                   >
                     {currentCurrency}
                   </span>
+
                   <Input
                     type="number"
                     step="100"
@@ -314,7 +315,7 @@ export default function LoanForm({
                       field.onChange(val === '' ? undefined : +val);
                     }}
                     value={field.value === undefined ? '' : String(field.value)}
-                    style={{ paddingLeft: '55px' }}
+                    style={{ paddingLeft: '60px' }}
                   />
                 </div>
               </FormControl>
