@@ -32,8 +32,6 @@ const KNOWN_BACKEND_ERRORS = [
   'PrivilegeDoesNotExist',
   'RateLimitExceeded',
   'VerificationCodeExpiredOrInvalid',
-  'NoTotpException',
-  'NotValidTotpException',
 ] as const;
 
 export type KnownBackendErrors = (typeof KNOWN_BACKEND_ERRORS)[number];
@@ -102,8 +100,6 @@ export const apiErrorMessages: Readonly<Record<KnownBackendErrors, string>> = {
   PrivilegeDoesNotExist: 'Invalid privilege',
   RateLimitExceeded: 'Rate limit exceeded!',
   VerificationCodeExpiredOrInvalid: 'Your verification code expired',
-  NoTotpException: "You don't have 2FA enabled on your account.",
-  NotValidTotpException: 'TOTP code is invalid.',
 };
 export const UNKNOWN_ERROR_MESSAGE = 'An unknown error occurred';
 
