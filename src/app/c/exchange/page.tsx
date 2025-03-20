@@ -138,7 +138,7 @@ const ExchangePage: React.FC = () => {
                 <Input
                   type="number"
                   defaultValue="1.00"
-                  className="bg-gray-800 text-white w-32 rounded-md p-2 text-center"
+                  className=" w-32 rounded-md p-2 text-center"
                   onChange={(e) => {
                     setAmount(parseFloat(e.target.value));
                     setConvertedAmount(null);
@@ -155,7 +155,7 @@ const ExchangePage: React.FC = () => {
                       setConvertedAmount(null);
                     }}
                   >
-                    <SelectTrigger className="w-48 bg-gray-800 text-white rounded-md p-2">
+                    <SelectTrigger className="w-48 rounded-md p-2">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -184,7 +184,7 @@ const ExchangePage: React.FC = () => {
                       setConvertedAmount(null);
                     }}
                   >
-                    <SelectTrigger className="w-48 bg-gray-800 text-white rounded-md p-2">
+                    <SelectTrigger className="w-48 rounded-md p-2">
                       <SelectValue placeholder="Select currency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -218,7 +218,7 @@ const ExchangePage: React.FC = () => {
               </div>
             </div>
             {convertedAmount !== null && (
-              <div className="text-lg font-semibold text-white mt-6 text-center text-2xl">
+              <div className="text-lg font-semibold mt-6 text-center text-2xl">
                 {amount} {fromCurrency} = {convertedAmount} {toCurrency}
               </div>
             )}
