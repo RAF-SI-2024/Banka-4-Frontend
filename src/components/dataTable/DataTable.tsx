@@ -166,19 +166,21 @@ export function DataTable<TData>({
             </TableBody>
           </Table>
         </div>
-        <div className="pt-6">
-          <PaginationWrapper
-            currentPage={pagination.page + 1} // Convert from 0-index to 1-index
-            totalPages={pageCount}
-            onPageChange={(page) => {
-              // Convert back from 1-index to 0-index
-              onPaginationChange({
-                page: page - 1,
-                pageSize: pagination.pageSize,
-              });
-            }}
-          />
-        </div>
+        {pageCount > 1 && (
+          <div className="pt-6">
+            <PaginationWrapper
+              currentPage={pagination.page + 1} // Convert from 0-index to 1-index
+              totalPages={pageCount}
+              onPageChange={(page) => {
+                // Convert back from 1-index to 0-index
+                onPaginationChange({
+                  page: page - 1,
+                  pageSize: pagination.pageSize,
+                });
+              }}
+            />
+          </div>
+        )}
       </div>
     </>
   );
