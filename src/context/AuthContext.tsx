@@ -13,6 +13,7 @@ import { API_BASE } from '@/lib/utils';
 import { LoginRequestDto, RefreshTokenDto } from '@/api/request/auth';
 import { LoginResponseDto, RefreshTokenResponseDto } from '@/api/response/auth';
 import { UserType } from '@/api/auth';
+import { isAPIError, isKnownAPIError } from '@/api/errors';
 
 type LoggedInAuthState = {
   accessToken: Promise<string>;
@@ -185,12 +186,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                       /* ... and it was Unauthorized or Conflict... */
                       (err.response.status === 409 ||
                         err.response.status === 401) &&
-                      /* ... and the response body exists and is an object... */
-                      typeof err.response.data === 'object' &&
+                      /* ... and the response body is an API error... */
+                      isAPIError(err.response.data) &&
+                      isKnownAPIError(err.response.data) &&
                       /* ... and it tells us the refresh token expired or was
                        * revoked... */
-                      (err.response.data.data === 'ExpiredJwt' ||
-                        err.response.data.data === 'RefreshTokenRevoked')
+                      (err.response.data.code === 'ExpiredJwt' ||
+                        err.response.data.code === 'RefreshTokenRevoked')
                     )
                       /* ... then, the session is over.  */
                       dispatch({ type: 'logout' });
