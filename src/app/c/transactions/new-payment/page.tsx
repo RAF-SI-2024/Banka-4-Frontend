@@ -73,6 +73,12 @@ export default function NewPaymentPage() {
       throw Error('invalid state.');
     }
 
+    if (paymentData.payerAccount === paymentData.recipientAccount) {
+      toast.error('You cannot make a payment to the same account.');
+      setIsDialogOpen(false);
+      return;
+    }
+
     makePayment({
       fromAccount: paymentData.payerAccount,
       toAccount: paymentData.recipientAccount,
