@@ -37,7 +37,7 @@ export const transferColumns: ColumnDef<TransferDto>[] = [
     header: 'Start Amount',
     cell: ({ row }) => (
       <p>
-        {row.original.fromAmount} {row.original.fromCurrency}
+        {row.original.fromAmount.toLocaleString()} {row.original.fromCurrency}
       </p>
     ),
   },
@@ -51,7 +51,7 @@ export const transferColumns: ColumnDef<TransferDto>[] = [
     header: 'End Amount',
     cell: ({ row }) => (
       <p>
-        {row.original.toAmount} {row.original.toCurrency}
+        {row.original.toAmount.toLocaleString()} {row.original.toCurrency}
       </p>
     ),
   },
