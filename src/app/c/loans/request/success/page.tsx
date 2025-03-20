@@ -9,7 +9,7 @@ export default function Page() {
         <div className="text-center">
           <p className="text-lg pb-2 my-4">
             Loan was requested successfully. You will get a confirmation as soon
-            as it's approved.
+            as it&apos;s approved.
           </p>
           Go back{' '}
           <Link className="text-blue-500 dark:text-blue-400" href={'/'}>
