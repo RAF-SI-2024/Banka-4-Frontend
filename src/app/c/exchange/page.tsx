@@ -57,14 +57,12 @@ const ExchangePage: React.FC = () => {
     queryKey: ['exchange', page, pageSize],
     queryFn: async () => {
       const response = await searchExchanges(client, pageSize, page);
-      console.log(response.data);
 
-      console.log(response.data.exchanges);
       const uniqueCurrencies = [
         ...new Set(Object.keys(response.data.exchanges)),
+        'RSD',
       ];
 
-      console.log('Available Currencies:', uniqueCurrencies);
       setAvailableCurrencies(uniqueCurrencies);
 
       const formattedExchanges = Object.values(response.data.exchanges).map(
@@ -113,41 +111,28 @@ const ExchangePage: React.FC = () => {
   return (
     <GuardBlock requiredUserType={'client'}>
       <div className="p-4">
-        <Card className="max-w-[900px] mx-auto p-4">
-          <CardContent className="rounded-lg overflow-hidden  items-center">
-            <DataTable
-              columns={exchangeColumns}
-              data={data ?? []}
-              isLoading={isLoading}
-              pageCount={0}
-              pagination={{ page, pageSize }}
-              onPaginationChange={(newPagination) => {
-                setPage(newPagination.page);
-                setPageSize(newPagination.pageSize);
-              }}
-            />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="p-4">
         <Card className="max-w-[900px] mx-auto rounded-lg p-6">
           <CardContent className="flex flex-col items-center gap-6 p-10">
-            <div className="flex items-center gap-6 w-full justify-center">
+            <div className="flex items-end gap-6 w-full justify-center">
               <div className="flex flex-col items-center">
-                <span className="text-sm text-gray-400 mb-1">Amount</span>
+                <span className="text-sm text-muted-foreground mb-1">
+                  Amount
+                </span>
                 <Input
                   type="number"
-                  defaultValue="1.00"
-                  className=" w-32 rounded-md p-2 text-center"
+                  defaultValue="1"
+                  className="w-32 rounded-md p-2 text-center"
                   onChange={(e) => {
                     setAmount(parseFloat(e.target.value));
                     setConvertedAmount(null);
                   }}
                 />
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-end gap-4">
                 <div className="flex flex-col items-center">
-                  <span className="text-sm text-gray-400 mb-1">From</span>
+                  <span className="text-sm text-muted-foreground mb-1">
+                    From
+                  </span>
                   <Select
                     value={fromCurrency}
                     onValueChange={(value) => {
@@ -167,16 +152,11 @@ const ExchangePage: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={swapCurrencies}
-                  className="hover:bg-gray-700 rounded-md p-2"
-                >
-                  <ArrowLeftRight className="text-white" />
+                <Button variant="ghost" size="icon" onClick={swapCurrencies}>
+                  <ArrowLeftRight />
                 </Button>
                 <div className="flex flex-col items-center">
-                  <span className="text-sm text-gray-400 mb-1">To</span>
+                  <span className="text-sm text-muted-foreground mb-1">To</span>
                   <Select
                     value={toCurrency}
                     onValueChange={(value) => {
@@ -218,10 +198,28 @@ const ExchangePage: React.FC = () => {
               </div>
             </div>
             {convertedAmount !== null && (
-              <div className="text-lg font-semibold mt-6 text-center text-2xl">
-                {amount} {fromCurrency} = {convertedAmount} {toCurrency}
+              <div className="text-2xl font-semibold mt-6 text-center">
+                {amount.toLocaleString()} {fromCurrency} ={' '}
+                {convertedAmount.toLocaleString()} {toCurrency}
               </div>
             )}
+          </CardContent>
+        </Card>
+      </div>
+      <div className="p-4">
+        <Card className="max-w-[900px] mx-auto p-4">
+          <CardContent className="rounded-lg overflow-hidden items-center">
+            <DataTable
+              columns={exchangeColumns}
+              data={data ?? []}
+              isLoading={isLoading}
+              pageCount={0}
+              pagination={{ page, pageSize }}
+              onPaginationChange={(newPagination) => {
+                setPage(newPagination.page);
+                setPageSize(newPagination.pageSize);
+              }}
+            />
           </CardContent>
         </Card>
       </div>
