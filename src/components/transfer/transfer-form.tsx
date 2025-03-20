@@ -25,7 +25,7 @@ import { InputFieldWithCurrency } from '../ui/input-with-currency';
 interface Account {
   id: string;
   accountNumber: string;
-  availableBalance: number;
+  balance: number /* TODO: this should be changed back to availableBalance in the coming sprints. */;
   currency: {
     code: string;
     symbol: string;
@@ -82,8 +82,8 @@ export default function TransferForm({
 
   const adjustedBalance =
     selectedFromAccount && amount
-      ? Math.max(selectedFromAccount.availableBalance - amount, 0)
-      : selectedFromAccount?.availableBalance;
+      ? Math.max(selectedFromAccount.balance - amount, 0)
+      : selectedFromAccount?.balance;
 
   return (
     <Form {...form}>
