@@ -2,7 +2,7 @@
 
 import { Input } from '@/components/ui/input';
 
-interface InputFieldWithCurrenctProps {
+interface InputFieldWithCurrencyProps {
   currency: string;
   field: {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,14 +14,14 @@ interface InputFieldWithCurrenctProps {
   };
 }
 
-const InputFieldWithCurrenct: React.FC<InputFieldWithCurrenctProps> = ({
+const InputFieldWithCurrency: React.FC<InputFieldWithCurrencyProps> = ({
   currency,
   field,
 }) => {
   return (
     <div className="flex items-center border rounded-md px-3 py-2">
       <Input
-        className="flex-1 border-none focus:ring-0 text-lg font-semibold"
+        className="flex-1 border-none focus:ring-0 text-lg !h-fit font-semibold"
         placeholder="Enter amount"
         {...field}
       />
@@ -32,4 +32,4 @@ const InputFieldWithCurrenct: React.FC<InputFieldWithCurrenctProps> = ({
   );
 };
 
-export { InputFieldWithCurrenct };
+export { InputFieldWithCurrency };

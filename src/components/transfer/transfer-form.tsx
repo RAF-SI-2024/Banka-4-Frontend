@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InputFieldWithCurrenct } from '../ui/input-with-currency';
+import { InputFieldWithCurrency } from '../ui/input-with-currency';
 
 interface Account {
   id: string;
@@ -169,7 +169,7 @@ export default function TransferForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <InputFieldWithCurrenct
+                <InputFieldWithCurrency
                   currency={selectedFromAccount?.currency.code || 'RSD'}
                   field={{
                     ...field,

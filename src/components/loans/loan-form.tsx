@@ -35,7 +35,7 @@ import {
 import { ALL_CURRENCIES, ALL_CURRENCIES_ } from '@/types/currency';
 import { SomePartials } from '@/types/utils';
 import { numberEnum } from '@/lib/form-utils';
-import { InputFieldWithCurrenct } from '../ui/input-with-currency';
+import { InputFieldWithCurrency } from '../ui/input-with-currency';
 
 const loanFormSchema = z
   .object({
@@ -293,7 +293,7 @@ export default function LoanForm({
                 Monthly Income <span className={'text-red-500'}>*</span>
               </FormLabel>
               <FormControl>
-                <InputFieldWithCurrenct
+                <InputFieldWithCurrency
                   currency={currentCurrency || 'RSD'}
                   field={{
                     ...field,
