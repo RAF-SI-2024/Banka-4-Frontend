@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TwoFASetupResponse } from '@/api/response/2fa';
 import { useMe } from '@/hooks/use-me';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const OnboardingPage: React.FC = () => {
   const [copyStatus, setCopyStatus] = useState('');
@@ -24,7 +24,7 @@ const OnboardingPage: React.FC = () => {
   const {
     data: qrData,
     isLoading,
-    error,
+    refetch,
   } = useQuery<TwoFASetupResponse>({
     queryKey: ['2fa'],
     queryFn: async () => {
@@ -33,7 +33,7 @@ const OnboardingPage: React.FC = () => {
       );
       return response.data;
     },
-    enabled: me.state === 'logged-in' && me.type === 'client' && !me.me.has2FA,
+    enabled: false,
   });
 
   // Mutation to verify the OTP code.
@@ -42,7 +42,14 @@ const OnboardingPage: React.FC = () => {
       await client.post('/verify/verify-new-authenticator', { content: otp });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['users'] });
+      await queryClient.invalidateQueries({
+        queryKey: ['users'],
+        exact: false,
+      });
+    },
+    onError: (error) => {
+      console.error('OTP verification failed', error);
+      setVerifyError('OTP verification failed. Please try again.');
     },
   });
 
@@ -57,17 +64,7 @@ const OnboardingPage: React.FC = () => {
 
   const handleVerifyOTP = async () => {
     setVerifyError('');
-    try {
-      await verifyOTPMutation.mutateAsync(otpCode);
-      handleCompleteOnboarding();
-    } catch (error) {
-      console.error('OTP verification failed', error);
-      setVerifyError('OTP verification failed. Please try again.');
-    }
-  };
-
-  const handleCompleteOnboarding = () => {
-    router.push('/c/');
+    await verifyOTPMutation.mutateAsync(otpCode);
   };
 
   // If user isn't logged in yet, show a loading state.
@@ -75,7 +72,6 @@ const OnboardingPage: React.FC = () => {
   // If user already has 2FA, redirect them away.
   if (me.type === 'client' && me.me.has2FA) {
     redirect('/c/');
-    return null;
   }
 
   if (isLoading)
@@ -86,8 +82,18 @@ const OnboardingPage: React.FC = () => {
     );
   if (!qrData)
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        Error loading 2FA setup.
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-gray-100">
+          Welcome to our onboarding process!
+        </h1>
+        <p className="text-gray-700 dark:text-gray-300 text-center max-w-2xl mb-6">
+          Your security is our top priority, and enabling Two-Factor
+          Authentication (2FA) adds an extra layer of protection to your
+          account. Simply set up 2FA using one of our Android or iOS apps, then
+          verify with a one-time code. This ensures only <b>you</b> can access
+          your account, keeping your data safe. 🔒
+        </p>
+        <Button onClick={() => refetch()}>Start setting up 2FA!</Button>
       </div>
     );
 
