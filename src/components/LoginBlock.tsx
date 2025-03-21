@@ -15,13 +15,8 @@ const LoginBlock: React.FC<LoginBlockProps> = ({ children }) => {
     return <div>Loading...</div>;
   }
 
-  if (me.state === 'logged-in') {
-    if (me.type === 'client') {
-      redirect('/c/');
-    } else {
-      redirect('/e/');
-    }
-  }
+  if (me.state === 'logged-in')
+    return <>Already logged in!</>;
 
   return <>{children}</>;
 };
