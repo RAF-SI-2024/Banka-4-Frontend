@@ -29,12 +29,7 @@ export default function LoginPage() {
     }) => {
       if (!auth.isLoggedIn) await auth.login(userType, email, password);
     },
-    onSuccess: (_, { userType }) => {
-      if (userType === 'employee') {
-        router.replace('/e/employee');
-      } else {
-        router.replace('/c/');
-      }
+    onSuccess: () => {
       toast.success('Success!');
     },
   });
