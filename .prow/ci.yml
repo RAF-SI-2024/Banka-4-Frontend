@@ -1,0 +1,18 @@
+presubmits:
+  - name: pull-banka-4-frontend-ci
+    always_run: true
+    decorate: true
+    spec:
+      containers:
+        - image: harbor.k8s.elab.rs/base-images/base:gradle-21-node-22-docker
+          name: code-style
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -xe
+              fail=false
+              npm ci || fail=true
+              npm run build || fail=true
+              npx prettier -c . || fail=true
+              ! "${fail}"
