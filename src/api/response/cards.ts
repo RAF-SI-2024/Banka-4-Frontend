@@ -14,7 +14,7 @@ export interface CardResponseDto {
   cardStatus: CardStatus;
   accountNumber: string;
   client: ClientResponseDto;
-  authorizedUserDto: AuthorizedUserDto;
+  authorizedUserDto?: AuthorizedUserDto;
 }
 
 export type EmployeeCardResponseDto = Pageable<CardResponseDto>;

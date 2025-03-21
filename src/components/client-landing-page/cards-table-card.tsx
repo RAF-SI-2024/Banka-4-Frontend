@@ -225,7 +225,10 @@ export function CardsTableCard(props: CardsTableCardProps) {
             createdDate: selectedCard.creationDate,
             expiryDate: selectedCard.expirationDate,
             status: selectedCard.cardStatus,
-            cardOwner: `${selectedCard.client.firstName} ${selectedCard.client.lastName}`,
+            cardOwner:
+              (selectedCard.authorizedUserDto &&
+                `${selectedCard.authorizedUserDto.firstName} ${selectedCard.authorizedUserDto.lastName}`) ??
+              `${selectedCard.client.firstName} ${selectedCard.client.lastName}`,
           }}
         />
       )}
