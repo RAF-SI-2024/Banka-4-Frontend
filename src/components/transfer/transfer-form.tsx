@@ -67,9 +67,7 @@ export default function TransferForm({
   );
 
   const filteredToAccounts = accounts.filter(
-    (acc) =>
-      acc.currency.code === selectedFromAccount?.currency.code &&
-      acc.accountNumber !== fromAccount
+    (acc) => acc.accountNumber !== fromAccount
   );
 
   function handleSubmit(data: {
