@@ -222,7 +222,6 @@ export default function LoanForm({
                   type="number"
                   step="100" // Increased step to 100
                   placeholder="Enter amount"
-                  min={1}
                   onChange={(e) => {
                     const val = e.target.value;
                     field.onChange(val === '' ? undefined : +val);
