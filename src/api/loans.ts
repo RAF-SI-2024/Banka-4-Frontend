@@ -5,6 +5,7 @@ import {
   LoanRequestsResponseDto,
   LoanInstallmentResponseDto,
 } from '@/api/response/loan';
+import { cleanObject } from '@/lib/request-utils';
 
 export interface LoanFilters {
   loanType?: LoanType;
@@ -47,9 +48,7 @@ export const searchAllLoanRequests = async (
   page: number,
   size: number
 ) => {
-  const cleanedFilters = Object.fromEntries(
-    Object.entries(filters).filter(([_, value]) => value !== '')
-  );
+  const cleanedFilters = cleanObject(filters);
 
   return client.get<LoanRequestsResponseDto>('/loans/search-requested', {
     params: { ...cleanedFilters, page, size },
