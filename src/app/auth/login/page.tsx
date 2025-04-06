@@ -39,10 +39,10 @@ export default function LoginPage() {
       <div className="flex justify-center items-center pt-16">
         <Tabs defaultValue={'client'}>
           <TabsList className={'w-full'}>
-            <TabsTrigger className={'w-full'} value="client">
+            <TabsTrigger id="client-tab" className={'w-full'} value="client">
               Client
             </TabsTrigger>
-            <TabsTrigger className={'w-full'} value="employee">
+            <TabsTrigger id="employee-tab" className={'w-full'} value="employee">
               Employee
             </TabsTrigger>
           </TabsList>
