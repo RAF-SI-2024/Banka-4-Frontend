@@ -5,6 +5,7 @@ import { Currency } from '@/types/currency';
 export type GetListingsResponse = Pageable<ListingInfoDto>;
 
 export interface ListingInfoDto {
+  securityId: string;
   name: string;
   ticker: string;
   volume: number;
