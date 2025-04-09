@@ -31,6 +31,6 @@ export const getListingOptions = async (
   stockId: string,
   settlementDate: string
 ) =>
-  client.get<GetListingOptionsResponse>(`/options/${stockId}`, {
+  client.get<GetListingOptionsResponse>(`/stock/listings/options/${stockId}`, {
     params: { settlementDate },
   });

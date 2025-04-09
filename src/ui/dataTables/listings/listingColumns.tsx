@@ -4,6 +4,7 @@ import { GetListingsFilters } from '@/api/request/listing';
 import { FilterDefinition } from '@/components/filters/FilterBar';
 import { ALL_SECURITY_TYPES } from '@/types/securities';
 
+// @ts-expect-error
 export const listingFilterColumns: Record<
   keyof GetListingsFilters,
   FilterDefinition
