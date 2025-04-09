@@ -17,6 +17,7 @@ import { useListingFilters } from './ListingFilters';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function Page({
   params,
@@ -50,13 +51,21 @@ export default function Page({
     staleTime: 10000,
   });
 
+  const refresh = async () => {
+    toast.promise(refetch(), {
+      loading: 'Loading...',
+      success: `Success`,
+      error: 'Network error',
+    });
+  };
+
   return (
     <div className="">
       <div className="justify-end flex flex-row gap-2 pb-4">
         <Link href={'/u/create-order'}>
           <Button>Create Order</Button>
         </Link>
-        <Button disabled={isLoading} onClick={() => refetch()}>
+        <Button disabled={isLoading} onClick={refresh}>
           Refresh
         </Button>
       </div>
