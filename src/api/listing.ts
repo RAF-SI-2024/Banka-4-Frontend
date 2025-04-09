@@ -18,17 +18,19 @@ export const getListings = async (
     params: { ...cleanObject(params), page, pageSize: size },
   });
 
-export const getPriceChanges = async (client: Axios) =>
-  client.get<GetPriceChangesResponse>('/stock/listings/priceChange');
+export const getPriceChanges = async (client: Axios, securityId: string) =>
+  client.get<GetPriceChangesResponse>(
+    `/stock/listings/${securityId}/priceChange`
+  );
 
 export const getListingDetails = async (client: Axios, securityId: string) =>
-  client.get<ListingDetailsDto>(`stock/listings/${securityId}`);
+  client.get<ListingDetailsDto>(`/stock/listings/${securityId}`);
 
 export const getListingOptions = async (
   client: Axios,
   stockId: string,
   settlementDate: string
 ) =>
-  client.get<GetListingOptionsResponse>(`options/${stockId}`, {
+  client.get<GetListingOptionsResponse>(`/options/${stockId}`, {
     params: { settlementDate },
   });
