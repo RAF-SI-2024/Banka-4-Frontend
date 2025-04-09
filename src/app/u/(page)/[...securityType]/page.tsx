@@ -46,8 +46,6 @@ export default function Page({
   const { securityType: securityTypeParam } = use(params);
   const [securityType, id] = securityTypeParam;
 
-  if (!id || !securityType || !isValidSecurityType(securityType))
-    return notFound();
   const { data: options, isLoading: isLoadingOptions } = useQuery({
     queryKey: ['listings/options', id, settlementDate],
     queryFn: async () =>
@@ -83,20 +81,26 @@ export default function Page({
     if (value < 0) return 'text-red-600 font-medium';
     return 'text-gray-700 dark:text-gray-200';
   };
+
+  if (!id || !securityType || !isValidSecurityType(securityType))
+    return notFound();
+
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">{details?.data.ticker}</h1>
           <div className="flex items-center gap-2">
-            <span className="text-xl">${details?.data.price.toFixed(2)}</span>
+            <span className="text-xl">{details?.data.price.toFixed(2)}</span>
             <span
               className={cn(
                 'text-sm',
-                details?.data.change! >= 0 ? 'text-green-600' : 'text-red-600'
+                details && details?.data.change >= 0
+                  ? 'text-green-600'
+                  : 'text-red-600'
               )}
             >
-              {details?.data.change! >= 0 ? '+' : ''}
+              {details && details?.data.change >= 0 ? '+' : ''}
               {details?.data.change.toFixed(2)} (
               {details?.data.change.toFixed(2)}%)
             </span>

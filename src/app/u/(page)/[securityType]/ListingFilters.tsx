@@ -54,7 +54,7 @@ export const useListingFilters = (securityType: string) => {
   );
 
   const filters = useMemo(() => {
-    let obj: GetListingsFilters = {};
+    const obj: GetListingsFilters = {};
     if (volumeRange.length === 2) {
       obj.volumeMin = volumeRange[0];
       obj.volumeMax = volumeRange[1];
@@ -107,6 +107,8 @@ export const ListingFilters = ({
   } = useListingFilters(securityType);
 
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <FilterBar<GetListingsFilters, typeof listingFilterColumns>
       onSubmit={(filter) => {
         setPage(0);
