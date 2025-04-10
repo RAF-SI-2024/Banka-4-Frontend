@@ -116,6 +116,7 @@ type AuthContextT =
   | {
       isLoggedIn: false;
       isLoading: boolean;
+      userType?: UserType;
       /** Attempts to log in.
        * @throws Underlying error, if login fails.
        */

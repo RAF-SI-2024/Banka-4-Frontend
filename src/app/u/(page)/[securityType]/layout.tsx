@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ListingFilters } from './ListingFilters';
 import { isValidSecurityType } from '../isValidSecurityType';
+import { cookies, headers } from 'next/headers';
+import { UserType } from '@/api/auth';
 
 export default async function Page({
   params,
@@ -24,6 +26,8 @@ export default async function Page({
       {children}
     </div>
   );
+  const userType: UserType | undefined = (await cookies()).get('user_type')
+    ?.value as UserType;
 
   return (
     <div>
@@ -34,11 +38,13 @@ export default async function Page({
               Stocks
             </Link>
           </TabsTrigger>
-          <TabsTrigger value="futures" className="!p-0 !m-0">
-            <Link className="p-2 min-w-[120px]" href={'/u/futures'}>
-              Futures
-            </Link>
-          </TabsTrigger>
+          {userType === 'employee' && (
+            <TabsTrigger value="futures" className="!p-0 !m-0">
+              <Link className="p-2 min-w-[120px]" href={'/u/futures'}>
+                Futures
+              </Link>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="forex-pairs" className="!p-0 !m-0">
             <Link className="p-2 min-w-[120px]" href={'/u/forex-pairs'}>
               Forex Pairs

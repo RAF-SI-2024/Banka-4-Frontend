@@ -6,6 +6,7 @@ import { listingFilterColumns } from '@/ui/dataTables/listings/listingColumns';
 import {
   parseAsArrayOf,
   parseAsInteger,
+  parseAsIsoDate,
   parseAsString,
   useQueryState,
 } from 'nuqs';
@@ -53,6 +54,16 @@ export const useListingFilters = (securityType: string) => {
       .withDefault([])
   );
 
+  const [settlementDateRange, setSettlementDateRange] = useQueryState(
+    `${securityType}:settlement-date-range`,
+    parseAsArrayOf(parseAsIsoDate)
+      .withOptions({
+        throttleMs: 300,
+        shallow: true,
+      })
+      .withDefault([])
+  );
+
   const filters = useMemo(() => {
     const obj: GetListingsFilters = {};
     if (volumeRange.length === 2) {
@@ -81,6 +92,8 @@ export const useListingFilters = (securityType: string) => {
     setTickerSearch,
     nameSearch,
     setNameSearch,
+    settlementDateRange,
+    setSettlementDateRange,
     filters,
   };
 };
@@ -104,6 +117,8 @@ export const ListingFilters = ({
     setTickerSearch,
     nameSearch,
     setNameSearch,
+    settlementDateRange,
+    setSettlementDateRange,
   } = useListingFilters(securityType);
 
   return (
@@ -114,12 +129,18 @@ export const ListingFilters = ({
         setPage(0);
         if (filter.priceMin && filter.priceMax) {
           setPriceRange([filter.priceMin, filter.priceMax]);
-        }
+        } else setPriceRange([]);
         if (filter.volumeMin && filter.volumeMax) {
           setVolumeRange([filter.volumeMin, filter.volumeMax]);
-        }
+        } else setVolumeRange([]);
         setNameSearch(filter.searchName ?? '');
         setTickerSearch(filter.searchTicker ?? '');
+        if (filter.settlementDateFrom && filter.settlementDateTo) {
+          setSettlementDateRange([
+            new Date(filter.settlementDateFrom),
+            new Date(filter.settlementDateTo),
+          ]);
+        } else setSettlementDateRange([]);
       }}
       filter={filters}
       columns={

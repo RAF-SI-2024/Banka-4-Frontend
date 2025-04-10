@@ -38,6 +38,8 @@ export default function HttpClientProvider({
       const accessToken = await state.accessToken;
       if (accessToken !== undefined) {
         v.headers.Authorization ??= `Bearer ${accessToken}`;
+        const userType = auth.userType ?? sessionStorage.getItem('b4/userType');
+        document.cookie = `user_type=${userType}; path=/; max-age=999999`;
       }
       return v;
     });
