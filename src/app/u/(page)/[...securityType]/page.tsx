@@ -15,10 +15,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import {
+  addDays,
+  addYears,
+  format,
+  subDays,
+  subMonths,
+  subYears,
+} from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -37,6 +44,124 @@ import {
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import StockCard from './ListingCard';
 import ListingCard from './ListingCard';
+import * as React from 'react';
+import { PopoverClose } from '@radix-ui/react-popover';
+import { DateRange } from 'react-day-picker';
+
+const DateRangePicker = ({
+  date,
+  setDate,
+}: {
+  date: DateRange | undefined;
+  setDate: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
+}) => {
+  const presets = [
+    {
+      name: 'Last Week',
+      getValue: () => {
+        const today = new Date();
+        return {
+          from: subDays(today, 7),
+          to: today,
+        };
+      },
+    },
+    {
+      name: 'Last Month',
+      getValue: () => {
+        const today = new Date();
+        return {
+          from: subMonths(today, 1),
+          to: today,
+        };
+      },
+    },
+    {
+      name: 'Last Year',
+      getValue: () => {
+        const today = new Date();
+        return {
+          from: subYears(today, 1),
+          to: today,
+        };
+      },
+    },
+    {
+      name: 'Last 5 Years',
+      getValue: () => {
+        const today = new Date();
+        return {
+          from: subYears(today, 5),
+          to: today,
+        };
+      },
+    },
+  ];
+
+  return (
+    <div className={cn('grid gap-2')}>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id="date"
+            variant={'outline'}
+            className={cn(
+              'w-[300px] justify-start text-left font-normal',
+              !date && 'text-muted-foreground'
+            )}
+          >
+            <CalendarIcon className="mr-2 h-4 w-4" />
+            {date?.from ? (
+              date.to ? (
+                <>
+                  {format(date.from, 'LLL dd, y')} -{' '}
+                  {format(date.to, 'LLL dd, y')}
+                </>
+              ) : (
+                format(date.from, 'LLL dd, y')
+              )
+            ) : (
+              <span>Pick a date</span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <div className="flex flex-col sm:flex-row">
+            <div className="flex flex-col p-3 border-r border-border">
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium">Presets</h4>
+                <div className="flex flex-col gap-1">
+                  {presets.map((preset) => (
+                    <PopoverClose
+                      key={preset.name}
+                      className={cn(
+                        '!text-start !justify-start !font-normal',
+                        buttonVariants({ variant: 'ghost' })
+                      )}
+                      onClick={() => {
+                        setDate(preset.getValue());
+                      }}
+                    >
+                      {preset.name}
+                    </PopoverClose>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={date?.from}
+              selected={date}
+              onSelect={setDate}
+              numberOfMonths={2}
+            />
+          </div>
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+};
 
 export default function Page({
   params,
@@ -84,6 +209,19 @@ export default function Page({
     return 'text-gray-700 dark:text-gray-200';
   };
 
+  const [date, setDate] = useState<DateRange | undefined>({
+    from: addYears(new Date(), -5),
+    to: new Date(),
+  });
+
+  const filteredPriceChanges = React.useMemo(() => {
+    if (priceChanges?.data && date && date.from != null && date.to != null) {
+      return priceChanges.data.filter(
+        (x) => new Date(x.date) > date.from! && new Date(x.date) < date.to!
+      );
+    }
+  }, [date, priceChanges]);
+
   if (!id || !securityType || !isValidSecurityType(securityType))
     return notFound();
 
@@ -128,15 +266,16 @@ export default function Page({
                 selected={settlementDate}
                 onSelect={(n) => n && setSettlementDate(n)}
                 disabled={{ before: new Date() }}
-              />{' '}
+              />
             </PopoverContent>
           </Popover>
         </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-4">
         <Card className="w-full">
-          <CardHeader>
+          <CardHeader className="flex flex-row justify-between">
             <CardTitle>Price History</CardTitle>
+            <DateRangePicker date={date} setDate={setDate} />
           </CardHeader>
           <CardContent>
             <ChartContainer
@@ -150,7 +289,7 @@ export default function Page({
             >
               <LineChart
                 accessibilityLayer
-                data={priceChanges?.data}
+                data={filteredPriceChanges}
                 margin={{
                   top: 20,
                   right: 20,
