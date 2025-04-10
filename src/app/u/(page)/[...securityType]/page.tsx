@@ -35,6 +35,8 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import StockCard from './ListingCard';
+import ListingCard from './ListingCard';
 
 export default function Page({
   params,
@@ -86,7 +88,7 @@ export default function Page({
     return notFound();
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto py-6 space-y-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">{details?.data.ticker}</h1>
@@ -131,68 +133,71 @@ export default function Page({
           </Popover>
         </div>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Price History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer
-            config={{
-              price: {
-                label: 'Price',
-                color: 'hsl(var(--chart-1))',
-              },
-            }}
-            className="h-[300px]"
-          >
-            <LineChart
-              accessibilityLayer
-              data={priceChanges?.data}
-              margin={{
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 20,
+      <div className="flex flex-col lg:flex-row gap-4">
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Price History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={{
+                price: {
+                  label: 'Price',
+                  color: 'hsl(var(--chart-1))',
+                },
               }}
+              className="h-[300px]"
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => {
-                  const date = new Date(value);
-                  return format(date, 'MMM');
+              <LineChart
+                accessibilityLayer
+                data={priceChanges?.data}
+                margin={{
+                  top: 20,
+                  right: 20,
+                  bottom: 20,
+                  left: 20,
                 }}
-              />
-              <YAxis
-                domain={['auto', 'auto']}
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => `$${value}`}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={
-                  <ChartTooltipContent
-                    formatter={(value) => `$${Number(value).toFixed(2)}`}
-                  />
-                }
-              />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke="var(--color-price)"
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 6 }}
-              />
-            </LineChart>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => {
+                    const date = new Date(value);
+                    return format(date, 'MMM');
+                  }}
+                />
+                <YAxis
+                  domain={['auto', 'auto']}
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => `$${value}`}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value) => `$${Number(value).toFixed(2)}`}
+                    />
+                  }
+                />
+                <Line
+                  type="monotone"
+                  dataKey="price"
+                  stroke="var(--color-price)"
+                  strokeWidth={2}
+                  dot={false}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+        {details && <ListingCard listing={details.data} />}
+      </div>
       {details?.data.securityType === 'STOCK' && (
         <Card>
           <CardHeader>
