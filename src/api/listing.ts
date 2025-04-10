@@ -15,7 +15,7 @@ export const getListings = async (
   size: number
 ) =>
   client.get<GetListingsResponse>('/stock/listings', {
-    params: { ...cleanObject(params), page, pageSize: size },
+    params: { ...cleanObject(params), page, size },
   });
 
 export const getPriceChanges = async (client: Axios, securityId: string) =>

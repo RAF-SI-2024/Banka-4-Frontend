@@ -49,6 +49,7 @@ export default function Page({
       return data.data;
     },
     staleTime: 10000,
+    refetchInterval: 10000,
   });
 
   const refresh = async () => {
@@ -73,7 +74,7 @@ export default function Page({
         columns={listingColumns}
         data={data?.content ?? []}
         isLoading={isLoading}
-        pageCount={data?.page.size ?? 0}
+        pageCount={data?.page.totalPages ?? 0}
         pagination={{ page, pageSize }}
         onPaginationChange={(newPagination) => {
           setPage(newPagination.page);

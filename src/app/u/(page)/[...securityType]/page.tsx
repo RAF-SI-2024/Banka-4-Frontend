@@ -193,120 +193,125 @@ export default function Page({
           </ChartContainer>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Options Chain</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead colSpan={5} className="text-center border-r">
-                    Calls
-                  </TableHead>
-                  <TableHead colSpan={2} rowSpan={2} className="text-center">
-                    Strike
-                  </TableHead>
-                  <TableHead colSpan={5} className="text-center border-l">
-                    Puts
-                  </TableHead>
-                </TableRow>
-                <TableRow>
-                  <TableHead className="text-right">Last Price</TableHead>
-                  <TableHead className="text-right">Change</TableHead>
-                  <TableHead className="text-right">% Change</TableHead>
-                  <TableHead className="text-right">Volume</TableHead>
-                  <TableHead className="text-right border-r">
-                    Open Int.
-                  </TableHead>
-                  <TableHead className="text-right border-l">
-                    Last Price
-                  </TableHead>
-                  <TableHead className="text-right">Change</TableHead>
-                  <TableHead className="text-right">% Change</TableHead>
-                  <TableHead className="text-right">Volume</TableHead>
-                  <TableHead className="text-right">Open Int.</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {options?.data.map((option) => (
-                  <TableRow
-                    key={option.strike}
-                    className={cn(option.strike === 190 ? 'bg-muted/50' : '')}
-                  >
-                    <TableCell className="text-right">
-                      {formatPrice(option?.callsLastPrice)}
-                    </TableCell>
-                    <TableCell
-                      className={`text-right ${getChangeColorClass(option?.callsLastPrice)}`}
-                    >
-                      {formatChange(option?.callsChange)}
-                    </TableCell>
-                    <TableCell
-                      className={`text-right ${getChangeColorClass(
-                        option.callsLastPrice !== 0
-                          ? (option.callsChange /
-                              (option.callsLastPrice - option.callsChange)) *
-                              100
-                          : 0
-                      )}`}
-                    >
-                      {formatPercent(
-                        option.callsLastPrice !== 0
-                          ? (option.callsChange /
-                              (option.callsLastPrice - option.callsChange)) *
-                              100
-                          : 0
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {option?.callsVolume.toLocaleString()}
-                    </TableCell>
-                    <TableCell className={`text-right border-r`}>
-                      {option.callsOpenInterest.toLocaleString()}
-                    </TableCell>
-                    <TableCell colSpan={2} className="text-center font-medium">
-                      ${option.strike.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right border-l">
-                      {formatPrice(option?.putsLastPrice)}
-                    </TableCell>
-                    <TableCell
-                      className={`text-right ${getChangeColorClass(option?.putsChange)}`}
-                    >
-                      {formatChange(option?.putsChange)}
-                    </TableCell>
-                    <TableCell
-                      className={`text-right ${getChangeColorClass(
-                        option.putsLastPrice !== 0
-                          ? (option.putsChange /
-                              (option.putsLastPrice - option.putsChange)) *
-                              100
-                          : 0
-                      )}`}
-                    >
-                      {formatPercent(
-                        option.putsLastPrice !== 0
-                          ? (option.putsChange /
-                              (option.putsLastPrice - option.putsChange)) *
-                              100
-                          : 0
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {option?.putsVolume.toLocaleString()}
-                    </TableCell>
-                    <TableCell className={`text-right`}>
-                      {option.putsOpenInterest.toLocaleString()}
-                    </TableCell>
+      {details?.data.securityType === 'STOCK' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Options Chain</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead colSpan={5} className="text-center border-r">
+                      Calls
+                    </TableHead>
+                    <TableHead colSpan={2} rowSpan={2} className="text-center">
+                      Strike
+                    </TableHead>
+                    <TableHead colSpan={5} className="text-center border-l">
+                      Puts
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                  <TableRow>
+                    <TableHead className="text-right">Last Price</TableHead>
+                    <TableHead className="text-right">Change</TableHead>
+                    <TableHead className="text-right">% Change</TableHead>
+                    <TableHead className="text-right">Volume</TableHead>
+                    <TableHead className="text-right border-r">
+                      Open Int.
+                    </TableHead>
+                    <TableHead className="text-right border-l">
+                      Last Price
+                    </TableHead>
+                    <TableHead className="text-right">Change</TableHead>
+                    <TableHead className="text-right">% Change</TableHead>
+                    <TableHead className="text-right">Volume</TableHead>
+                    <TableHead className="text-right">Open Int.</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {options?.data.map((option) => (
+                    <TableRow
+                      key={option.strike}
+                      className={cn(option.strike === 190 ? 'bg-muted/50' : '')}
+                    >
+                      <TableCell className="text-right">
+                        {formatPrice(option?.callsLastPrice)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${getChangeColorClass(option?.callsLastPrice)}`}
+                      >
+                        {formatChange(option?.callsChange)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${getChangeColorClass(
+                          option.callsLastPrice !== 0
+                            ? (option.callsChange /
+                                (option.callsLastPrice - option.callsChange)) *
+                                100
+                            : 0
+                        )}`}
+                      >
+                        {formatPercent(
+                          option.callsLastPrice !== 0
+                            ? (option.callsChange /
+                                (option.callsLastPrice - option.callsChange)) *
+                                100
+                            : 0
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {option?.callsVolume.toLocaleString()}
+                      </TableCell>
+                      <TableCell className={`text-right border-r`}>
+                        {option.callsOpenInterest.toLocaleString()}
+                      </TableCell>
+                      <TableCell
+                        colSpan={2}
+                        className="text-center font-medium"
+                      >
+                        ${option.strike.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-right border-l">
+                        {formatPrice(option?.putsLastPrice)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${getChangeColorClass(option?.putsChange)}`}
+                      >
+                        {formatChange(option?.putsChange)}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${getChangeColorClass(
+                          option.putsLastPrice !== 0
+                            ? (option.putsChange /
+                                (option.putsLastPrice - option.putsChange)) *
+                                100
+                            : 0
+                        )}`}
+                      >
+                        {formatPercent(
+                          option.putsLastPrice !== 0
+                            ? (option.putsChange /
+                                (option.putsLastPrice - option.putsChange)) *
+                                100
+                            : 0
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {option?.putsVolume.toLocaleString()}
+                      </TableCell>
+                      <TableCell className={`text-right`}>
+                        {option.putsOpenInterest.toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

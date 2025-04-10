@@ -13,8 +13,10 @@ import {
 import { useMemo } from 'react';
 
 export const useListingFilters = (securityType: string) => {
-  const { page, setPage, pageSize, setPageSize } =
-    useTablePageParams(securityType);
+  const { page, setPage, pageSize, setPageSize } = useTablePageParams(
+    securityType,
+    { pageSize: 10, page: 0 }
+  );
   const [nameSearch, setNameSearch] = useQueryState(
     `${securityType}:name-search`,
     parseAsString
