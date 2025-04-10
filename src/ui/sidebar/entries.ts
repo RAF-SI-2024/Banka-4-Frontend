@@ -13,6 +13,7 @@ import {
   Repeat,
   CircleDollarSign,
   WalletCards,
+  ChartLine,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -100,6 +101,13 @@ const ClientGroups: SidebarGroupType[] = [
     isActive: false,
     userType: 'client',
     items: undefined,
+  },
+  {
+    title: 'Listings',
+    url: '/u',
+    icon: ChartLine,
+    isActive: false,
+    userType: 'client',
   },
 ];
 
@@ -204,6 +212,13 @@ const EmployeeGroups: SidebarGroupType[] = [
         privileges: [],
       },
     ],
+  },
+  {
+    title: 'Listings',
+    url: '/u',
+    icon: ChartLine,
+    isActive: false,
+    userType: 'employee',
   },
 ];
 
