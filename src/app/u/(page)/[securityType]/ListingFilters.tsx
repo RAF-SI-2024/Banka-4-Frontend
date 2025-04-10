@@ -79,22 +79,28 @@ export const useListingFilters = (securityType: string) => {
 
   const [sortBy, setSortBy] = useQueryState<ListingSortBy>(
     `${securityType}:sort-by`,
-    parseAsString
-      .withOptions({
-        throttleMs: 300,
-        shallow: true,
-      })
-      .withDefault('PRICE')
+    {
+      parse: (value: string | null): ListingSortBy => {
+        const parsed = value || 'PRICE';
+        return parsed === 'PRICE' || parsed === 'VOLUME'
+          ? (parsed satisfies ListingSortBy)
+          : 'PRICE';
+      },
+      defaultValue: 'PRICE',
+    }
   );
 
   const [sortDirection, setSortDirection] = useQueryState<ListingSortDirection>(
     `${securityType}:sort-direction`,
-    parseAsString
-      .withOptions({
-        throttleMs: 300,
-        shallow: true,
-      })
-      .withDefault('ASC')
+    {
+      parse: (value: string | null): ListingSortDirection => {
+        const parsed = value || 'ASC';
+        return parsed === 'ASC' || parsed === 'DESC'
+          ? (parsed satisfies ListingSortDirection)
+          : 'ASC';
+      },
+      defaultValue: 'ASC',
+    }
   );
 
   const filters = useMemo(() => {
