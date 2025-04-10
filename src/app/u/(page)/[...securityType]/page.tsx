@@ -246,30 +246,6 @@ export default function Page({
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium min-w-fit">
-            Settlement Date:
-          </span>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={'outline'}
-                className={cn('w-full justify-start text-left font-normal')}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {format(settlementDate, 'PPP')}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={settlementDate}
-                onSelect={(n) => n && setSettlementDate(n)}
-                disabled={{ before: new Date() }}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-4">
         <Card className="w-full">
@@ -339,8 +315,32 @@ export default function Page({
       </div>
       {details?.data.securityType === 'STOCK' && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row justify-between">
             <CardTitle>Options Chain</CardTitle>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium min-w-fit">
+                Settlement Date:
+              </span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={'outline'}
+                    className={cn('w-full justify-start text-left font-normal')}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {format(settlementDate, 'PPP')}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={settlementDate}
+                    onSelect={(n) => n && setSettlementDate(n)}
+                    disabled={{ before: new Date() }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
