@@ -27,7 +27,7 @@ const FilterEnumInput = <TFilterKey, T extends string>({
   optionToString = (option: T) => option.toString(),
 }: FilterEnumInputProps<TFilterKey, T>) => {
   return (
-    <div className="filter-input w-full">
+    <div className="filter-input">
       <Select
         value={value}
         onValueChange={(newValue) => {

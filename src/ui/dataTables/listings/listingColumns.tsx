@@ -3,6 +3,10 @@ import { ListingInfoDto } from '@/api/response/listing';
 import { GetListingsFilters } from '@/api/request/listing';
 import { FilterDefinition } from '@/components/filters/FilterBar';
 import { ALL_SECURITY_TYPES } from '@/types/securities';
+import {
+  ALL_SORT_BY_LISTINGS,
+  ALL_SORT_DIRECTION_LISTINGS,
+} from '@/types/listings';
 
 export const listingFilterColumns: Partial<
   Record<keyof GetListingsFilters, FilterDefinition>
@@ -43,6 +47,16 @@ export const listingFilterColumns: Partial<
   bidMax: {
     filterType: 'number',
     placeholder: 'Enter bid max',
+  },
+  sortBy: {
+    filterType: 'enum',
+    placeholder: 'Sort by column',
+    options: ALL_SORT_BY_LISTINGS,
+  },
+  sortDirection: {
+    filterType: 'enum',
+    placeholder: 'Sort direction',
+    options: ALL_SORT_DIRECTION_LISTINGS,
   },
 };
 

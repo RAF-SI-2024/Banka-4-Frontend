@@ -2,6 +2,7 @@
 import { GetListingsFilters } from '@/api/request/listing';
 import FilterBar from '@/components/filters/FilterBar';
 import useTablePageParams from '@/hooks/useTablePageParams';
+import { ListingSortBy, ListingSortDirection } from '@/types/listings';
 import { listingFilterColumns } from '@/ui/dataTables/listings/listingColumns';
 import {
   parseAsArrayOf,
@@ -76,6 +77,26 @@ export const useListingFilters = (securityType: string) => {
       .withDefault([])
   );
 
+  const [sortBy, setSortBy] = useQueryState<ListingSortBy>(
+    `${securityType}:sort-by`,
+    parseAsString
+      .withOptions({
+        throttleMs: 300,
+        shallow: true,
+      })
+      .withDefault('PRICE')
+  );
+
+  const [sortDirection, setSortDirection] = useQueryState<ListingSortDirection>(
+    `${securityType}:sort-direction`,
+    parseAsString
+      .withOptions({
+        throttleMs: 300,
+        shallow: true,
+      })
+      .withDefault('ASC')
+  );
+
   const filters = useMemo(() => {
     const obj: GetListingsFilters = {};
     if (volumeRange.length === 2) {
@@ -94,6 +115,8 @@ export const useListingFilters = (securityType: string) => {
       obj.settlementDateFrom = settlementDateRange[0].toISOString();
       obj.settlementDateTo = settlementDateRange[1].toISOString();
     }
+    obj.sortBy ??= sortBy;
+    obj.sortDirection ??= sortDirection;
     obj.searchTicker = tickerSearch;
     obj.searchName = nameSearch;
     return obj;
@@ -104,6 +127,8 @@ export const useListingFilters = (securityType: string) => {
     nameSearch,
     bidRange,
     settlementDateRange,
+    sortDirection,
+    sortBy,
   ]);
 
   return {
@@ -123,6 +148,10 @@ export const useListingFilters = (securityType: string) => {
     setSettlementDateRange,
     bidRange,
     setBidRange,
+    sortBy,
+    setSortBy,
+    sortDirection,
+    setSortDirection,
     filters,
   };
 };
@@ -150,6 +179,10 @@ export const ListingFilters = ({
     setSettlementDateRange,
     bidRange,
     setBidRange,
+    sortBy,
+    setSortBy,
+    sortDirection,
+    setSortDirection,
   } = useListingFilters(securityType);
 
   return (
@@ -175,6 +208,8 @@ export const ListingFilters = ({
         if (filter.bidMin != null && filter.bidMax != null) {
           setBidRange([filter.bidMin, filter.bidMax]);
         } else setBidRange([]);
+        setSortBy(filter.sortBy);
+        setSortDirection(filter.sortDirection);
       }}
       filter={filters}
       columns={
