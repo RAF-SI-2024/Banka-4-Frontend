@@ -28,10 +28,16 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SomePartial } from '@/types/utils';
 
-import { MultiSelect } from '@/components/ui/multi-select';
 import { EMPLOYEE_PRIVILEGES, EMPLOYEE_PRIVILEGES_ } from '@/types/privileges';
 import { getDirtyValues } from '@/lib/form-utils';
 import { ALL_GENDERS_ } from '@/types/gender';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const formSchema = z.object({
   firstName: z.string().min(1),
@@ -47,7 +53,7 @@ const formSchema = z.object({
   department: z.string().min(1),
   gender: z.enum(ALL_GENDERS_),
   active: z.boolean(),
-  privilege: z.union([z.tuple([]), z.array(z.enum(EMPLOYEE_PRIVILEGES_))]),
+  privilege: z.enum(EMPLOYEE_PRIVILEGES_).nullable(),
 });
 
 export type EmployeeFormAction =
@@ -289,32 +295,41 @@ export default function EmployeeForm({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="privilege"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1.5 col-span-2">
-              <FormLabel>
-                Privileges <span className="text-red-500 text-xl">*</span>
-              </FormLabel>
-              <FormControl>
-                <MultiSelect
-                  maxCount={5}
-                  options={EMPLOYEE_PRIVILEGES.map((priv) => ({
-                    label: priv,
-                    value: priv,
-                  }))}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value as string[] | undefined}
-                  placeholder="Select privileges"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <div className="flex items-center gap-2">
+              <Select
+                onValueChange={(value) =>
+                  field.onChange(value === 'none' ? undefined : value)
+                }
+                value={field.value || ''}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a privilege" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={'none'}>None</SelectItem>
+                  {EMPLOYEE_PRIVILEGES.map((privilege) => (
+                    <SelectItem key={privilege} value={privilege}>
+                      {privilege}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {field.value && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => field.onChange(null)}
+                >
+                  Clear
+                </Button>
+              )}
+            </div>
           )}
         />
-
         <div className="flex items-center col-span-2 justify-between w-full">
           <div className="flex items-center gap-2">
             <FormField

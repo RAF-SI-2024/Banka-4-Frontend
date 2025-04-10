@@ -1,7 +1,7 @@
 'use client';
 import EmployeeForm, {
-  EmployeeFormValues,
   EmployeeFormAction,
+  EmployeeFormValues,
 } from '@/components/employee/employee-form';
 import {
   Card,
@@ -82,7 +82,7 @@ export default function EditEmployeePage() {
     department: data.department,
     gender: data.gender,
     active: data.active,
-    privilege: data.privileges,
+    privilege: data.privileges[0] ?? null,
   };
 
   function onSubmit(data: EmployeeFormAction) {
@@ -90,6 +90,7 @@ export default function EditEmployeePage() {
       doUpdate({
         ...data.data,
         dateOfBirth: data.data.dateOfBirth?.toISOString(),
+        privilege: !data.data.privilege ? [] : [data.data.privilege],
       });
     }
   }

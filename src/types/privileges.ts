@@ -1,17 +1,9 @@
 /* Please keep in sync with:
  * user-service/src/main/java/rs/banka4/user_service/models/Privilege.java
  */
-export const EMPLOYEE_PRIVILEGES_ = [
-  'ADMIN',
-  'FILTER',
-  'SEARCH',
-  'TRADE_STOCKS',
-  'VIEW_STOCKS',
-  'CONTRACTS',
-  'NEW_INSURANCES',
-] as const;
+export const EMPLOYEE_PRIVILEGES_ = ['ADMIN', 'SUPERVISOR', 'AGENT'] as const;
 
-export const CLIENT_PRIVILEGES_ = ['DUMMY_PRIVILEGE'] as const;
+export const CLIENT_PRIVILEGES_ = ['TRADE'] as const;
 
 export const ALL_PRIVILEGES_ = [
   ...EMPLOYEE_PRIVILEGES_,

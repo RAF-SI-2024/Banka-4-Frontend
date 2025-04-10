@@ -77,7 +77,7 @@ export default function EditClientPage() {
     phoneNumber: data.phone,
     address: data.address,
     gender: data.gender,
-    privilege: data.privileges,
+    privilege: data.privileges[0] ?? null,
   };
 
   function onSubmit(data: ClientFormAction) {
@@ -85,6 +85,7 @@ export default function EditClientPage() {
       doUpdate({
         ...data.data,
         dateOfBirth: data.data.dateOfBirth?.toISOString(),
+        privilege: !data.data.privilege ? [] : [data.data.privilege],
       });
     }
   }
