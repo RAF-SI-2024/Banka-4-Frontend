@@ -1,6 +1,7 @@
 import { Axios } from 'axios';
 import {
   EditEmployeeRequest,
+  EmployeeFilter,
   NewEmployeeRequest,
 } from '@/api/request/employee';
 import {
@@ -24,12 +25,7 @@ export const postNewEmployee = async (
 
 export const searchEmployees = async (
   client: Axios,
-  filters: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    position: string;
-  },
+  filters: EmployeeFilter,
   rowsPerPage: number,
   currentPage: number
 ) => {

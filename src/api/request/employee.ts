@@ -16,3 +16,10 @@ export interface NewEmployeeRequest {
 }
 
 export type EditEmployeeRequest = Partial<NewEmployeeRequest>;
+
+export interface EmployeeFilter {
+  firstName: string;
+  lastName: string;
+  email: string;
+  position: string;
+}
