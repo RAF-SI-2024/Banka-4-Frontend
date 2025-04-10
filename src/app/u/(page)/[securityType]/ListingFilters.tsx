@@ -44,7 +44,7 @@ export const useListingFilters = (securityType: string) => {
         throttleMs: 300,
         shallow: true,
       })
-      .withDefault([])
+      .withDefault([-Infinity, Infinity])
   );
 
   const [volumeRange, setVolumeRange] = useQueryState(
@@ -54,7 +54,7 @@ export const useListingFilters = (securityType: string) => {
         throttleMs: 300,
         shallow: true,
       })
-      .withDefault([])
+      .withDefault([-Infinity, Infinity])
   );
 
   const [bidRange, setBidRange] = useQueryState(
@@ -64,7 +64,7 @@ export const useListingFilters = (securityType: string) => {
         throttleMs: 300,
         shallow: true,
       })
-      .withDefault([])
+      .withDefault([-Infinity, Infinity])
   );
 
   const [settlementDateRange, setSettlementDateRange] = useQueryState(
@@ -125,6 +125,9 @@ export const useListingFilters = (securityType: string) => {
     obj.sortDirection ??= sortDirection;
     obj.searchTicker = tickerSearch;
     obj.searchName = nameSearch;
+
+    // remove `Infinity` values
+    // return cleanObject(JSON.parse(JSON.stringify(obj)));
     return obj;
   }, [
     volumeRange,
@@ -197,23 +200,35 @@ export const ListingFilters = ({
     <FilterBar<GetListingsFilters, typeof listingFilterColumns>
       onSubmit={(filter) => {
         setPage(0);
-        if (filter.askMin != null && filter.askMax != null) {
-          setPriceRange([filter.askMin, filter.askMax]);
-        } else setPriceRange([]);
-        if (filter.volumeMin != null && filter.volumeMax != null) {
-          setVolumeRange([filter.volumeMin, filter.volumeMax]);
-        } else setVolumeRange([]);
+
+        const setRange = (min, max, setRangeFunction) => {
+          if (min != null && max != null) {
+            setRangeFunction([min, max]);
+          } else if (min != null) {
+            setRangeFunction([min, Infinity]);
+          } else if (max != null) {
+            setRangeFunction([-Infinity, max]);
+          } else {
+            setRangeFunction([-Infinity, Infinity]);
+          }
+        };
+
+        setRange(filter.askMin, filter.askMax, setPriceRange);
+        setRange(filter.volumeMin, filter.volumeMax, setVolumeRange);
+        setRange(filter.bidMin, filter.bidMax, setBidRange);
+
         setNameSearch(filter.searchName ?? '');
         setTickerSearch(filter.searchTicker ?? '');
+
         if (filter.settlementDateFrom && filter.settlementDateTo) {
           setSettlementDateRange([
             new Date(filter.settlementDateFrom),
             new Date(filter.settlementDateTo),
           ]);
-        } else setSettlementDateRange([]);
-        if (filter.bidMin != null && filter.bidMax != null) {
-          setBidRange([filter.bidMin, filter.bidMax]);
-        } else setBidRange([]);
+        } else {
+          setSettlementDateRange([]);
+        }
+
         setSortBy(filter.sortBy);
         setSortDirection(filter.sortDirection);
       }}

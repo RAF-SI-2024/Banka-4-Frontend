@@ -289,8 +289,8 @@ export default function ListingCard({ listing }: ListingCardProps) {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-1 bg-slate-100 px-2 py-1 rounded-md">
-            <DollarSign className="h-4 w-4 text-slate-600" />
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-muted px-2 py-1 rounded-md">
+            <DollarSign className="h-4 w-4 text-slate-600 dark:text-white" />
             <span className="font-bold text-lg">{formattedPrice}</span>
           </div>
         </div>

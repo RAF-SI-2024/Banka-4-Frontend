@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { cleanObject } from '@/lib/request-utils';
 
 export default function Page({
   params,
@@ -42,7 +43,8 @@ export default function Page({
     queryFn: async () => {
       const data = await getListings(
         client,
-        { ...filters, securityType },
+        // Infinity gets serialized to null, clear it here
+        { ...cleanObject(JSON.parse(JSON.stringify(filters))), securityType },
         page,
         pageSize
       );

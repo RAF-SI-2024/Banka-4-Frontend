@@ -38,18 +38,20 @@ export default async function Page({
               Stocks
             </Link>
           </TabsTrigger>
+
+          <TabsTrigger value="futures" className="!p-0 !m-0">
+            <Link className="p-2 min-w-[120px]" href={'/u/futures'}>
+              Futures
+            </Link>
+          </TabsTrigger>
+
           {userType === 'employee' && (
-            <TabsTrigger value="futures" className="!p-0 !m-0">
-              <Link className="p-2 min-w-[120px]" href={'/u/futures'}>
-                Futures
+            <TabsTrigger value="forex-pairs" className="!p-0 !m-0">
+              <Link className="p-2 min-w-[120px]" href={'/u/forex-pairs'}>
+                Forex Pairs
               </Link>
             </TabsTrigger>
           )}
-          <TabsTrigger value="forex-pairs" className="!p-0 !m-0">
-            <Link className="p-2 min-w-[120px]" href={'/u/forex-pairs'}>
-              Forex Pairs
-            </Link>
-          </TabsTrigger>
         </TabsList>
         <TabsContent value="stocks">{component}</TabsContent>
         <TabsContent value="futures">{component}</TabsContent>
