@@ -126,8 +126,6 @@ export const useListingFilters = (securityType: string) => {
     obj.searchTicker = tickerSearch;
     obj.searchName = nameSearch;
 
-    // remove `Infinity` values
-    // return cleanObject(JSON.parse(JSON.stringify(obj)));
     return obj;
   }, [
     volumeRange,
