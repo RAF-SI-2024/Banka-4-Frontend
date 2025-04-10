@@ -20,11 +20,11 @@ export const listingFilterColumns: Partial<
     filterType: 'string',
     placeholder: 'Enter ticker',
   },
-  priceMin: {
+  askMin: {
     filterType: 'number',
     placeholder: 'Enter price min',
   },
-  priceMax: {
+  askMax: {
     filterType: 'number',
     placeholder: 'Enter price max',
   },
@@ -35,6 +35,14 @@ export const listingFilterColumns: Partial<
   volumeMax: {
     filterType: 'number',
     placeholder: 'Enter volume max',
+  },
+  bidMin: {
+    filterType: 'number',
+    placeholder: 'Enter bid min',
+  },
+  bidMax: {
+    filterType: 'number',
+    placeholder: 'Enter bid max',
   },
 };
 

@@ -54,6 +54,16 @@ export const useListingFilters = (securityType: string) => {
       .withDefault([])
   );
 
+  const [bidRange, setBidRange] = useQueryState(
+    `${securityType}:bid-range`,
+    parseAsArrayOf(parseAsInteger)
+      .withOptions({
+        throttleMs: 300,
+        shallow: true,
+      })
+      .withDefault([])
+  );
+
   const [settlementDateRange, setSettlementDateRange] = useQueryState(
     `${securityType}:settlement-date-range`,
     parseAsArrayOf(parseAsIsoDate)
@@ -71,13 +81,28 @@ export const useListingFilters = (securityType: string) => {
       obj.volumeMax = volumeRange[1];
     }
     if (priceRange.length === 2) {
-      obj.priceMin = priceRange[0];
-      obj.priceMax = priceRange[1];
+      obj.askMin = priceRange[0];
+      obj.askMax = priceRange[1];
+    }
+    if (bidRange.length === 2) {
+      obj.bidMin = bidRange[0];
+      obj.bidMax = bidRange[1];
+    }
+    if (settlementDateRange.length === 2) {
+      obj.settlementDateFrom = settlementDateRange[0].toISOString();
+      obj.settlementDateTo = settlementDateRange[1].toISOString();
     }
     obj.searchTicker = tickerSearch;
     obj.searchName = nameSearch;
     return obj;
-  }, [volumeRange, priceRange, tickerSearch, nameSearch]);
+  }, [
+    volumeRange,
+    priceRange,
+    tickerSearch,
+    nameSearch,
+    bidRange,
+    settlementDateRange,
+  ]);
 
   return {
     page,
@@ -94,6 +119,8 @@ export const useListingFilters = (securityType: string) => {
     setNameSearch,
     settlementDateRange,
     setSettlementDateRange,
+    bidRange,
+    setBidRange,
     filters,
   };
 };
@@ -119,6 +146,8 @@ export const ListingFilters = ({
     setNameSearch,
     settlementDateRange,
     setSettlementDateRange,
+    bidRange,
+    setBidRange,
   } = useListingFilters(securityType);
 
   return (
@@ -127,10 +156,10 @@ export const ListingFilters = ({
     <FilterBar<GetListingsFilters, typeof listingFilterColumns>
       onSubmit={(filter) => {
         setPage(0);
-        if (filter.priceMin && filter.priceMax) {
-          setPriceRange([filter.priceMin, filter.priceMax]);
+        if (filter.askMin != null && filter.askMax != null) {
+          setPriceRange([filter.askMin, filter.askMax]);
         } else setPriceRange([]);
-        if (filter.volumeMin && filter.volumeMax) {
+        if (filter.volumeMin != null && filter.volumeMax != null) {
           setVolumeRange([filter.volumeMin, filter.volumeMax]);
         } else setVolumeRange([]);
         setNameSearch(filter.searchName ?? '');
@@ -141,6 +170,9 @@ export const ListingFilters = ({
             new Date(filter.settlementDateTo),
           ]);
         } else setSettlementDateRange([]);
+        if (filter.bidMin != null && filter.bidMax != null) {
+          setBidRange([filter.bidMin, filter.bidMax]);
+        } else setBidRange([]);
       }}
       filter={filters}
       columns={
