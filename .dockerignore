@@ -1,0 +1,5 @@
+# -*- gitignore -*-
+Dockerfile
+node_modules
+.next
+.env.development
