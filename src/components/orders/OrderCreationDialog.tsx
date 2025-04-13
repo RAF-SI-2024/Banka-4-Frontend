@@ -48,7 +48,7 @@ const orderFormSchema = z.object({
   accountId: z.string().min(1, 'Account is required'),
 });
 
-type OrderFormValues = z.infer<typeof orderFormSchema>;
+export type OrderFormValues = z.infer<typeof orderFormSchema>;
 
 interface Props {
   open: boolean;
@@ -196,7 +196,6 @@ export default function OrderCreationDialog({
                   </FormItem>
                 )}
               />
-              {/* More fields: quantity, limitValue, stopValue, checkboxes */}
               <div className="flex justify-end gap-2 mt-2">
                 <Button
                   type="button"
