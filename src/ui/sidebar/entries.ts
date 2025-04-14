@@ -14,6 +14,7 @@ import {
   CircleDollarSign,
   WalletCards,
   ChartLine,
+  UserRoundPen,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -219,6 +220,21 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: ChartLine,
     isActive: false,
     userType: 'employee',
+  },
+  {
+    title: 'Actuaries',
+    url: '/e/actuaries',
+    icon: UserRoundPen,
+    isActive: false,
+    userType: 'employee',
+    items: [
+      {
+        title: 'Overview',
+        url: '/e/actuaries',
+        icon: List,
+        privileges: ['ADMIN'], //, 'SUPERVISOR'
+      },
+    ],
   },
 ];
 
