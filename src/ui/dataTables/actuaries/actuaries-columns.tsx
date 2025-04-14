@@ -38,6 +38,19 @@ export const actuariesColumns: ColumnDef<ActuaryItem>[] = [
   {
     accessorKey: 'usedLimitAmount',
     header: 'Used Limit',
-    cell: ({ row }) => <ActuaryActions item={row.original} />,
+    cell: ({ row }) => {
+        const { usedLimitAmount, currencyCode } = row.original.actuary;
+        return (
+          <span>
+            {usedLimitAmount} {currencyCode}
+          </span>
+        );
+      },
   },
+  {
+    accessorKey: 'actions',
+    header: 'Actions',
+    cell: ({ row }) => <ActuaryActions item={row.original} />,
+  }
+
 ];
