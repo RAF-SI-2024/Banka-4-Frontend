@@ -33,7 +33,7 @@ export function ChangeLimitDialog({
   const client = useHttpClient();
 
   const { mutate: doLimitUpdate } = useMutation({
-    mutationKey: ['actuary'],
+    mutationKey: ['actuaries'],
     mutationFn: async ({
       actuaryId,
       newLimit,
