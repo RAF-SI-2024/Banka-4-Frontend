@@ -28,7 +28,6 @@ interface Account {
   balance: number /* TODO: this should be changed back to availableBalance in the coming sprints. */;
   currency: {
     code: string;
-    symbol: string;
   };
 }
 
@@ -104,7 +103,7 @@ export default function TransferForm({
                         key={account.id}
                         value={account.accountNumber}
                       >
-                        {account.accountNumber} ({account.currency.symbol})
+                        {account.accountNumber} ({account.currency.code})
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -143,7 +142,7 @@ export default function TransferForm({
                           key={account.id}
                           value={account.accountNumber}
                         >
-                          {account.accountNumber} ({account.currency.symbol})
+                          {account.accountNumber} ({account.currency.code})
                         </SelectItem>
                       ))
                     ) : (
