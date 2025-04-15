@@ -25,5 +25,8 @@ const hasRequiredPrivileges = (
   requiredPrivileges: Privilege[],
   userPrivileges: Privilege[]
 ) => {
-  return requiredPrivileges.some((priv) => userPrivileges.includes(priv));
+  return (
+    requiredPrivileges.length === 0 ||
+    requiredPrivileges.some((priv) => userPrivileges.includes(priv))
+  );
 };
