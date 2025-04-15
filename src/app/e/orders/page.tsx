@@ -61,55 +61,6 @@ const OrdersOverviewPage: React.FC = () => {
     },
   });
 
-  // Mock data for testing
-  const mockOrders: OrderDto[] = [
-    {
-      id: '1',
-      userId: '123',
-      assetTicker: 'AAPL',
-      orderType: 'LIMIT',
-      direction: 'BUY',
-      quantity: 100,
-      pricePerUnit: { amount: 150, currency: 'USD' },
-      status: 'PENDING',
-      isDone: false,
-      createdAt: '2025-04-01T10:00:00Z',
-      lastModified: '2025-04-01T12:00:00Z',
-      contractSize: 10,
-      remainingPortions: 5,
-    },
-    {
-      id: '2',
-      userId: '456',
-      assetTicker: 'GOOGL',
-      orderType: 'MARKET',
-      direction: 'SELL',
-      quantity: 50,
-      pricePerUnit: { amount: 2800, currency: 'USD' },
-      status: 'APPROVED',
-      isDone: true,
-      createdAt: '2025-03-28T09:00:00Z',
-      lastModified: '2025-03-28T11:00:00Z',
-      contractSize: 5,
-      remainingPortions: 0,
-    },
-    {
-      id: '3',
-      userId: '789',
-      assetTicker: 'TSLA',
-      orderType: 'LIMIT',
-      direction: 'BUY',
-      quantity: 200,
-      pricePerUnit: { amount: 700, currency: 'USD' },
-      status: 'DECLINED',
-      isDone: false,
-      createdAt: '2025-04-10T14:00:00Z',
-      lastModified: '2025-04-10T16:00:00Z',
-      contractSize: 20,
-      remainingPortions: 10,
-    },
-  ];
-
   const { dispatch } = useBreadcrumb();
   useEffect(() => {
     dispatch({
