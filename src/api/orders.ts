@@ -5,6 +5,10 @@ import { OrderStatus } from '@/types/orders';
 import { Pageable } from '@/types/pageable';
 import { cleanObject } from '@/lib/request-utils';
 
+export interface OrderFilter {
+  status?: OrderStatus;
+}
+
 export const createOrder = async (client: Axios, body: CreateOrderRequest) =>
   client.post<OrderDto>('/stock/orders', cleanObject(body));
 
@@ -19,7 +23,7 @@ export const calculateAveragePrice = async (
 
 export const searchOrders = async (
   client: Axios,
-  status: OrderStatus,
+  status: OrderStatus | undefined,
   page: number,
   size: number
 ) =>

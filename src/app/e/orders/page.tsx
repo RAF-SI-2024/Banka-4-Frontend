@@ -10,31 +10,29 @@ import {
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useBreadcrumb } from '@/context/BreadcrumbContext';
 import GuardBlock from '@/components/GuardBlock';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/dataTable/DataTable';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
-import { searchOrders, approveOrder, declineOrder } from '@/api/orders';
-import { OrderDto } from '@/api/response/orders';
+import {
+  searchOrders,
+  approveOrder,
+  declineOrder,
+  OrderFilter,
+} from '@/api/orders';
 import { ORDER_STATUSES_ } from '@/types/orders';
 import { ordersColumns } from '@/ui/dataTables/orders/ordersColumns';
+import { useQueryClient } from '@tanstack/react-query';
+import { toastRequestError } from '@/api/errors';
 
-const orderFilterColumns = {
+const orderFilterColumns: Record<keyof OrderFilter, FilterDefinition> = {
   status: {
     filterType: 'enum',
     placeholder: 'Enter status',
     options: Array.from(ORDER_STATUSES_),
     optionToString: (option) => option,
   },
-  userId: {
-    filterType: 'string',
-    placeholder: 'Enter agent ID',
-  },
-  assetTicker: {
-    filterType: 'string',
-    placeholder: 'Enter asset ticker',
-  },
-} as Record<keyof OrderDto, FilterDefinition>;
+};
 
 const OrdersOverviewPage: React.FC = () => {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
@@ -45,19 +43,40 @@ const OrdersOverviewPage: React.FC = () => {
     }
   );
 
-  const [searchFilter, setSearchFilter] = useState<Partial<OrderDto>>({
+  const [searchFilter, setSearchFilter] = useState<OrderFilter>({
     status: undefined,
-    userId: '',
-    assetTicker: '',
   });
 
   const client = useHttpClient();
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders', page, pageSize, searchFilter],
     queryFn: async () => {
-      const status = searchFilter.status || 'PENDING';
-      return (await searchOrders(client, status, page, pageSize)).data;
+      return (await searchOrders(client, searchFilter.status, page, pageSize))
+        .data;
+    },
+  });
+
+  const approveMutation = useMutation({
+    mutationKey: ['orders'],
+    mutationFn: (orderId: string) => approveOrder(client, orderId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: (error) => {
+      toastRequestError(error);
+    },
+  });
+
+  const declineMutation = useMutation({
+    mutationKey: ['orders'],
+    mutationFn: (orderId: string) => declineOrder(client, orderId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: (error) => {
+      toastRequestError(error);
     },
   });
 
@@ -73,24 +92,6 @@ const OrdersOverviewPage: React.FC = () => {
     });
   }, [dispatch]);
 
-  const handleApprove = async (orderId: string) => {
-    try {
-      await approveOrder(client, orderId);
-      setPage(0);
-    } catch (error) {
-      console.error('Failed to approve order:', error);
-    }
-  };
-
-  const handleDecline = async (orderId: string) => {
-    try {
-      await declineOrder(client, orderId);
-      setPage(0);
-    } catch (error) {
-      console.error('Failed to decline order:', error);
-    }
-  };
-
   return (
     <GuardBlock
       requiredUserType="employee"
@@ -105,9 +106,8 @@ const OrdersOverviewPage: React.FC = () => {
               orders, making it easy to review key details and track relevant
               information.
             </CardDescription>
-            <FilterBar<Partial<OrderDto>, typeof orderFilterColumns>
+            <FilterBar<OrderFilter, typeof orderFilterColumns>
               onSubmit={(filter) => {
-                setPage(0);
                 setSearchFilter(filter);
               }}
               filter={searchFilter}
@@ -116,7 +116,10 @@ const OrdersOverviewPage: React.FC = () => {
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
             <DataTable
-              columns={ordersColumns(handleApprove, handleDecline)}
+              columns={ordersColumns(
+                (orderId) => approveMutation.mutate(orderId),
+                (orderId) => declineMutation.mutate(orderId)
+              )}
               data={data?.content ?? []}
               isLoading={isLoading}
               pageCount={data?.page.totalPages ?? 0}

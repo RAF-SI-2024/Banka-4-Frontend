@@ -27,8 +27,12 @@ export const ordersColumns = (
     header: 'Contract Size',
   },
   {
-    accessorKey: 'pricePerUnit.amount',
+    accessorKey: 'pricePerUnit',
     header: 'Price Per Unit',
+    cell: ({ row }) => {
+      const { amount, currency } = row.original.pricePerUnit;
+      return `${amount} ${currency}`;
+    },
   },
   {
     accessorKey: 'direction',
@@ -49,15 +53,10 @@ export const ordersColumns = (
       const order = row.original;
       return order.status === 'PENDING' ? (
         <div className="flex gap-2">
-          <Button
-            className="btn btn-primary"
-            variant="default"
-            onClick={() => handleApprove(order.id)}
-          >
+          <Button variant="default" onClick={() => handleApprove(order.id)}>
             Approve
           </Button>
           <Button
-            className="btn btn-danger"
             variant={'destructive'}
             onClick={() => handleDecline(order.id)}
           >
