@@ -20,6 +20,7 @@ export interface SidebarGroupType {
   isActive: boolean;
   items?: SidebarGroupItemType[];
   userType: UserType;
+  privileges: Privilege[];
 }
 
 export interface SidebarGroupItemType {

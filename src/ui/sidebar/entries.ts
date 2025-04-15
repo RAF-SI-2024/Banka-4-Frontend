@@ -14,6 +14,7 @@ import {
   CircleDollarSign,
   WalletCards,
   ChartLine,
+  FileClock,
   UserRoundPen,
 } from 'lucide-react';
 
@@ -24,6 +25,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: Home,
     isActive: false,
     userType: 'client',
+    privileges: [],
     items: undefined,
   },
   {
@@ -32,6 +34,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: ArrowRightLeft,
     isActive: false,
     userType: 'client',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -65,6 +68,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: HandCoins,
     isActive: false,
     userType: 'client',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -86,6 +90,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: Users,
     isActive: false,
     userType: 'client',
+    privileges: [],
     items: [
       {
         title: 'Manage',
@@ -101,6 +106,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: Repeat,
     isActive: false,
     userType: 'client',
+    privileges: [],
     items: undefined,
   },
   {
@@ -109,6 +115,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: ChartLine,
     isActive: false,
     userType: 'client',
+    privileges: [],
   },
 ];
 
@@ -119,6 +126,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: Home,
     isActive: false,
     userType: 'employee',
+    privileges: [],
     items: undefined,
   },
   {
@@ -127,6 +135,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: Coins,
     isActive: false,
     userType: 'employee',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -148,6 +157,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: Users,
     isActive: false,
     userType: 'employee',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -171,6 +181,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     ],
     isActive: false,
     userType: 'employee',
+    privileges: [],
   },
   {
     title: 'Employees',
@@ -178,6 +189,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: BriefcaseBusiness,
     isActive: false,
     userType: 'employee',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -199,6 +211,7 @@ const EmployeeGroups: SidebarGroupType[] = [
     icon: CircleDollarSign,
     isActive: false,
     userType: 'employee',
+    privileges: [],
     items: [
       {
         title: 'Overview',
@@ -215,11 +228,20 @@ const EmployeeGroups: SidebarGroupType[] = [
     ],
   },
   {
+    title: 'Orders',
+    url: '/e/orders',
+    icon: FileClock,
+    isActive: false,
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR'],
+  },
+  {
     title: 'Listings',
     url: '/u',
     icon: ChartLine,
     isActive: false,
     userType: 'employee',
+    privileges: [],
   },
   {
     title: 'Actuaries',
@@ -235,6 +257,7 @@ const EmployeeGroups: SidebarGroupType[] = [
         privileges: ['ADMIN', 'SUPERVISOR'],
       },
     ],
+    privileges: [],
   },
 ];
 
