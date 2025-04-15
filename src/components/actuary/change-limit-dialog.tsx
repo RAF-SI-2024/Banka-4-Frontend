@@ -59,22 +59,29 @@ export function ChangeLimitDialog({
         <DialogHeader>
           <DialogTitle className={'text-2xl'}>Change Limit</DialogTitle>
         </DialogHeader>
-        <div className={'flex gap-6'}>
-          <div className="flex flex-col">
-            <Label>Limit:</Label>
-            <Input
-              type="text"
-              className={'disabled:cursor-default'}
-              value={newLimit !== null ? newLimit : ''}
-              onChange={(e) => setNewLimit(Number(e.target.value))}
-            />
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSaveChanges();
+          }}
+        >
+          <div className={'flex gap-6'}>
+            <div className="flex flex-col">
+              <Label>Limit:</Label>
+              <Input
+                type="text"
+                className={'disabled:cursor-default'}
+                value={newLimit !== null ? newLimit : ''}
+                onChange={(e) => setNewLimit(Number(e.target.value))}
+              />
+            </div>
           </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit" onClick={handleSaveChanges}>
-            Save changes
-          </Button>
-        </DialogFooter>
+          <DialogFooter>
+            <Button type="submit" onClick={handleSaveChanges}>
+              Save changes
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
