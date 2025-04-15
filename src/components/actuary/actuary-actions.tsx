@@ -15,7 +15,7 @@ export function ActuaryActions({ item }: { item: ActuaryItem }) {
 
   const handleSubmit = () => {
     resetLimit(item.user.id);
-  }
+  };
 
   const { mutate: resetLimit } = useMutation({
     mutationKey: ['actuaries'],

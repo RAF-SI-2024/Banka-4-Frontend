@@ -30,9 +30,9 @@ export const actuariesColumns: ColumnDef<ActuaryItem>[] = [
       const { limitAmount, currencyCode } = row.original.actuary;
       return (
         <span>
-           {limitAmount != null
-        ? `${limitAmount.toLocaleString()} ${currencyCode}`
-        : 'UNLIMITED'}
+          {limitAmount != null
+            ? `${limitAmount.toLocaleString()} ${currencyCode}`
+            : 'UNLIMITED'}
         </span>
       );
     },
@@ -41,18 +41,17 @@ export const actuariesColumns: ColumnDef<ActuaryItem>[] = [
     accessorKey: 'usedLimitAmount',
     header: 'Used Limit',
     cell: ({ row }) => {
-        const { usedLimitAmount, currencyCode } = row.original.actuary;
-        return (
-          <span>
-            {usedLimitAmount.toLocaleString()} {currencyCode}
-          </span>
-        );
-      },
+      const { usedLimitAmount, currencyCode } = row.original.actuary;
+      return (
+        <span>
+          {usedLimitAmount.toLocaleString()} {currencyCode}
+        </span>
+      );
+    },
   },
   {
     accessorKey: 'actions',
     header: 'Actions',
     cell: ({ row }) => <ActuaryActions item={row.original} />,
-  }
-
+  },
 ];

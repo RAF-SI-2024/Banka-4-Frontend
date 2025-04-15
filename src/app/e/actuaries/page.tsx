@@ -60,7 +60,6 @@ const ActuariesPage: React.FC = () => {
 
   const client = useHttpClient();
 
-
   const { data, isLoading } = useQuery({
     queryKey: ['actuaries', page, pageSize, searchFilter],
     queryFn: async () => {

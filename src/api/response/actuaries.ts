@@ -14,5 +14,4 @@ export interface ActuaryItem {
   actuary: ActuaryInfoDto;
 }
 
-
 export type ActuariesSearchResponse = Pageable<ActuaryItem>;
