@@ -1,8 +1,9 @@
 'use client';
 import { notFound } from 'next/navigation';
+import * as React from 'react';
 import { use, useState } from 'react';
 import { isValidSecurityType } from '../isValidSecurityType';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useHttpClient } from '@/context/HttpClientContext';
 import {
   getListingDetails,
@@ -18,14 +19,7 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import {
-  addDays,
-  addYears,
-  format,
-  subDays,
-  subMonths,
-  subYears,
-} from 'date-fns';
+import { addYears, format, subDays, subMonths, subYears } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -35,18 +29,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { OptionDto } from '@/api/response/listing';
+import OrderCreationDialog from '@/components/order/OrderCreationDialog';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
-import StockCard from './ListingCard';
 import ListingCard from './ListingCard';
-import * as React from 'react';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { DateRange } from 'react-day-picker';
+import { getAccounts } from '@/api/account';
+import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
+import { calculateAveragePrice, createOrder } from '@/api/orders';
 import GuardBlock from '@/components/GuardBlock';
 
 const DateRangePicker = ({
@@ -169,10 +164,34 @@ export default function Page({
 }: {
   params: Promise<{ securityType: string[] }>;
 }) {
+  const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [settlementDate, setSettlementDate] = useState<Date>(new Date());
   const client = useHttpClient();
   const { securityType: securityTypeParam } = use(params);
   const [securityType, id] = securityTypeParam;
+
+  const handleBuy = (securityId: string) => {
+    setSelectedAssetId(securityId);
+    setBuyDialogOpen(true);
+  };
+
+  const { data: accounts } = useQuery({
+    queryKey: ['accounts'],
+    queryFn: async () => (await getAccounts(client)).data,
+  });
+
+  const previewMutation = useMutation({
+    mutationKey: ['order-preview'],
+    mutationFn: (request: OrderPreviewRequest) =>
+      calculateAveragePrice(client, request),
+  });
+
+  const orderMutation = useMutation({
+    mutationKey: ['create-order'],
+    mutationFn: (orderRequest: CreateOrderRequest) =>
+      createOrder(client, orderRequest),
+  });
 
   const { data: options, isLoading: isLoadingOptions } = useQuery({
     queryKey: ['listings/options', id, settlementDate],
@@ -313,7 +332,7 @@ export default function Page({
               </ChartContainer>
             </CardContent>
           </Card>
-          {details && <ListingCard listing={details.data} />}
+          {details && <ListingCard listing={details.data} onBuy={handleBuy} />}
         </div>
         {details?.data.securityType === 'STOCK' && (
           <Card>
@@ -468,6 +487,27 @@ export default function Page({
             </CardContent>
           </Card>
         )}
+        {buyDialogOpen &&
+          selectedAssetId &&
+          accounts &&
+          accounts.length > 0 && (
+            <OrderCreationDialog
+              open={buyDialogOpen}
+              direction="BUY"
+              assetId={selectedAssetId}
+              accounts={accounts}
+              onPreviewRequested={(request) =>
+                previewMutation.mutateAsync(request).then((res) => res.data)
+              }
+              onOrderConfirmed={(orderRequest) =>
+                orderMutation.mutateAsync(orderRequest).then(() => {})
+              }
+              onClose={() => {
+                setBuyDialogOpen(false);
+                setSelectedAssetId(null);
+              }}
+            />
+          )}
       </div>
     </GuardBlock>
   );

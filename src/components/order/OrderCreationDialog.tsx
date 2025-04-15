@@ -122,32 +122,27 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
 
   const onFormSubmit = async (data: OrderFormValues) => {
     const selectedAccount = accounts.find((acc) => acc.id === data.accountId);
-    if (!selectedAccount) {
-      return;
-    }
-    const previewRequest: OrderPreviewRequest = {
+    if (!selectedAccount) return;
+
+    const previewRequest = {
       assetId,
       quantity: data.quantity,
-      limitValue:
-        data.limitValue !== undefined
-          ? {
-              amount: data.limitValue,
-              currency: selectedAccount.currency
-                .code as MonetaryAmount['currency'],
-            }
-          : undefined,
-      stopValue:
-        data.stopValue !== undefined
-          ? {
-              amount: data.stopValue,
-              currency: selectedAccount.currency
-                .code as MonetaryAmount['currency'],
-            }
-          : undefined,
       allOrNothing: data.allOrNothing,
       margin: data.margin,
       accountId: data.accountId,
-    };
+      ...(data.limitValue !== undefined && {
+        limitValue: {
+          amount: data.limitValue,
+          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+        },
+      }),
+      ...(data.stopValue !== undefined && {
+        stopValue: {
+          amount: data.stopValue,
+          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+        },
+      }),
+    } as OrderPreviewRequest;
 
     try {
       setLoading(true);
@@ -168,30 +163,27 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
       (acc) => acc.id === submittedData.accountId
     );
     if (!selectedAccount) return;
-    const createOrderRequest: CreateOrderRequest = {
+
+    const createOrderRequest = {
       assetId,
       direction,
       quantity: submittedData.quantity,
-      limitValue:
-        submittedData.limitValue !== undefined
-          ? {
-              amount: submittedData.limitValue,
-              currency: selectedAccount.currency
-                .code as MonetaryAmount['currency'],
-            }
-          : undefined,
-      stopValue:
-        submittedData.stopValue !== undefined
-          ? {
-              amount: submittedData.stopValue,
-              currency: selectedAccount.currency
-                .code as MonetaryAmount['currency'],
-            }
-          : undefined,
       allOrNothing: submittedData.allOrNothing,
       margin: submittedData.margin,
       accountId: submittedData.accountId,
-    };
+      ...(submittedData.limitValue !== undefined && {
+        limitValue: {
+          amount: submittedData.limitValue,
+          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+        },
+      }),
+      ...(submittedData.stopValue !== undefined && {
+        stopValue: {
+          amount: submittedData.stopValue,
+          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+        },
+      }),
+    } as CreateOrderRequest;
 
     try {
       setLoading(true);

@@ -26,12 +26,14 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ListingDetailsDto } from '@/api/response/listing';
+import { Button } from '@/components/ui/button';
 
 interface ListingCardProps {
   listing: ListingDetailsDto;
+  onBuy: (securityId: string) => void;
 }
 
-export default function ListingCard({ listing }: ListingCardProps) {
+export default function ListingCard({ listing, onBuy }: ListingCardProps) {
   const data = listing;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -310,6 +312,9 @@ export default function ListingCard({ listing }: ListingCardProps) {
             <Coins className="h-3 w-3" />
             <span>Vol: {data.volume.toLocaleString()}</span>
           </div>
+          <Button variant="default" onClick={() => onBuy(data.securityId)}>
+            Buy
+          </Button>
         </div>
       </CardFooter>
     </Card>
