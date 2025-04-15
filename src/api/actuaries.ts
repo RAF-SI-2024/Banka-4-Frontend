@@ -16,7 +16,7 @@ export const searchActuaries = async (
 export const updateLimits = async (
   client: Axios,
   actuaryId: string,
-  newLimit: number
+  newLimit: number | null
 ) =>
   client.put<void>(`/stock/actuaries/limit/${actuaryId}`, {
     limitAmount: newLimit,

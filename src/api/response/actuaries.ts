@@ -4,7 +4,7 @@ import { Currency } from '@/types/currency';
 
 export interface ActuaryInfoDto {
   needsApproval: boolean;
-  limitAmount: number;
+  limitAmount: number | null;
   usedLimitAmount: number;
   currencyCode: Currency;
 }

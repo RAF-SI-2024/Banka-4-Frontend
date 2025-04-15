@@ -28,7 +28,9 @@ export function ChangeLimitDialog({
   open,
   onOpenChange,
 }: ChangeLimitDialogProps) {
-  const [newLimit, setNewLimit] = useState<number>(item.actuary.limitAmount);
+  const [newLimit, setNewLimit] = useState<number | null>(
+    item.actuary.limitAmount
+  );
 
   const client = useHttpClient();
 
@@ -39,7 +41,7 @@ export function ChangeLimitDialog({
       newLimit,
     }: {
       actuaryId: string;
-      newLimit: number;
+      newLimit: number | null;
     }) => updateLimits(client, actuaryId, newLimit),
     onSuccess: () => {
       toast.success('Limit changed successfully');
@@ -63,7 +65,7 @@ export function ChangeLimitDialog({
             <Input
               type="text"
               className={'disabled:cursor-default'}
-              value={newLimit}
+              value={newLimit !== null ? newLimit : ''}
               onChange={(e) => setNewLimit(Number(e.target.value))}
             />
           </div>
