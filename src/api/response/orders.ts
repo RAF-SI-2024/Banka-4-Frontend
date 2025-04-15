@@ -13,6 +13,8 @@ export interface OrderDto {
   isDone: boolean;
   createdAt: string;
   lastModified: string;
+  contractSize: number;
+  remainingPortions: number;
 }
 
 export interface OrderPreviewDto {
