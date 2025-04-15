@@ -9,7 +9,10 @@ export interface ActuaryInfoDto {
   currencyCode: Currency;
 }
 
-export type ActuariesSearchResponse = Pageable<{
+export interface ActuaryItem {
   user: EmployeeResponseDto;
   actuary: ActuaryInfoDto;
-}>;
+}
+
+
+export type ActuariesSearchResponse = Pageable<ActuaryItem>;

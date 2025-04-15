@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { ActuaryItem } from '@/types/actuary';
 import { ActuaryActions } from '@/components/actuary/actuary-actions';
+import { ActuaryItem } from '@/api/response/actuaries';
 
 export const actuariesColumns: ColumnDef<ActuaryItem>[] = [
   {

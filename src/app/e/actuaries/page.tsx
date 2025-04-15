@@ -12,7 +12,6 @@ import { useQuery } from '@tanstack/react-query';
 import { searchActuaries } from '@/api/actuaries';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { actuariesColumns } from '@/ui/dataTables/actuaries/actuaries-columns';
-import { ActuaryItem } from '@/types/actuary';
 
 const actuariesFilterColumns: Record<keyof ActuariesFilter, FilterDefinition> =
   {
@@ -61,7 +60,6 @@ const ActuariesPage: React.FC = () => {
 
   const client = useHttpClient();
 
-  const [actuaryItems, setActuaryItems] = useState<ActuaryItem[]>([]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['actuaries', page, pageSize, searchFilter],
@@ -75,12 +73,6 @@ const ActuariesPage: React.FC = () => {
       return response.data;
     },
   });
-
-  useEffect(() => {
-    if (data?.content) {
-      setActuaryItems(data.content);
-    }
-  }, [data]);
 
   return (
     <GuardBlock requiredUserType={'employee'} requiredPrivileges={['ADMIN']}>
@@ -100,7 +92,7 @@ const ActuariesPage: React.FC = () => {
         <CardContent className="rounded-lg overflow-hidden">
           <DataTable
             columns={actuariesColumns}
-            data={actuaryItems ?? []}
+            data={data?.content ?? []}
             isLoading={isLoading}
             pageCount={data?.page.totalPages ?? 0}
             pagination={{ page, pageSize }}

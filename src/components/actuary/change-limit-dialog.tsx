@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { ActuaryItem } from '@/types/actuary';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { updateLimits } from '@/api/actuaries';
@@ -16,6 +15,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { useState } from 'react';
+import { ActuaryItem } from '@/api/response/actuaries';
 
 interface ChangeLimitDialogProps {
   item: ActuaryItem;

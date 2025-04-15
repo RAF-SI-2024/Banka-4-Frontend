@@ -5,8 +5,8 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { resetUsedLimit } from '@/api/actuaries';
 import { toast } from 'sonner';
-import { ActuaryItem } from '@/types/actuary';
 import { useMutation } from '@tanstack/react-query';
+import { ActuaryItem } from '@/api/response/actuaries';
 
 export function ActuaryActions({ item }: { item: ActuaryItem }) {
   const [isChangeLimitDialogOpen, setChangeLimitDialogOpen] = useState(false);
