@@ -32,7 +32,7 @@ export const searchOrders = async (
   });
 
 export const approveOrder = async (client: Axios, orderId: string) =>
-  client.post<void>(`/stocks/orders/${orderId}/approve`);
+  client.post<void>(`/stock/orders/${orderId}/approve`);
 
 export const declineOrder = async (client: Axios, orderId: string) =>
-  client.post<void>(`/stocks/orders/${orderId}/decline`);
+  client.post<void>(`/stock/orders/${orderId}/decline`);
