@@ -7,22 +7,25 @@ export function filterSidebarItemsByPrivileges(
 ): SidebarGroupType[] {
   return items
     .map((section) => {
-      const filteredItems = section.items?.filter((item) =>
-        hasRequiredPrivileges(item.privileges, userPrivilege)
+      const hasGroupAccess = hasRequiredPrivileges(
+        section.privileges,
+        userPrivilege
       );
-
-      const hasGroupAccess =
-        hasRequiredPrivileges(section.privileges, userPrivilege) ||
-        (filteredItems && filteredItems.length > 0);
 
       if (!hasGroupAccess) {
         return null;
       }
 
-      return {
-        ...section,
-        items: filteredItems,
-      };
+      if (section.items === undefined) {
+        return { ...section };
+      }
+      const filteredItems = section.items?.filter((item) =>
+        hasRequiredPrivileges(item.privileges, userPrivilege)
+      );
+
+      return filteredItems?.length > 0
+        ? { ...section, items: filteredItems }
+        : null;
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
 }
