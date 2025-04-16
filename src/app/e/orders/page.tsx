@@ -49,7 +49,6 @@ const OrdersOverviewPage: React.FC = () => {
   });
 
   const client = useHttpClient();
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['orders', page, pageSize, searchFilter],
