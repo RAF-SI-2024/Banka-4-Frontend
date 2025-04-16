@@ -28,7 +28,7 @@ export const searchOrders = async (
   size: number
 ) =>
   client.get<Pageable<OrderDto>>('/stock/orders', {
-    params: { statuses: status, page, size },
+    params: cleanObject({ statuses: status, page, size }),
   });
 
 export const approveOrder = async (client: Axios, orderId: string) =>
