@@ -7,8 +7,8 @@ export const ordersColumns = (
   handleDecline: (orderId: string) => void
 ): ColumnDef<OrderDto>[] => [
   {
-    accessorKey: 'userId',
     header: 'Agent',
+    cell: ({ row }) => `${row.original.firstName} ${row.original.lastName}`,
   },
   {
     accessorKey: 'orderType',

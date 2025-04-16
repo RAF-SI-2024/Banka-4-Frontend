@@ -3,7 +3,8 @@ import { MonetaryAmount } from '@/api/response/listing';
 
 export interface OrderDto {
   id: string;
-  userId: string;
+  firstName: string;
+  lastName: string;
   assetTicker: string;
   orderType: OrderType;
   direction: OrderDirection;
