@@ -24,6 +24,7 @@ import { ORDER_STATUSES_ } from '@/types/orders';
 import { ordersColumns } from '@/ui/dataTables/orders/ordersColumns';
 import { useQueryClient } from '@tanstack/react-query';
 import { toastRequestError } from '@/api/errors';
+import { toast } from 'sonner';
 
 const orderFilterColumns: Record<keyof OrderFilter, FilterDefinition> = {
   status: {
@@ -62,7 +63,7 @@ const OrdersOverviewPage: React.FC = () => {
     mutationKey: ['orders'],
     mutationFn: (orderId: string) => approveOrder(client, orderId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
+      toast.success('Order approved!');
     },
     onError: (error) => {
       toastRequestError(error);
@@ -73,7 +74,7 @@ const OrdersOverviewPage: React.FC = () => {
     mutationKey: ['orders'],
     mutationFn: (orderId: string) => declineOrder(client, orderId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['orders'] });
+      toast.success('Order declined!');
     },
     onError: (error) => {
       toastRequestError(error);
