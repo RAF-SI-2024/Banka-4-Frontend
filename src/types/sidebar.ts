@@ -19,7 +19,7 @@ export interface SidebarGroupType {
   icon: LucideIcon;
   isActive: boolean;
   items?: SidebarGroupItemType[];
-  userType: UserType;
+  userType: UserType | 'any';
   privileges: Privilege[];
 }
 

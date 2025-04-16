@@ -63,7 +63,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain
           items={filterSidebarItemsByPrivileges(
             data.navMain.filter(
-              (g) => userType !== undefined && userType === g.userType
+              (g) =>
+                userType !== undefined &&
+                (userType === g.userType || g.userType === 'any')
             ),
             userPrivileges
           )}
