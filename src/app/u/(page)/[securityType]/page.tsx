@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { cleanObject } from '@/lib/request-utils';
+import GuardBlock from '@/components/GuardBlock';
 
 export default function Page({
   params,
@@ -63,7 +64,7 @@ export default function Page({
   };
 
   return (
-    <div className="">
+    <GuardBlock requiredPrivileges={['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE']}>
       <div className="justify-end flex flex-row gap-2 pb-4">
         <Link href={'/u/create-order'}>
           <Button>Create Order</Button>
@@ -86,6 +87,6 @@ export default function Page({
           router.push(`/u/${securityTypeParam}/${row.original.securityId}`)
         }
       />
-    </div>
+    </GuardBlock>
   );
 }

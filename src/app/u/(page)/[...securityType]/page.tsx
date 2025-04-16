@@ -47,6 +47,7 @@ import ListingCard from './ListingCard';
 import * as React from 'react';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { DateRange } from 'react-day-picker';
+import GuardBlock from '@/components/GuardBlock';
 
 const DateRangePicker = ({
   date,
@@ -226,236 +227,248 @@ export default function Page({
     return notFound();
 
   return (
-    <div className="container mx-auto py-6 space-y-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">{details?.data.ticker}</h1>
-          <div className="flex items-center gap-2">
-            <span className="text-xl">{details?.data.price.toFixed(2)}</span>
-            <span
-              className={cn(
-                'text-sm',
-                details && details?.data.change >= 0
-                  ? 'text-green-600'
-                  : 'text-red-600'
-              )}
-            >
-              {details && details?.data.change >= 0 ? '+' : ''}
-              {details?.data.change.toFixed(2)} (
-              {details?.data.change.toFixed(2)}%)
-            </span>
+    <GuardBlock requiredPrivileges={['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE']}>
+      <div className="container mx-auto py-6 space-y-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">{details?.data.ticker}</h1>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{details?.data.price.toFixed(2)}</span>
+              <span
+                className={cn(
+                  'text-sm',
+                  details && details?.data.change >= 0
+                    ? 'text-green-600'
+                    : 'text-red-600'
+                )}
+              >
+                {details && details?.data.change >= 0 ? '+' : ''}
+                {details?.data.change.toFixed(2)} (
+                {details?.data.change.toFixed(2)}%)
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col lg:flex-row gap-4">
-        <Card className="w-full">
-          <CardHeader className="flex flex-row justify-between">
-            <CardTitle>Price History</CardTitle>
-            <DateRangePicker date={date} setDate={setDate} />
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                price: {
-                  label: 'Price',
-                  color: 'hsl(var(--chart-1))',
-                },
-              }}
-              className="h-[300px]"
-            >
-              <LineChart
-                accessibilityLayer
-                data={filteredPriceChanges}
-                margin={{
-                  top: 20,
-                  right: 20,
-                  bottom: 20,
-                  left: 20,
+        <div className="flex flex-col lg:flex-row gap-4">
+          <Card className="w-full">
+            <CardHeader className="flex flex-row justify-between">
+              <CardTitle>Price History</CardTitle>
+              <DateRangePicker date={date} setDate={setDate} />
+            </CardHeader>
+            <CardContent>
+              <ChartContainer
+                config={{
+                  price: {
+                    label: 'Price',
+                    color: 'hsl(var(--chart-1))',
+                  },
                 }}
+                className="h-[300px]"
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => {
-                    const date = new Date(value);
-                    return format(date, 'MMM');
+                <LineChart
+                  accessibilityLayer
+                  data={filteredPriceChanges}
+                  margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
                   }}
-                />
-                <YAxis
-                  domain={['auto', 'auto']}
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  tickFormatter={(value) => `$${value}`}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={
-                    <ChartTooltipContent
-                      formatter={(value) => `$${Number(value).toFixed(2)}`}
-                    />
-                  }
-                />
-                <Line
-                  type="monotone"
-                  dataKey="price"
-                  stroke="var(--color-price)"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-        {details && <ListingCard listing={details.data} />}
-      </div>
-      {details?.data.securityType === 'STOCK' && (
-        <Card>
-          <CardHeader className="flex flex-row justify-between">
-            <CardTitle>Options Chain</CardTitle>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium min-w-fit">
-                Settlement Date:
-              </span>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={'outline'}
-                    className={cn('w-full justify-start text-left font-normal')}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {format(settlementDate, 'PPP')}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={settlementDate}
-                    onSelect={(n) => n && setSettlementDate(n)}
-                    disabled={{ before: new Date() }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return format(date, 'MMM');
+                    }}
                   />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead colSpan={5} className="text-center border-r">
-                      Calls
-                    </TableHead>
-                    <TableHead colSpan={2} rowSpan={2} className="text-center">
-                      Strike
-                    </TableHead>
-                    <TableHead colSpan={5} className="text-center border-l">
-                      Puts
-                    </TableHead>
-                  </TableRow>
-                  <TableRow>
-                    <TableHead className="text-right">Last Price</TableHead>
-                    <TableHead className="text-right">Change</TableHead>
-                    <TableHead className="text-right">% Change</TableHead>
-                    <TableHead className="text-right">Volume</TableHead>
-                    <TableHead className="text-right border-r">
-                      Open Int.
-                    </TableHead>
-                    <TableHead className="text-right border-l">
-                      Last Price
-                    </TableHead>
-                    <TableHead className="text-right">Change</TableHead>
-                    <TableHead className="text-right">% Change</TableHead>
-                    <TableHead className="text-right">Volume</TableHead>
-                    <TableHead className="text-right">Open Int.</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {options?.data.map((option) => (
-                    <TableRow
-                      key={option.strike}
-                      className={cn(option.strike === 190 ? 'bg-muted/50' : '')}
+                  <YAxis
+                    domain={['auto', 'auto']}
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
+                    tickFormatter={(value) => `$${value}`}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={
+                      <ChartTooltipContent
+                        formatter={(value) => `$${Number(value).toFixed(2)}`}
+                      />
+                    }
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="price"
+                    stroke="var(--color-price)"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+          {details && <ListingCard listing={details.data} />}
+        </div>
+        {details?.data.securityType === 'STOCK' && (
+          <Card>
+            <CardHeader className="flex flex-row justify-between">
+              <CardTitle>Options Chain</CardTitle>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium min-w-fit">
+                  Settlement Date:
+                </span>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className={cn(
+                        'w-full justify-start text-left font-normal'
+                      )}
                     >
-                      <TableCell className="text-right">
-                        {formatPrice(option?.callsLastPrice)}
-                      </TableCell>
-                      <TableCell
-                        className={`text-right ${getChangeColorClass(option?.callsLastPrice)}`}
-                      >
-                        {formatChange(option?.callsChange)}
-                      </TableCell>
-                      <TableCell
-                        className={`text-right ${getChangeColorClass(
-                          option.callsLastPrice !== 0
-                            ? (option.callsChange /
-                                (option.callsLastPrice - option.callsChange)) *
-                                100
-                            : 0
-                        )}`}
-                      >
-                        {formatPercent(
-                          option.callsLastPrice !== 0
-                            ? (option.callsChange /
-                                (option.callsLastPrice - option.callsChange)) *
-                                100
-                            : 0
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {option?.callsVolume.toLocaleString()}
-                      </TableCell>
-                      <TableCell className={`text-right border-r`}>
-                        {option.callsOpenInterest.toLocaleString()}
-                      </TableCell>
-                      <TableCell
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {format(settlementDate, 'PPP')}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={settlementDate}
+                      onSelect={(n) => n && setSettlementDate(n)}
+                      disabled={{ before: new Date() }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead colSpan={5} className="text-center border-r">
+                        Calls
+                      </TableHead>
+                      <TableHead
                         colSpan={2}
-                        className="text-center font-medium"
+                        rowSpan={2}
+                        className="text-center"
                       >
-                        ${option.strike.toFixed(2)}
-                      </TableCell>
-                      <TableCell className="text-right border-l">
-                        {formatPrice(option?.putsLastPrice)}
-                      </TableCell>
-                      <TableCell
-                        className={`text-right ${getChangeColorClass(option?.putsChange)}`}
-                      >
-                        {formatChange(option?.putsChange)}
-                      </TableCell>
-                      <TableCell
-                        className={`text-right ${getChangeColorClass(
-                          option.putsLastPrice !== 0
-                            ? (option.putsChange /
-                                (option.putsLastPrice - option.putsChange)) *
-                                100
-                            : 0
-                        )}`}
-                      >
-                        {formatPercent(
-                          option.putsLastPrice !== 0
-                            ? (option.putsChange /
-                                (option.putsLastPrice - option.putsChange)) *
-                                100
-                            : 0
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        {option?.putsVolume.toLocaleString()}
-                      </TableCell>
-                      <TableCell className={`text-right`}>
-                        {option.putsOpenInterest.toLocaleString()}
-                      </TableCell>
+                        Strike
+                      </TableHead>
+                      <TableHead colSpan={5} className="text-center border-l">
+                        Puts
+                      </TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
+                    <TableRow>
+                      <TableHead className="text-right">Last Price</TableHead>
+                      <TableHead className="text-right">Change</TableHead>
+                      <TableHead className="text-right">% Change</TableHead>
+                      <TableHead className="text-right">Volume</TableHead>
+                      <TableHead className="text-right border-r">
+                        Open Int.
+                      </TableHead>
+                      <TableHead className="text-right border-l">
+                        Last Price
+                      </TableHead>
+                      <TableHead className="text-right">Change</TableHead>
+                      <TableHead className="text-right">% Change</TableHead>
+                      <TableHead className="text-right">Volume</TableHead>
+                      <TableHead className="text-right">Open Int.</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {options?.data.map((option) => (
+                      <TableRow
+                        key={option.strike}
+                        className={cn(
+                          option.strike === 190 ? 'bg-muted/50' : ''
+                        )}
+                      >
+                        <TableCell className="text-right">
+                          {formatPrice(option?.callsLastPrice)}
+                        </TableCell>
+                        <TableCell
+                          className={`text-right ${getChangeColorClass(option?.callsLastPrice)}`}
+                        >
+                          {formatChange(option?.callsChange)}
+                        </TableCell>
+                        <TableCell
+                          className={`text-right ${getChangeColorClass(
+                            option.callsLastPrice !== 0
+                              ? (option.callsChange /
+                                  (option.callsLastPrice -
+                                    option.callsChange)) *
+                                  100
+                              : 0
+                          )}`}
+                        >
+                          {formatPercent(
+                            option.callsLastPrice !== 0
+                              ? (option.callsChange /
+                                  (option.callsLastPrice -
+                                    option.callsChange)) *
+                                  100
+                              : 0
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {option?.callsVolume.toLocaleString()}
+                        </TableCell>
+                        <TableCell className={`text-right border-r`}>
+                          {option.callsOpenInterest.toLocaleString()}
+                        </TableCell>
+                        <TableCell
+                          colSpan={2}
+                          className="text-center font-medium"
+                        >
+                          ${option.strike.toFixed(2)}
+                        </TableCell>
+                        <TableCell className="text-right border-l">
+                          {formatPrice(option?.putsLastPrice)}
+                        </TableCell>
+                        <TableCell
+                          className={`text-right ${getChangeColorClass(option?.putsChange)}`}
+                        >
+                          {formatChange(option?.putsChange)}
+                        </TableCell>
+                        <TableCell
+                          className={`text-right ${getChangeColorClass(
+                            option.putsLastPrice !== 0
+                              ? (option.putsChange /
+                                  (option.putsLastPrice - option.putsChange)) *
+                                  100
+                              : 0
+                          )}`}
+                        >
+                          {formatPercent(
+                            option.putsLastPrice !== 0
+                              ? (option.putsChange /
+                                  (option.putsLastPrice - option.putsChange)) *
+                                  100
+                              : 0
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {option?.putsVolume.toLocaleString()}
+                        </TableCell>
+                        <TableCell className={`text-right`}>
+                          {option.putsOpenInterest.toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </GuardBlock>
   );
 }

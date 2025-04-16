@@ -2,20 +2,20 @@ import { SidebarGroupType } from '@/types/sidebar';
 import {
   ArrowRightLeft,
   BriefcaseBusiness,
+  ChartLine,
+  CircleDollarSign,
   Coins,
+  FileClock,
   HandCoins,
   Home,
   List,
   Nfc,
   Plus,
-  UserPlus,
-  Users,
   Repeat,
-  CircleDollarSign,
-  WalletCards,
-  ChartLine,
-  FileClock,
+  UserPlus,
   UserRoundPen,
+  Users,
+  WalletCards,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -240,8 +240,8 @@ const EmployeeGroups: SidebarGroupType[] = [
     url: '/u',
     icon: ChartLine,
     isActive: false,
-    userType: 'employee',
-    privileges: [],
+    userType: 'any',
+    privileges: ['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE'],
   },
   {
     title: 'Actuaries',
