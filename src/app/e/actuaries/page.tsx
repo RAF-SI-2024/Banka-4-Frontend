@@ -74,7 +74,10 @@ const ActuariesPage: React.FC = () => {
   });
 
   return (
-    <GuardBlock requiredUserType={'employee'} requiredPrivileges={['ADMIN']}>
+    <GuardBlock
+      requiredUserType={'employee'}
+      requiredPrivileges={['ADMIN', 'SUPERVISOR']}
+    >
       <Card className="max-w-[900px] mx-auto">
         <CardHeader>
           <h1 className="text-2xl font-bold">Actuaries</h1>

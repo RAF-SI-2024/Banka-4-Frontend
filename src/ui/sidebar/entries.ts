@@ -232,7 +232,7 @@ const EmployeeGroups: SidebarGroupType[] = [
         title: 'Overview',
         url: '/e/actuaries',
         icon: List,
-        privileges: ['ADMIN'], //, 'SUPERVISOR'
+        privileges: ['ADMIN', 'SUPERVISOR'],
       },
     ],
   },
