@@ -115,7 +115,7 @@ const ClientGroups: SidebarGroupType[] = [
     icon: ChartLine,
     isActive: false,
     userType: 'client',
-    privileges: [],
+    privileges: ['TRADE'],
   },
 ];
 
@@ -240,8 +240,8 @@ const EmployeeGroups: SidebarGroupType[] = [
     url: '/u',
     icon: ChartLine,
     isActive: false,
-    userType: 'any',
-    privileges: ['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE'],
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
   },
   {
     title: 'Actuaries',
