@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { DialogFooter } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { ActuaryItem } from '@/api/response/actuaries';
+import { toastRequestError } from '@/api/errors';
 
 interface ChangeLimitDialogProps {
   item: ActuaryItem;
@@ -45,6 +46,9 @@ export function ChangeLimitDialog({
     }) => updateLimits(client, actuaryId, newLimit),
     onSuccess: () => {
       toast.success('Limit changed successfully');
+    },
+    onError: (error) => {
+      toastRequestError(error);
     },
   });
 
