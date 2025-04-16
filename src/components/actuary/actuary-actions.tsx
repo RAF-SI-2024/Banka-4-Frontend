@@ -7,6 +7,7 @@ import { resetUsedLimit } from '@/api/actuaries';
 import { toast } from 'sonner';
 import { useMutation } from '@tanstack/react-query';
 import { ActuaryItem } from '@/api/response/actuaries';
+import { toastRequestError } from '@/api/errors';
 
 export function ActuaryActions({ item }: { item: ActuaryItem }) {
   const [isChangeLimitDialogOpen, setChangeLimitDialogOpen] = useState(false);
@@ -24,9 +25,10 @@ export function ActuaryActions({ item }: { item: ActuaryItem }) {
     },
     onSuccess: () => {
       toast.success('Used limit reset successfully');
+      setConfirmDialogOpen(false);
     },
-    onError: () => {
-      toast.error('Failed to reset used limit');
+    onError: (error) => {
+      toastRequestError(error);
     },
   });
 
