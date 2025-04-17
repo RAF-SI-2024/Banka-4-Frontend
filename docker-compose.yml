@@ -1,0 +1,92 @@
+# A docker-compose configuration for E2E testing.
+# Copyright (C) 2025  Arsen Arsenović <aarsenovic8422rn@raf.rs>
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+services:
+  # Bank service and its state
+  bank_service:
+    image: harbor.k8s.elab.rs/banka-4/bank-service
+    command:
+      - /service.jar
+      - --spring.profiles.active=e2e
+      - --spring.datasource.url=jdbc:postgresql://bank_service_db/bank-service?user=bank-service&password=lmaolmao123
+      - --spring.flyway.clean-disabled=false
+      - --spring.rabbitmq.username=guest
+      - --spring.rabbitmq.password=guest
+      - --spring.rabbitmq.host=broker
+      - --logging.level.rs.banka4=TRACE
+      - --jwt.secret.key=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+      - --alphavantage.api-key=${ALPHAVANTAGE_API_KEY}
+      - --listings.refetch-min=20000000
+      - --services.exchange=http://exchange_office:8000/
+    depends_on:
+      bank_service_db:
+        condition: service_healthy
+      broker:
+        condition: service_started
+  bank_service_db:
+    image: postgres:17
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: lmaolmao123
+      POSTGRES_DB: bank-service
+      POSTGRES_USER: bank-service
+    healthcheck:
+      test: "pg_isready -d bank-service -U bank-service"
+      interval: 3s
+      start_period: 3s
+
+  notification_service:
+    image: harbor.k8s.elab.rs/banka-4/notification-service
+    command:
+      - /service.jar
+      - --spring.profiles.active=e2e
+      - --spring.rabbitmq.username=guest
+      - --spring.rabbitmq.password=guest
+      - --spring.rabbitmq.host=broker
+      - --app.base-url=http://localhost:${MUCENJE_PORT:-8080}
+      - --rabbitmq.queue.email.name=notification-queue
+      - --rabbitmq.exchange.email.name=notification-queue
+      - --rabbitmq.binding.email.name=notification-queue
+
+  broker:
+    image: rabbitmq:4.0-management
+
+  exchange_office:
+    image: harbor.k8s.elab.rs/banka-4/exchange-office
+    environment:
+      EXCHANGERATE_API_KEY: ${EXCHANGERATE_API_KEY:?exchange rate api key missing}
+    volumes:
+      - exchange_office_data:/data
+
+  frontend:
+    build:
+      context: .
+
+  gateway:
+    volumes:
+      - ./docker/gateway-nginx.conf:/etc/nginx/nginx.conf:ro
+    image: nginx:1
+    ports:
+      - ${MUCENJE_PORT:-8080}:80
+    depends_on:
+      - bank_service
+      - exchange_office
+      - frontend
+
+volumes:
+  # Exchange office cache.  Might as well persist.
+  exchange_office_data:
