@@ -7,9 +7,6 @@ export function filterSidebarItemsByPrivileges(
 ): SidebarGroupType[] {
   return items
     .map((section) => {
-      if (section.items === undefined) {
-        return { ...section };
-      }
       const filteredItems = section.items?.filter((item) =>
         hasRequiredPrivileges(item.privileges, userPrivilege)
       );
@@ -22,9 +19,10 @@ export function filterSidebarItemsByPrivileges(
         return null;
       }
 
-      return filteredItems?.length > 0
-        ? { ...section, items: filteredItems }
-        : null;
+      return {
+        ...section,
+        items: filteredItems,
+      };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
 }
