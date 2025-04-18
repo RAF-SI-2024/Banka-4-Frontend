@@ -1,10 +1,10 @@
-const LOGIN_PAGE_PATH = 'auth/login';
+const LOGIN_PAGE_PATH = '/auth/login';
 const EMPLOYEE_HOME_PATH = '/e';
 
 describe('user-auth', () => {
   beforeEach(() => {
-    /* TODO: get base url from env */
-    cy.visit(`http://localhost:3000/${LOGIN_PAGE_PATH}`);
+    cy.task('resetDb');
+    cy.visit(LOGIN_PAGE_PATH);
   });
   it('visit login page and login with valid employee account', () => {
     cy.get('#employee-tab').click();

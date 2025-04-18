@@ -17,3 +17,11 @@ the run will be detached, and stay in the background instead.
 
 A full-ish deployment of the frontend will be set up on
 `localhost:${MUCENJE_PORT:-8080}`.
+## Running E2E tests
+To invoke end-to-end tests, run:
+
+```sh
+npx cypress run
+```
+
+Consult the [Cypress documentation](https://docs.cypress.io/) for more info.
