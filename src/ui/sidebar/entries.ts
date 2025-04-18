@@ -259,6 +259,14 @@ const EmployeeGroups: SidebarGroupType[] = [
     ],
     privileges: [],
   },
+  {
+    title: 'Taxes',
+    url: '/e/taxes',
+    icon: HandCoins,
+    isActive: false,
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR'],
+  },
 ];
 
 export const ALL_GROUPS = EmployeeGroups.concat(ClientGroups);
