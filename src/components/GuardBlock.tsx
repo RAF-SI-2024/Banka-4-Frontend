@@ -33,10 +33,10 @@ const GuardBlock: React.FC<GuardBlockProps> = ({
   // Privileges of current user
   const userPrivileges: Privilege[] = me.me.privileges;
 
-  // Check if the user has all required privileges.
-  const hasPermissions = requiredPrivileges.every((privilege) =>
-    userPrivileges.includes(privilege)
-  );
+  // Check if the user has any required privileges.
+  const hasPermissions =
+    requiredPrivileges.length === 0 ||
+    requiredPrivileges.some((privilege) => userPrivileges.includes(privilege));
 
   // If the user lacks the required privileges, redirect them outside.
   if (!hasPermissions) {

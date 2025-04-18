@@ -44,7 +44,7 @@ export default function NewClientStage(props: NewClientProps) {
               phoneNumber: '',
               address: '',
               gender: 'MALE',
-              privilege: [],
+              privilege: null,
             }}
           />
         </CardContent>

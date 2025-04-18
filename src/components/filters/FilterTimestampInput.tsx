@@ -29,7 +29,7 @@ const FilterTimestampInput = <TFilterKey,>({
   const selectedDate = value ? dayjs(value, 'YYYY-MM-DD').toDate() : undefined;
 
   return (
-    <div className="filter-input w-full">
+    <div className="filter-input">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full ">
@@ -38,7 +38,7 @@ const FilterTimestampInput = <TFilterKey,>({
                 className={`w-full text-left  ${value == null || value.length == 0 ? 'text-gray-500 font-normal' : ''}`}
               >
                 {value
-                  ? value
+                  ? new Date(value).toLocaleDateString()
                   : placeholder || `Filter by ${String(propertyName)}`}
               </p>
               <ChevronDown className="text-gray-400" aria-hidden="true" />

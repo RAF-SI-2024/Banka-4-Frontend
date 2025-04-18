@@ -14,6 +14,14 @@ export function filterSidebarItemsByPrivileges(
         hasRequiredPrivileges(item.privileges, userPrivilege)
       );
 
+      const hasGroupAccess =
+        hasRequiredPrivileges(section.privileges, userPrivilege) ||
+        (filteredItems && filteredItems.length > 0);
+
+      if (!hasGroupAccess) {
+        return null;
+      }
+
       return filteredItems?.length > 0
         ? { ...section, items: filteredItems }
         : null;
@@ -25,5 +33,8 @@ const hasRequiredPrivileges = (
   requiredPrivileges: Privilege[],
   userPrivileges: Privilege[]
 ) => {
-  return requiredPrivileges.every((priv) => userPrivileges.includes(priv));
+  return (
+    requiredPrivileges.length === 0 ||
+    requiredPrivileges.some((priv) => userPrivileges.includes(priv))
+  );
 };

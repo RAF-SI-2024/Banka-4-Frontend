@@ -17,13 +17,7 @@ import { DataTable } from '@/components/dataTable/DataTable';
 import { employeesColumns } from '@/ui/dataTables/employees/employeesColumns';
 import useTablePageParams from '@/hooks/useTablePageParams';
 import FilterBar, { FilterDefinition } from '@/components/filters/FilterBar';
-
-interface EmployeeFilter {
-  firstName: string;
-  lastName: string;
-  email: string;
-  position: string;
-}
+import { EmployeeFilter } from '@/api/request/employee';
 
 const employeeFilterColumns: Record<keyof EmployeeFilter, FilterDefinition> = {
   firstName: {

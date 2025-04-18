@@ -125,11 +125,11 @@ export function FilterBar<
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
+    <form onSubmit={handleSubmit} className="flex mb-4 flex-wrap gap-3">
       {Object.keys(columns).map((key) =>
         renderFilterInput(key as keyof TFilter)
       )}
-      <Button type="submit">
+      <Button type="submit" className="!ml-auto">
         Search
         <Search className="w-4 h-4 mr-1" />
       </Button>

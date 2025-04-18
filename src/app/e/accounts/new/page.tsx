@@ -132,6 +132,7 @@ export default function NewAccountPage() {
                   ...c,
                   phone: c.phoneNumber,
                   dateOfBirth: c.dateOfBirth.toISOString(),
+                  privilege: !c.privilege ? [] : [c.privilege],
                 },
               });
               setStage(NewAccountStage.PersonalOrCompany);

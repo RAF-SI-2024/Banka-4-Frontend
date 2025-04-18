@@ -23,10 +23,7 @@ export interface AccountDto {
 }
 
 export interface CurrencyDto {
-  id: string;
-  name: string;
   code: string;
-  symbol: string;
 }
 
 export type AccountOverviewResponseDto = Pageable<AccountDto>;

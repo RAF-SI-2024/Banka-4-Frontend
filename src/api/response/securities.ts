@@ -1,6 +1,6 @@
-import { ForexLiquidity, UnitName } from '@/types/securities';
+import { AssetType, ForexLiquidity, UnitName } from '@/types/securities';
 import { Currency } from '@/types/currency';
-import { ListingInfoDto } from '@/api/response/listing';
+import { ListingInfoDto, MonetaryAmount } from '@/api/response/listing';
 
 export type StockDto = {
   outstandingShares: number;
@@ -20,3 +20,19 @@ export type ForexPairDto = {
   liquidity: ForexLiquidity;
   exchangeRate: number;
 } & ListingInfoDto;
+
+export interface SecurityHoldingDto {
+  assetType: AssetType;
+  ticker: string;
+  amount: number;
+  price: MonetaryAmount;
+  profit: MonetaryAmount;
+  publicAmount: number;
+  lastModified: string;
+}
+
+export interface UserTaxInfoDto {
+  paidTaxThisYear: number;
+  unpaidTaxThisMonth: number;
+  currency: Currency;
+}

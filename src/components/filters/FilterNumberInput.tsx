@@ -26,7 +26,7 @@ const FilterNumberInput = <TFilterKey,>({
   };
 
   return (
-    <div className="filter-input w-full">
+    <div className="filter-input">
       <Input
         className="w-full"
         type="number"
