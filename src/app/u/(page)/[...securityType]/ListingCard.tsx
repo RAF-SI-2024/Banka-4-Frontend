@@ -30,10 +30,15 @@ import { Button } from '@/components/ui/button';
 
 interface ListingCardProps {
   listing: ListingDetailsDto;
+  assetId: string;
   onBuy: (securityId: string) => void;
 }
 
-export default function ListingCard({ listing, onBuy }: ListingCardProps) {
+export default function ListingCard({
+  listing,
+  onBuy,
+  assetId,
+}: ListingCardProps) {
   const data = listing;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -312,7 +317,7 @@ export default function ListingCard({ listing, onBuy }: ListingCardProps) {
             <Coins className="h-3 w-3" />
             <span>Vol: {data.volume.toLocaleString()}</span>
           </div>
-          <Button variant="default" onClick={() => onBuy(data.securityId)}>
+          <Button variant="default" onClick={() => onBuy(assetId)}>
             Buy
           </Button>
         </div>

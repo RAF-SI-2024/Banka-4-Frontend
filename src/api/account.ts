@@ -22,6 +22,10 @@ export const searchAccounts = async (
 export const getClientAccounts = async (client: Axios) => {
   return client.get<AccountDto[]>(`/account`);
 };
+
+export const getEmployeeAccounts = async (client: Axios) => {
+  return client.get<AccountDto[]>(`/account/bank-accounts`);
+};
 export const getAccounts = async (client: Axios) => {
   return client.get<AccountDto[]>(`/account`);
 };

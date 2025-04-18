@@ -3,12 +3,12 @@ import { OrderDirection } from '@/types/orders';
 
 export interface OrderPreviewRequest {
   assetId: string /* securityId :) */;
+  direction: OrderDirection;
   quantity: number;
   limitValue?: MonetaryAmount;
   stopValue?: MonetaryAmount;
   allOrNothing?: boolean;
   margin?: boolean;
-  accountId: string;
 }
 
 export interface CreateOrderRequest {
@@ -19,5 +19,5 @@ export interface CreateOrderRequest {
   stopValue?: MonetaryAmount;
   allOrNothing?: boolean;
   margin?: boolean;
-  accountId: string;
+  accountNumber: string;
 }

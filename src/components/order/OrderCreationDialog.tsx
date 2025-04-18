@@ -31,6 +31,8 @@ import { OrderPreviewDto } from '@/api/response/orders';
 import { OrderDirection } from '@/types/orders';
 import { AccountDto } from '@/api/response/account';
 import { MonetaryAmount } from '@/api/response/listing';
+import { useMe } from '@/hooks/use-me';
+import { Switch } from '@/components/ui/switch';
 
 const orderFormSchema = z
   .object({
@@ -40,11 +42,12 @@ const orderFormSchema = z
     orderType: z.enum(['Market', 'Limit', 'Stop', 'Stop-Limit'], {
       required_error: 'Order type is required',
     }),
-    limitValue: z.number().optional(),
-    stopValue: z.number().optional(),
+    limitValue: z.coerce.number().optional(),
+    stopValue: z.coerce.number().optional(),
     allOrNothing: z.boolean().default(false),
     margin: z.boolean().default(false),
-    accountId: z.string().nonempty('Select an account'),
+    accountId: z.string().optional(),
+    accountNumber: z.string().optional(),
   })
   .refine(
     (data) => {
@@ -58,6 +61,10 @@ const orderFormSchema = z
     },
     { message: 'Enter limit value', path: ['limitValue'] }
   )
+  .refine((data) => Boolean(data.accountId) !== Boolean(data.accountNumber), {
+    message: 'Select an account',
+    path: ['accountId'], // you can point at either
+  })
   .refine(
     (data) => {
       if (
@@ -94,6 +101,7 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
   onOrderConfirmed,
   onClose,
 }) => {
+  const me = useMe();
   const [step, setStep] = useState<1 | 2>(1);
   const [previewData, setPreviewData] = useState<OrderPreviewDto | null>(null);
   const [submittedData, setSubmittedData] = useState<OrderFormValues | null>(
@@ -109,6 +117,9 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
       allOrNothing: false,
       margin: false,
       accountId: '',
+      accountNumber: '',
+      limitValue: 0,
+      stopValue: 0,
     },
   });
 
@@ -121,28 +132,40 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
   };
 
   const onFormSubmit = async (data: OrderFormValues) => {
-    const selectedAccount = accounts.find((acc) => acc.id === data.accountId);
+    const key =
+      me.state === 'logged-in' && me.type === 'employee'
+        ? data.accountNumber
+        : data.accountId;
+    const selectedAccount = accounts.find((acc) =>
+      me.state === 'logged-in' && me.type === 'employee'
+        ? acc.accountNumber === key
+        : acc.id === key
+    );
     if (!selectedAccount) return;
 
-    const previewRequest = {
+    const previewRequest: OrderPreviewRequest = {
       assetId,
+      direction,
       quantity: data.quantity,
       allOrNothing: data.allOrNothing,
       margin: data.margin,
-      accountId: data.accountId,
-      ...(data.limitValue !== undefined && {
-        limitValue: {
-          amount: data.limitValue,
-          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-        },
-      }),
-      ...(data.stopValue !== undefined && {
-        stopValue: {
-          amount: data.stopValue,
-          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-        },
-      }),
-    } as OrderPreviewRequest;
+
+      limitValue: {
+        amount:
+          data.orderType === 'Limit' || data.orderType === 'Stop-Limit'
+            ? data.limitValue!
+            : 0,
+        currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+      },
+
+      stopValue: {
+        amount:
+          data.orderType === 'Stop' || data.orderType === 'Stop-Limit'
+            ? data.stopValue!
+            : 0,
+        currency: selectedAccount.currency.code as MonetaryAmount['currency'],
+      },
+    };
 
     try {
       setLoading(true);
@@ -159,27 +182,35 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
 
   const handleConfirmOrder = async () => {
     if (!submittedData) return;
-    const selectedAccount = accounts.find(
-      (acc) => acc.id === submittedData.accountId
+    const key =
+      me.state === 'logged-in' && me.type === 'employee'
+        ? submittedData.accountNumber
+        : submittedData.accountId;
+    const selectedAccount = accounts.find((acc) =>
+      me.state === 'logged-in' && me.type === 'employee'
+        ? acc.accountNumber === key
+        : acc.id === key
     );
     if (!selectedAccount) return;
 
-    const createOrderRequest = {
+    const createOrderRequest: CreateOrderRequest = {
       assetId,
       direction,
       quantity: submittedData.quantity,
       allOrNothing: submittedData.allOrNothing,
       margin: submittedData.margin,
-      accountId: submittedData.accountId,
+      ...(me.state === 'logged-in' && me.type === 'employee'
+        ? { accountNumber: submittedData.accountNumber }
+        : { accountId: submittedData.accountId }),
       ...(submittedData.limitValue !== undefined && {
         limitValue: {
-          amount: submittedData.limitValue,
+          amount: submittedData.limitValue ?? 0,
           currency: selectedAccount.currency.code as MonetaryAmount['currency'],
         },
       }),
       ...(submittedData.stopValue !== undefined && {
         stopValue: {
-          amount: submittedData.stopValue,
+          amount: submittedData.stopValue ?? 0,
           currency: selectedAccount.currency.code as MonetaryAmount['currency'],
         },
       }),
@@ -260,8 +291,14 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                     </FormItem>
                   )}
                 />
-                {(form.watch('orderType') === 'Limit' ||
-                  form.watch('orderType') === 'Stop-Limit') && (
+                <div
+                  className={
+                    form.watch('orderType') === 'Limit' ||
+                    form.watch('orderType') === 'Stop-Limit'
+                      ? ''
+                      : 'hidden'
+                  }
+                >
                   <FormField
                     control={form.control}
                     name="limitValue"
@@ -269,15 +306,21 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                       <FormItem>
                         <FormLabel>Limit Value</FormLabel>
                         <FormControl>
-                          <Input type="number" step="0.01" {...field} />
+                          <Input type="number" step="10" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )}
-                {(form.watch('orderType') === 'Stop' ||
-                  form.watch('orderType') === 'Stop-Limit') && (
+                </div>
+                <div
+                  className={
+                    form.watch('orderType') === 'Stop' ||
+                    form.watch('orderType') === 'Stop-Limit'
+                      ? ''
+                      : 'hidden'
+                  }
+                >
                   <FormField
                     control={form.control}
                     name="stopValue"
@@ -285,33 +328,24 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                       <FormItem>
                         <FormLabel>Stop Value</FormLabel>
                         <FormControl>
-                          <Input type="number" step="0.01" {...field} />
+                          <Input type="number" step="10" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )}
+                </div>
                 <FormField
                   control={form.control}
                   name="allOrNothing"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>All or Nothing</FormLabel>
+                    <FormItem className="flex flex-row items-center justify-between">
+                      <FormLabel className="mb-0">All or Nothing</FormLabel>
                       <FormControl>
-                        <select
-                          onChange={(e) =>
-                            field.onChange(e.target.value === 'true')
-                          }
-                          onBlur={field.onBlur}
-                          value={field.value ? 'true' : 'false'}
-                          name={field.name}
-                          ref={field.ref}
-                          className="input"
-                        >
-                          <option value="false">No</option>
-                          <option value="true">Yes</option>
-                        </select>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -321,22 +355,13 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                   control={form.control}
                   name="margin"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Margin</FormLabel>
+                    <FormItem className="flex flex-row items-center justify-between">
+                      <FormLabel className="mb-0">Margin</FormLabel>
                       <FormControl>
-                        <select
-                          onChange={(e) =>
-                            field.onChange(e.target.value === 'true')
-                          }
-                          onBlur={field.onBlur}
-                          value={field.value ? 'true' : 'false'}
-                          name={field.name}
-                          ref={field.ref}
-                          className="input"
-                        >
-                          <option value="false">No</option>
-                          <option value="true">Yes</option>
-                        </select>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -344,24 +369,40 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                 />
                 <FormField
                   control={form.control}
-                  name="accountId"
+                  name={
+                    me.state === 'logged-in' && me.type === 'employee'
+                      ? 'accountNumber'
+                      : 'accountId'
+                  }
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Account</FormLabel>
                       <FormControl>
                         <Select
                           onValueChange={field.onChange}
-                          value={field.value}
+                          value={String(field.value)}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select an account" />
                           </SelectTrigger>
                           <SelectContent>
-                            {accounts.map((acc) => (
-                              <SelectItem key={acc.id} value={acc.id}>
-                                {acc.accountNumber} - {acc.currency.code}
-                              </SelectItem>
-                            ))}
+                            {accounts.map((acc) => {
+                              const val =
+                                me.state === 'logged-in' &&
+                                me.type === 'employee'
+                                  ? acc.accountNumber
+                                  : acc.id;
+                              const label =
+                                me.state === 'logged-in' &&
+                                me.type === 'employee'
+                                  ? `${acc.accountNumber} – ${acc.currency}`
+                                  : `${acc.accountNumber} – ${acc.currency.code}`;
+                              return (
+                                <SelectItem key={val} value={val}>
+                                  {label}
+                                </SelectItem>
+                              );
+                            })}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -392,9 +433,6 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
             </DialogHeader>
             <div className="space-y-4">
               <p>
-                <strong>Asset ID:</strong> {assetId}
-              </p>
-              <p>
                 <strong>Quantity:</strong> {submittedData.quantity}
               </p>
               <p>
@@ -413,11 +451,11 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                 </p>
               )}
               <p>
-                <strong>Approximate Price (preview):</strong>{' '}
+                <strong>Approximate Price:</strong>{' '}
                 {previewData.approximatePrice}
               </p>
               <p>
-                <strong>Quantity (preview):</strong> {previewData.quantity}
+                <strong>Quantity:</strong> {previewData.quantity}
               </p>
             </div>
             <DialogFooter className="flex justify-end space-x-2 mt-4">

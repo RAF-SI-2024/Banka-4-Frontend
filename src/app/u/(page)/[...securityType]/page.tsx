@@ -40,10 +40,11 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import ListingCard from './ListingCard';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { DateRange } from 'react-day-picker';
-import { getAccounts } from '@/api/account';
+import { getAccounts, getEmployeeAccounts } from '@/api/account';
 import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
 import { calculateAveragePrice, createOrder } from '@/api/orders';
 import GuardBlock from '@/components/GuardBlock';
+import { useMe } from '@/hooks/use-me';
 
 const DateRangePicker = ({
   date,
@@ -172,14 +173,23 @@ export default function Page({
   const { securityType: securityTypeParam } = use(params);
   const [securityType, id] = securityTypeParam;
 
+  const me = useMe();
+  const isEmployee = me.state === 'logged-in' && me.type === 'employee';
+
   const handleBuy = (securityId: string) => {
     setSelectedAssetId(securityId);
     setBuyDialogOpen(true);
   };
 
   const { data: accounts } = useQuery({
-    queryKey: ['accounts'],
-    queryFn: async () => (await getAccounts(client)).data,
+    queryKey: ['accounts', isEmployee ? 'employee' : 'client'],
+    queryFn: async () => {
+      if (isEmployee) {
+        return (await getEmployeeAccounts(client)).data;
+      } else {
+        return (await getAccounts(client)).data;
+      }
+    },
   });
 
   const previewMutation = useMutation({
@@ -333,7 +343,13 @@ export default function Page({
               </ChartContainer>
             </CardContent>
           </Card>
-          {details && <ListingCard listing={details.data} onBuy={handleBuy} />}
+          {details && (
+            <ListingCard
+              listing={details.data}
+              assetId={id}
+              onBuy={handleBuy}
+            />
+          )}
         </div>
         {details?.data.securityType === 'STOCK' && (
           <Card>
