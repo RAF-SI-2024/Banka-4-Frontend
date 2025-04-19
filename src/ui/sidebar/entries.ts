@@ -7,6 +7,7 @@ import {
   Coins,
   FileClock,
   HandCoins,
+  Handshake,
   Home,
   List,
   Nfc,
@@ -116,6 +117,22 @@ const ClientGroups: SidebarGroupType[] = [
     isActive: false,
     userType: 'client',
     privileges: ['TRADE'],
+  },
+  {
+    title: 'OTC',
+    url: '/u/otc',
+    icon: Handshake,
+    isActive: false,
+    userType: 'client',
+    privileges: ['TRADE'],
+    items: [
+      {
+        title: 'Overview',
+        url: '/u/otc',
+        icon: List,
+        privileges: ['TRADE'],
+      },
+    ],
   },
 ];
 
@@ -242,6 +259,22 @@ const EmployeeGroups: SidebarGroupType[] = [
     isActive: false,
     userType: 'employee',
     privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
+  },
+  {
+    title: 'OTC',
+    url: '/u/otc',
+    icon: Handshake,
+    isActive: false,
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
+    items: [
+      {
+        title: 'Overview',
+        url: '/u/otc',
+        icon: List,
+        privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
+      },
+    ],
   },
   {
     title: 'Actuaries',
