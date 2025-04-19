@@ -22,7 +22,7 @@ export const taxesColumns = (
     header: 'Unpaid Tax',
     cell: ({ row }) => {
       const { unpaidTax, currency } = row.original;
-      return `${unpaidTax} ${currency}`;
+      return `${unpaidTax.toLocaleString()} ${currency}`;
     },
   },
   {
