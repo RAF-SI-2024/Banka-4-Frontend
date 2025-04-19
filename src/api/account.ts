@@ -1,5 +1,9 @@
 import { Axios } from 'axios';
-import { AccountDto, AccountOverviewResponseDto } from './response/account';
+import {
+  AccountDto,
+  AccountOverviewResponseDto,
+  BankAccountDto,
+} from './response/account';
 import { NewAccountDto, SetAccountLimitsDto } from '@/api/request/account';
 
 export const getAccountById = async (client: Axios, id: string) =>
@@ -23,8 +27,8 @@ export const getClientAccounts = async (client: Axios) => {
   return client.get<AccountDto[]>(`/account`);
 };
 
-export const getEmployeeAccounts = async (client: Axios) => {
-  return client.get<AccountDto[]>(`/account/bank-accounts`);
+export const getBankAccounts = async (client: Axios) => {
+  return client.get<BankAccountDto[]>(`/account/bank-accounts`);
 };
 export const getAccounts = async (client: Axios) => {
   return client.get<AccountDto[]>(`/account`);

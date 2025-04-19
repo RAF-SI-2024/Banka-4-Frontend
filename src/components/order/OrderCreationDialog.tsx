@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
-  SelectTrigger,
-  SelectValue,
   SelectContent,
   SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
 import {
   Form,
@@ -26,54 +26,49 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { OrderPreviewRequest, CreateOrderRequest } from '@/api/request/orders';
+import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
 import { OrderPreviewDto } from '@/api/response/orders';
-import { OrderDirection } from '@/types/orders';
-import { AccountDto } from '@/api/response/account';
-import { MonetaryAmount } from '@/api/response/listing';
-import { useMe } from '@/hooks/use-me';
+import { ORDER_TYPES, ORDER_TYPES_, OrderDirection } from '@/types/orders';
 import { Switch } from '@/components/ui/switch';
+import { orderTypeToHumanReadable } from '@/lib/order-utils';
+import { Currency } from '@/types/currency';
+import { MonetaryAmount } from '@/api/response/listing';
+import { formatAccountNumber } from '@/lib/account-utils';
+
+export interface OrderCreationAccountDto {
+  accountNumber: string;
+  currency: Currency;
+  balance: number;
+  availableBalance: number;
+}
 
 const orderFormSchema = z
   .object({
-    quantity: z
-      .number({ invalid_type_error: 'Quantity is required' })
-      .min(1, 'Quantity must be at least 1'),
-    orderType: z.enum(['Market', 'Limit', 'Stop', 'Stop-Limit'], {
+    quantity: z.coerce.number().min(1, 'Quantity must be at least 1'),
+    orderType: z.enum(ORDER_TYPES_, {
       required_error: 'Order type is required',
     }),
     limitValue: z.coerce.number().optional(),
     stopValue: z.coerce.number().optional(),
     allOrNothing: z.boolean().default(false),
     margin: z.boolean().default(false),
-    accountId: z.string().optional(),
-    accountNumber: z.string().optional(),
+    accountNumber: z.string(),
   })
   .refine(
     (data) => {
-      if (
-        (data.orderType === 'Limit' || data.orderType === 'Stop-Limit') &&
+      return !(
+        (data.orderType === 'LIMIT' || data.orderType === 'STOP_LIMIT') &&
         data.limitValue === undefined
-      ) {
-        return false;
-      }
-      return true;
+      );
     },
     { message: 'Enter limit value', path: ['limitValue'] }
   )
-  .refine((data) => Boolean(data.accountId) !== Boolean(data.accountNumber), {
-    message: 'Select an account',
-    path: ['accountId'], // you can point at either
-  })
   .refine(
     (data) => {
-      if (
-        (data.orderType === 'Stop' || data.orderType === 'Stop-Limit') &&
+      return !(
+        (data.orderType === 'STOP' || data.orderType === 'STOP_LIMIT') &&
         data.stopValue === undefined
-      ) {
-        return false;
-      }
-      return true;
+      );
     },
     { message: 'Enter stop value', path: ['stopValue'] }
   );
@@ -83,7 +78,7 @@ type OrderFormValues = z.infer<typeof orderFormSchema>;
 interface OrderCreationDialogProps {
   open: boolean;
   direction: OrderDirection;
-  accounts: AccountDto[];
+  accounts: OrderCreationAccountDto[];
   assetId: string;
   onPreviewRequested: (
     request: OrderPreviewRequest
@@ -101,7 +96,6 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
   onOrderConfirmed,
   onClose,
 }) => {
-  const me = useMe();
   const [step, setStep] = useState<1 | 2>(1);
   const [previewData, setPreviewData] = useState<OrderPreviewDto | null>(null);
   const [submittedData, setSubmittedData] = useState<OrderFormValues | null>(
@@ -113,10 +107,9 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
       quantity: 1,
-      orderType: 'Market',
+      orderType: 'MARKET',
       allOrNothing: false,
       margin: false,
-      accountId: '',
       accountNumber: '',
       limitValue: 0,
       stopValue: 0,
@@ -132,14 +125,8 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
   };
 
   const onFormSubmit = async (data: OrderFormValues) => {
-    const key =
-      me.state === 'logged-in' && me.type === 'employee'
-        ? data.accountNumber
-        : data.accountId;
-    const selectedAccount = accounts.find((acc) =>
-      me.state === 'logged-in' && me.type === 'employee'
-        ? acc.accountNumber === key
-        : acc.id === key
+    const selectedAccount = accounts.find(
+      (a) => a.accountNumber === data.accountNumber
     );
     if (!selectedAccount) return;
 
@@ -149,72 +136,33 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
       quantity: data.quantity,
       allOrNothing: data.allOrNothing,
       margin: data.margin,
-
-      limitValue: {
-        amount:
-          data.orderType === 'Limit' || data.orderType === 'Stop-Limit'
-            ? data.limitValue!
-            : 0,
-        currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-      },
-
-      stopValue: {
-        amount:
-          data.orderType === 'Stop' || data.orderType === 'Stop-Limit'
-            ? data.stopValue!
-            : 0,
-        currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-      },
+      ..._makeStopAndLimitValue(data, selectedAccount.currency),
     };
 
-    try {
-      setLoading(true);
-      const previewResponse = await onPreviewRequested(previewRequest);
-      setPreviewData(previewResponse);
-      setSubmittedData(data);
-      setStep(2);
-    } catch (error) {
-      console.error('Error fetching preview:', error);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const previewResponse = await onPreviewRequested(previewRequest);
+    setPreviewData(previewResponse);
+    setSubmittedData(data);
+    setStep(2);
+    setLoading(false);
   };
 
   const handleConfirmOrder = async () => {
     if (!submittedData) return;
-    const key =
-      me.state === 'logged-in' && me.type === 'employee'
-        ? submittedData.accountNumber
-        : submittedData.accountId;
-    const selectedAccount = accounts.find((acc) =>
-      me.state === 'logged-in' && me.type === 'employee'
-        ? acc.accountNumber === key
-        : acc.id === key
+    const selectedAccount = accounts.find(
+      (a) => a.accountNumber === submittedData.accountNumber
     );
     if (!selectedAccount) return;
 
     const createOrderRequest: CreateOrderRequest = {
-      assetId,
-      direction,
+      assetId: assetId,
+      direction: direction,
       quantity: submittedData.quantity,
+      ..._makeStopAndLimitValue(submittedData, selectedAccount.currency),
       allOrNothing: submittedData.allOrNothing,
       margin: submittedData.margin,
-      ...(me.state === 'logged-in' && me.type === 'employee'
-        ? { accountNumber: submittedData.accountNumber }
-        : { accountId: submittedData.accountId }),
-      ...(submittedData.limitValue !== undefined && {
-        limitValue: {
-          amount: submittedData.limitValue ?? 0,
-          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-        },
-      }),
-      ...(submittedData.stopValue !== undefined && {
-        stopValue: {
-          amount: submittedData.stopValue ?? 0,
-          currency: selectedAccount.currency.code as MonetaryAmount['currency'],
-        },
-      }),
-    } as CreateOrderRequest;
+      accountNumber: selectedAccount.accountNumber,
+    };
 
     try {
       setLoading(true);
@@ -277,13 +225,11 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                             <SelectValue placeholder="Select order type" />
                           </SelectTrigger>
                           <SelectContent>
-                            {['Market', 'Limit', 'Stop', 'Stop-Limit'].map(
-                              (type) => (
-                                <SelectItem key={type} value={type}>
-                                  {type}
-                                </SelectItem>
-                              )
-                            )}
+                            {ORDER_TYPES.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {orderTypeToHumanReadable(type)}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -293,8 +239,8 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                 />
                 <div
                   className={
-                    form.watch('orderType') === 'Limit' ||
-                    form.watch('orderType') === 'Stop-Limit'
+                    form.watch('orderType') === 'LIMIT' ||
+                    form.watch('orderType') === 'STOP_LIMIT'
                       ? ''
                       : 'hidden'
                   }
@@ -315,8 +261,8 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                 </div>
                 <div
                   className={
-                    form.watch('orderType') === 'Stop' ||
-                    form.watch('orderType') === 'Stop-Limit'
+                    form.watch('orderType') === 'STOP' ||
+                    form.watch('orderType') === 'STOP_LIMIT'
                       ? ''
                       : 'hidden'
                   }
@@ -369,11 +315,7 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                 />
                 <FormField
                   control={form.control}
-                  name={
-                    me.state === 'logged-in' && me.type === 'employee'
-                      ? 'accountNumber'
-                      : 'accountId'
-                  }
+                  name={'accountNumber'}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Account</FormLabel>
@@ -387,19 +329,12 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
                           </SelectTrigger>
                           <SelectContent>
                             {accounts.map((acc) => {
-                              const val =
-                                me.state === 'logged-in' &&
-                                me.type === 'employee'
-                                  ? acc.accountNumber
-                                  : acc.id;
-                              const label =
-                                me.state === 'logged-in' &&
-                                me.type === 'employee'
-                                  ? `${acc.accountNumber} – ${acc.currency}`
-                                  : `${acc.accountNumber} – ${acc.currency.code}`;
                               return (
-                                <SelectItem key={val} value={val}>
-                                  {label}
+                                <SelectItem
+                                  key={acc.accountNumber}
+                                  value={acc.accountNumber}
+                                >
+                                  {`${formatAccountNumber(acc.accountNumber)} - ${acc.availableBalance.toLocaleString()} ${acc.currency}`}
                                 </SelectItem>
                               );
                             })}
@@ -426,36 +361,27 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
             </Form>
           </>
         )}
-        {step === 2 && previewData && submittedData && (
+        {step === 2 && previewData && (
           <>
             <DialogHeader>
               <DialogTitle>Confirm Order</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <p>
-                <strong>Quantity:</strong> {submittedData.quantity}
+                <strong>Order Type:</strong> {previewData.orderType}
               </p>
-              <p>
-                <strong>Order Type:</strong> {submittedData.orderType}
-              </p>
-              {(submittedData.orderType === 'Limit' ||
-                submittedData.orderType === 'Stop-Limit') && (
-                <p>
-                  <strong>Limit Value:</strong> {submittedData.limitValue}
-                </p>
-              )}
-              {(submittedData.orderType === 'Stop' ||
-                submittedData.orderType === 'Stop-Limit') && (
-                <p>
-                  <strong>Stop Value:</strong> {submittedData.stopValue}
-                </p>
-              )}
               <p>
                 <strong>Approximate Price:</strong>{' '}
-                {previewData.approximatePrice}
+                {previewData.approximatePrice.toLocaleString()}{' '}
+                {accounts.find(
+                  (acc) =>
+                    submittedData?.accountNumber !== undefined &&
+                    acc.accountNumber === submittedData?.accountNumber
+                )?.currency ?? ''}
               </p>
               <p>
-                <strong>Quantity:</strong> {previewData.quantity}
+                <strong>Quantity:</strong>{' '}
+                {previewData.quantity.toLocaleString()}
               </p>
             </div>
             <DialogFooter className="flex justify-end space-x-2 mt-4">
@@ -472,5 +398,32 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
     </Dialog>
   );
 };
+
+function _makeStopAndLimitValue(
+  data: OrderFormValues,
+  currency: Currency
+): {
+  limitValue?: MonetaryAmount;
+  stopValue?: MonetaryAmount;
+} {
+  return {
+    limitValue:
+      (data.orderType === 'LIMIT' || data.orderType === 'STOP_LIMIT') &&
+      data.limitValue !== undefined
+        ? {
+            amount: data.limitValue,
+            currency: currency,
+          }
+        : undefined,
+    stopValue:
+      (data.orderType === 'STOP' || data.orderType === 'STOP_LIMIT') &&
+      data.stopValue !== undefined
+        ? {
+            amount: data.stopValue,
+            currency: currency,
+          }
+        : undefined,
+  };
+}
 
 export default OrderCreationDialog;

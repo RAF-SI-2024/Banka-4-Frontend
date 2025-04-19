@@ -29,7 +29,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import OrderCreationDialog from '@/components/order/OrderCreationDialog';
+import OrderCreationDialog, {
+  OrderCreationAccountDto,
+} from '@/components/order/OrderCreationDialog';
 
 import {
   ChartContainer,
@@ -40,11 +42,13 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 import ListingCard from './ListingCard';
 import { PopoverClose } from '@radix-ui/react-popover';
 import { DateRange } from 'react-day-picker';
-import { getAccounts, getEmployeeAccounts } from '@/api/account';
+import { getAccounts, getBankAccounts } from '@/api/account';
 import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
 import { calculateAveragePrice, createOrder } from '@/api/orders';
 import GuardBlock from '@/components/GuardBlock';
 import { useMe } from '@/hooks/use-me';
+import { toastRequestError } from '@/api/errors';
+import { toast } from 'sonner';
 
 const DateRangePicker = ({
   date,
@@ -185,9 +189,23 @@ export default function Page({
     queryKey: ['accounts', isEmployee ? 'employee' : 'client'],
     queryFn: async () => {
       if (isEmployee) {
-        return (await getEmployeeAccounts(client)).data;
+        return (await getBankAccounts(client)).data.map((acc) => {
+          return {
+            accountNumber: acc.accountNumber,
+            availableBalance: acc.availableBalance,
+            balance: acc.balance,
+            currency: acc.currency,
+          } satisfies OrderCreationAccountDto;
+        });
       } else {
-        return (await getAccounts(client)).data;
+        return (await getAccounts(client)).data.map((acc) => {
+          return {
+            accountNumber: acc.accountNumber,
+            availableBalance: acc.availableBalance,
+            balance: acc.balance,
+            currency: acc.currency.code,
+          } satisfies OrderCreationAccountDto;
+        });
       }
     },
   });
@@ -196,12 +214,21 @@ export default function Page({
     mutationKey: ['order-preview'],
     mutationFn: (request: OrderPreviewRequest) =>
       calculateAveragePrice(client, request),
+    onError: (error) => {
+      toastRequestError(error);
+    },
   });
 
   const orderMutation = useMutation({
     mutationKey: ['create-order'],
     mutationFn: (orderRequest: CreateOrderRequest) =>
       createOrder(client, orderRequest),
+    onError: (error) => {
+      toastRequestError(error);
+    },
+    onSuccess: () => {
+      toast.success('Order created successfully!');
+    },
   });
 
   const { data: options, isLoading: isLoadingOptions } = useQuery({

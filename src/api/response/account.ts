@@ -3,6 +3,7 @@ import { CompanyResponseDto } from './company';
 import { EmployeeResponseDto } from './employee';
 import { Pageable } from '@/types/pageable';
 import { AccountType } from '@/types/account';
+import { Currency } from '@/types/currency';
 
 export interface AccountDto {
   id: string;
@@ -23,7 +24,14 @@ export interface AccountDto {
 }
 
 export interface CurrencyDto {
-  code: string;
+  code: Currency;
+}
+
+export interface BankAccountDto {
+  accountNumber: string;
+  currency: Currency;
+  balance: number;
+  availableBalance: number;
 }
 
 export type AccountOverviewResponseDto = Pageable<AccountDto>;
