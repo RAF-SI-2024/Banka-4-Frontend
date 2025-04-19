@@ -99,25 +99,27 @@ const TaxesOverviewPage: React.FC = () => {
         <Card className="max-w-[900px] mx-auto">
           <CardHeader>
             <h1 className="text-2xl font-bold">Taxes Overview</h1>
-            <CardDescription>
+            <CardDescription className={'flex justify-between'}>
               This table provides an overview of all users and their unpaid
               taxes.
-            </CardDescription>
-            <div className="flex justify-between items-center flex-col lg:flex-row">
-              <FilterBar<TaxSummaryFilters, typeof taxFilterColumns>
-                onSubmit={(filter) => {
-                  setPage(0);
-                  setSearchFilter(filter);
-                }}
-                filter={searchFilter}
-                columns={taxFilterColumns}
-              />
               <Button
                 variant={'secondary'}
                 onClick={() => triggerTaxMutation.mutate()}
               >
                 Trigger Monthly Tax
               </Button>
+            </CardDescription>
+            <div className="flex justify-between items-center gap-8 flex-col lg:flex-row">
+              <div className="w-full">
+                <FilterBar<TaxSummaryFilters, typeof taxFilterColumns>
+                  onSubmit={(filter) => {
+                    setPage(0);
+                    setSearchFilter(filter);
+                  }}
+                  filter={searchFilter}
+                  columns={taxFilterColumns}
+                />
+              </div>
             </div>
           </CardHeader>
           <CardContent className="rounded-lg overflow-hidden">
