@@ -3,6 +3,7 @@
 import {
   acceptOtcRequest,
   getMyRequests,
+  getMyRequestsUnread,
   rejectOtcRequest,
   updateOtcRequest,
 } from '@/api/otc';
@@ -25,16 +26,38 @@ import { Currency } from '@/types/currency';
 import { otcActiveOffersColumns } from '@/ui/dataTables/otc/otcActiveOffersColumns';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import moment from 'moment';
+import { toast } from 'sonner';
 
 export default function Page() {
   const client = useHttpClient();
+  const [unreadRequestsCount, setUnreadRequestsCount] = useState(0);
   const [currency, setCurrency] = useState<Currency>();
-  const [selectedOffer, setSelectedOffer] = useState<string>();
+  const [selectedOffer, setSelectedOffer] = useState<OtcRequestDto>();
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const { page, pageSize, setPage, setPageSize } = useTablePageParams('otcs', {
     pageSize: 8,
     page: 0,
   });
+
+  const unreadRequests = useQuery({
+    queryKey: ['active-offers', page, pageSize, 'unread'],
+    queryFn: async () =>
+      (await getMyRequestsUnread(client, page, pageSize)).data,
+    staleTime: 100,
+    refetchInterval: 10_000,
+  });
+
+  useEffect(() => {
+    if (unreadRequests.isSuccess) {
+      const unreadCount = unreadRequests.data.page.totalElements;
+      if (unreadCount > unreadRequestsCount) {
+        toast.info('You have unread offers!');
+      }
+      setUnreadRequestsCount(unreadRequests.data.page.totalElements);
+    }
+  }, [unreadRequests, unreadRequestsCount]);
+
   const {
     data: activeOffers,
     isLoading,
@@ -54,9 +77,12 @@ export default function Page() {
     mutationKey: ['active-offers'],
   });
   const { mutate: updateMutation } = useMutation({
-    mutationFn: async (body: OtcRequestUpdateDto) =>
-      selectedOffer && updateOtcRequest(client, selectedOffer, body),
+    mutationFn: async (body: Partial<OtcRequestUpdateDto>) =>
+      selectedOffer && updateOtcRequest(client, selectedOffer.id, body),
     mutationKey: ['active-offers'],
+    onSuccess: () => {
+      setOfferDialogOpen(false);
+    },
   });
 
   const { dispatch } = useBreadcrumb();
@@ -73,27 +99,44 @@ export default function Page() {
 
   return (
     <GuardBlock requiredPrivileges={['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE']}>
-      <OfferDialog
-        isUpdate={false}
-        isPending={false}
-        defaultValues={{
-          amount: 0,
-          settlementDate: undefined,
-          premium: 0,
-          pricePerStock: 0,
-        }}
-        onSubmit={async (body) => {
-          if (currency && !body.update)
-            await updateMutation({
-              pricePerStock: { currency, amount: body.data.pricePerStock },
-              premium: { currency, amount: body.data.premium },
-              settlementDate: body.data.settlementDate.toDateString(),
-              amount: body.data.amount,
-            });
-        }}
-        open={offerDialogOpen}
-        onOpenChange={(val) => setOfferDialogOpen(val)}
-      />
+      {selectedOffer && (
+        <OfferDialog
+          isUpdate={true}
+          isPending={false}
+          defaultValues={{
+            pricePerStock: selectedOffer.pricePerStock.amount,
+            amount: selectedOffer.amount,
+            premium: selectedOffer.premium.amount,
+            settlementDate: new Date(selectedOffer.settlementDate),
+          }}
+          onSubmit={async (body) => {
+            if (currency && body.update)
+              updateMutation({
+                pricePerStock:
+                  body.data.pricePerStock !== undefined
+                    ? {
+                        currency,
+                        amount: body.data.pricePerStock,
+                      }
+                    : undefined,
+                premium:
+                  body.data.premium !== undefined
+                    ? {
+                        currency,
+                        amount: body.data.premium,
+                      }
+                    : undefined,
+                settlementDate:
+                  body.data.settlementDate !== undefined
+                    ? moment(body.data.settlementDate).format('YYYY-MM-DD')
+                    : undefined,
+                amount: body.data.amount,
+              });
+          }}
+          open={offerDialogOpen}
+          onOpenChange={(val) => setOfferDialogOpen(val)}
+        />
+      )}
 
       <div className={'p-8'}>
         <Card className="max-w-full mx-auto">
@@ -110,7 +153,7 @@ export default function Page() {
                 reject: rejectMutation,
                 counterOffer: (row: OtcRequestDto) => {
                   setOfferDialogOpen(true);
-                  setSelectedOffer(row.id);
+                  setSelectedOffer(row);
                   setCurrency(row.pricePerStock.currency);
                 },
               })}
@@ -122,6 +165,12 @@ export default function Page() {
                 setPage(newPagination.page);
                 setPageSize(newPagination.pageSize);
               }}
+              shouldHighlightRow={(row) =>
+                unreadRequests.data !== undefined &&
+                unreadRequests.data.content
+                  .map((r) => r.id)
+                  .includes(row.original.id)
+              }
             />
 
             <div className="flex w-full justify-end mt-6">

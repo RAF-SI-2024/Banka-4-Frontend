@@ -18,7 +18,7 @@ export interface OtcRequestDto {
   stock: StockInfoDto;
   pricePerStock: MonetaryAmount;
   premium: MonetaryAmount;
-  latestPrice: MonetaryAmount;
+  latestStockPrice: MonetaryAmount;
   amount: number;
   madeBy: string /* username of the user who made the offer */;
   madeFor: string /* username of the user for whom the offer is intended */;

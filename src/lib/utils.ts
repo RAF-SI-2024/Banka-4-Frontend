@@ -13,3 +13,6 @@ export const formatDateTime = (date: string | Date) =>
 
 export const formatDate = (date: string | Date) =>
   moment(new Date(date)).format('DD-MM-YYYY');
+
+export const calculatePercentageDifference = (v1: number, v2: number): number =>
+  (Math.abs(v1 - v2) / ((v1 + v2) / 2)) * 100;

@@ -37,7 +37,7 @@ export const getMyRequestsUnread = async (
   page: number,
   size: number
 ) =>
-  client.get<Pageable<OtcRequestDto>>('/stock/otc/unread', {
+  client.get<Pageable<OtcRequestDto>>('/stock/otc/me/unread', {
     params: { page, size },
   });
 
@@ -50,7 +50,7 @@ export const acceptOtcRequest = async (client: Axios, requestId: string) =>
 export const updateOtcRequest = async (
   client: Axios,
   requestId: string,
-  body: OtcRequestUpdateDto
+  body: Partial<OtcRequestUpdateDto>
 ) => client.patch<void>(`/stock/otc/update/${requestId}`, cleanObject(body));
 
 export const getLatestStockPrice = async (client: Axios, stockId: string) =>

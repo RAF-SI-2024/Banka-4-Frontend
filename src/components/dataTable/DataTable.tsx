@@ -21,6 +21,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import PaginationWrapper from '@/components/ui/pagination-wrapper';
+import { cn } from '@/lib/utils';
 
 interface DataTableProps<TData> {
   isLoading: boolean;
@@ -30,6 +31,7 @@ interface DataTableProps<TData> {
   onPaginationChange: (pagination: { page: number; pageSize: number }) => void;
   pageCount: number;
   onRowClick?: (row: Row<TData>) => void;
+  shouldHighlightRow?: (row: Row<TData>) => boolean;
 
   //  sort: SortProperty[];
   //  onSortChange: (sort: SortProperty[]) => void;
@@ -46,6 +48,7 @@ export function DataTable<TData>({
   pagination,
   onPaginationChange,
   onRowClick,
+  shouldHighlightRow,
   pageCount,
   // sort,
   // onSortChange,
@@ -141,7 +144,12 @@ export function DataTable<TData>({
                     onClick={
                       onRowClick != null ? () => onRowClick(row) : undefined
                     }
-                    className={'cursor-pointer'}
+                    className={cn(
+                      shouldHighlightRow && shouldHighlightRow(row)
+                        ? 'font-semibold !border-b-0 !border-l-2 border-blue-500'
+                        : 'font-normal',
+                      onRowClick ? 'cursor-pointer' : ''
+                    )}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

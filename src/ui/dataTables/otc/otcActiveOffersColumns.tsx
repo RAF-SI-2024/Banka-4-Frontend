@@ -1,9 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import { OtcRequestDto, PublicStocksDto } from '@/api/response/otc';
-import { formatDistanceToNow } from 'date-fns';
-import { Currency } from '@/types/currency';
-import { formatDate, formatDateTime } from '@/lib/utils';
+import { OtcRequestDto } from '@/api/response/otc';
+import {
+  calculatePercentageDifference,
+  cn,
+  formatDate,
+  formatDateTime,
+} from '@/lib/utils';
 import { MaybePromise } from '@/types/MaybePromise';
 
 export const otcActiveOffersColumns = ({
@@ -16,6 +19,10 @@ export const otcActiveOffersColumns = ({
   counterOffer: (dto: OtcRequestDto) => MaybePromise<unknown>;
 }): ColumnDef<OtcRequestDto>[] => [
   {
+    accessorKey: 'madeBy',
+    header: 'Made By',
+  },
+  {
     accessorKey: 'stock',
     header: 'Stock',
     cell: ({ row }) => row.original.stock.Name,
@@ -26,10 +33,20 @@ export const otcActiveOffersColumns = ({
     cell: ({ row }) => row.original.amount.toLocaleString(),
   },
   {
-    accessorKey: 'pricePerStock',
+    id: 'pricePerStock',
     header: 'Price per Stock',
-    cell: ({ row }) =>
-      `${row.original.pricePerStock.amount} ${row.original.pricePerStock.currency}`,
+    cell: ({ row }) => {
+      const percentageDifference = calculatePercentageDifference(
+        row.original.pricePerStock.amount,
+        row.original.latestStockPrice.amount
+      );
+      return (
+        <span className={colorPercentage(percentageDifference)}>
+          {row.original.pricePerStock.amount.toLocaleString()}{' '}
+          {row.original.pricePerStock.currency}
+        </span>
+      );
+    },
   },
   {
     accessorKey: 'settlementDate',
@@ -40,7 +57,7 @@ export const otcActiveOffersColumns = ({
     accessorKey: 'premium',
     header: 'Premium',
     cell: ({ row }) =>
-      `${row.original.pricePerStock.amount} ${row.original.pricePerStock.currency}`,
+      `${row.original.premium.amount.toLocaleString()} ${row.original.premium.currency}`,
   },
   {
     accessorKey: 'lastModifiedDate',
@@ -57,9 +74,22 @@ export const otcActiveOffersColumns = ({
     cell: ({ row }) => {
       return (
         <div className="flex flex-row gap-2">
-          <Button onClick={async () => accept(row.original.id)}>Accept</Button>
-          <Button onClick={async () => reject(row.original.id)}>Reject</Button>
-          <Button onClick={async () => counterOffer(row.original)}>
+          <Button
+            variant={'default'}
+            onClick={async () => accept(row.original.id)}
+          >
+            Accept
+          </Button>
+          <Button
+            variant={'destructive'}
+            onClick={async () => reject(row.original.id)}
+          >
+            Reject
+          </Button>
+          <Button
+            variant={'secondary'}
+            onClick={async () => counterOffer(row.original)}
+          >
             Counter
           </Button>
         </div>
@@ -67,3 +97,9 @@ export const otcActiveOffersColumns = ({
     },
   },
 ];
+
+export const colorPercentage = (percentage: number) => {
+  if (percentage >= 20) return cn('text-red-500');
+  else if (percentage >= 5) return cn('text-yellow-500');
+  else return cn('text-green-500');
+};
