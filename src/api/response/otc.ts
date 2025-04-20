@@ -18,11 +18,12 @@ export interface OtcRequestDto {
   stock: StockInfoDto;
   pricePerStock: MonetaryAmount;
   premium: MonetaryAmount;
+  latestPrice: MonetaryAmount;
   amount: number;
   madeBy: string /* username of the user who made the offer */;
   madeFor: string /* username of the user for whom the offer is intended */;
   modifiedBy: string /* username of the user who last modified the offer */;
-  lastModifiedDate: string /* e.g. "2024-04-10T12:34:56Z" */;
+  lastModified: string /* e.g. "2024-04-10T12:34:56Z" */;
   settlementDate: string /* YYYY-MM-DD */;
 }
 

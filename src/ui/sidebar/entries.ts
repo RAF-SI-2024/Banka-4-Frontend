@@ -17,6 +17,7 @@ import {
   UserRoundPen,
   Users,
   WalletCards,
+  Activity,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -130,6 +131,12 @@ const ClientGroups: SidebarGroupType[] = [
         title: 'Overview',
         url: '/u/otc',
         icon: List,
+        privileges: ['TRADE'],
+      },
+      {
+        title: 'Overview',
+        url: '/u/otc/active-offers',
+        icon: Activity,
         privileges: ['TRADE'],
       },
     ],
@@ -272,6 +279,12 @@ const EmployeeGroups: SidebarGroupType[] = [
         title: 'Overview',
         url: '/u/otc',
         icon: List,
+        privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
+      },
+      {
+        title: 'Active Offers',
+        url: '/u/otc/active-offers',
+        icon: Activity,
         privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
       },
     ],
