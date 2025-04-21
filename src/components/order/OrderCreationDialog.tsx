@@ -34,13 +34,7 @@ import { orderTypeToHumanReadable } from '@/lib/order-utils';
 import { Currency } from '@/types/currency';
 import { MonetaryAmount } from '@/api/response/listing';
 import { formatAccountNumber } from '@/lib/account-utils';
-
-export interface OrderCreationAccountDto {
-  accountNumber: string;
-  currency: Currency;
-  balance: number;
-  availableBalance: number;
-}
+import { BaseAccountDto } from '@/api/response/account';
 
 const orderFormSchema = z
   .object({
@@ -78,7 +72,7 @@ type OrderFormValues = z.infer<typeof orderFormSchema>;
 interface OrderCreationDialogProps {
   open: boolean;
   direction: OrderDirection;
-  accounts: OrderCreationAccountDto[];
+  accounts: BaseAccountDto[];
   assetId: string;
   onPreviewRequested: (
     request: OrderPreviewRequest

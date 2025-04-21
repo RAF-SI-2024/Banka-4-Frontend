@@ -23,6 +23,13 @@ export interface AccountDto {
   company: CompanyResponseDto;
 }
 
+export interface BaseAccountDto {
+  accountNumber: string;
+  currency: Currency;
+  balance: number;
+  availableBalance: number;
+}
+
 export interface CurrencyDto {
   code: Currency;
 }

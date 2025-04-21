@@ -29,9 +29,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import OrderCreationDialog, {
-  OrderCreationAccountDto,
-} from '@/components/order/OrderCreationDialog';
 
 import {
   ChartContainer,
@@ -47,8 +44,12 @@ import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
 import { calculateAveragePrice, createOrder } from '@/api/orders';
 import GuardBlock from '@/components/GuardBlock';
 import { useMe } from '@/hooks/use-me';
-import { toastRequestError } from '@/api/errors';
 import { toast } from 'sonner';
+import { BuyOptionRequestDto } from '@/api/request/options';
+import { buyOption } from '@/api/options';
+import { BaseAccountDto } from '@/api/response/account';
+import OrderCreationDialog from '@/components/order/OrderCreationDialog';
+import { BuyOptionDialog } from '@/components/options/buy-option-dialog';
 
 const DateRangePicker = ({
   date,
@@ -172,6 +173,8 @@ export default function Page({
 }) {
   const [selectedAssetId, setSelectedAssetId] = useState<string | null>(null);
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const [buyOptionsDialogOpen, setBuyOptionsDialogOpen] = useState(false);
+  const [selectedOptionId, setSelectedOptionId] = useState<string>();
   const [settlementDate, setSettlementDate] = useState<Date>(new Date());
   const client = useHttpClient();
   const { securityType: securityTypeParam } = use(params);
@@ -195,7 +198,7 @@ export default function Page({
             availableBalance: acc.availableBalance,
             balance: acc.balance,
             currency: acc.currency,
-          } satisfies OrderCreationAccountDto;
+          } satisfies BaseAccountDto;
         });
       } else {
         return (await getAccounts(client)).data.map((acc) => {
@@ -204,7 +207,7 @@ export default function Page({
             availableBalance: acc.availableBalance,
             balance: acc.balance,
             currency: acc.currency.code,
-          } satisfies OrderCreationAccountDto;
+          } satisfies BaseAccountDto;
         });
       }
     },
@@ -214,20 +217,25 @@ export default function Page({
     mutationKey: ['order-preview'],
     mutationFn: (request: OrderPreviewRequest) =>
       calculateAveragePrice(client, request),
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const orderMutation = useMutation({
     mutationKey: ['create-order'],
     mutationFn: (orderRequest: CreateOrderRequest) =>
       createOrder(client, orderRequest),
-    onError: (error) => {
-      toastRequestError(error);
-    },
     onSuccess: () => {
       toast.success('Order created successfully!');
+    },
+  });
+
+  const buyOptionMutation = useMutation({
+    mutationKey: ['listings/options'],
+    mutationFn: (buyOptionRequest: BuyOptionRequestDto) =>
+      buyOption(client, buyOptionRequest),
+    onSuccess: () => {
+      setSelectedOptionId(undefined);
+      setBuyOptionsDialogOpen(false);
+      toast.success('Successfully bought option!');
     },
   });
 
@@ -414,7 +422,7 @@ export default function Page({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead colSpan={5} className="text-center border-r">
+                      <TableHead colSpan={6} className="text-center border-r">
                         Calls
                       </TableHead>
                       <TableHead
@@ -424,11 +432,12 @@ export default function Page({
                       >
                         Strike
                       </TableHead>
-                      <TableHead colSpan={5} className="text-center border-l">
+                      <TableHead colSpan={6} className="text-center border-l">
                         Puts
                       </TableHead>
                     </TableRow>
                     <TableRow>
+                      <TableHead className="text-right">Actions</TableHead>
                       <TableHead className="text-right">Last Price</TableHead>
                       <TableHead className="text-right">Change</TableHead>
                       <TableHead className="text-right">% Change</TableHead>
@@ -443,6 +452,7 @@ export default function Page({
                       <TableHead className="text-right">% Change</TableHead>
                       <TableHead className="text-right">Volume</TableHead>
                       <TableHead className="text-right">Open Int.</TableHead>
+                      <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -453,6 +463,16 @@ export default function Page({
                           option.strike === 190 ? 'bg-muted/50' : ''
                         )}
                       >
+                        <TableCell className={'flex justify-end'}>
+                          <Button
+                            onClick={() => {
+                              setSelectedOptionId(option.callsId);
+                              setBuyOptionsDialogOpen(true);
+                            }}
+                          >
+                            Buy
+                          </Button>
+                        </TableCell>
                         <TableCell className="text-right">
                           {formatPrice(option?.callsLastPrice)}
                         </TableCell>
@@ -523,6 +543,16 @@ export default function Page({
                         <TableCell className={`text-right`}>
                           {option.putsOpenInterest.toLocaleString()}
                         </TableCell>
+                        <TableCell className={'flex justify-center'}>
+                          <Button
+                            onClick={() => {
+                              setSelectedOptionId(option.putsId);
+                              setBuyOptionsDialogOpen(true);
+                            }}
+                          >
+                            Buy
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -531,6 +561,23 @@ export default function Page({
             </CardContent>
           </Card>
         )}
+        {buyOptionsDialogOpen &&
+          selectedOptionId &&
+          accounts &&
+          accounts.length > 0 && (
+            <BuyOptionDialog
+              open={buyOptionsDialogOpen}
+              onOpenChange={setBuyOptionsDialogOpen}
+              accounts={accounts}
+              onSubmit={(an, amount) => {
+                buyOptionMutation.mutate({
+                  optionId: selectedOptionId,
+                  accountNumber: an,
+                  amount: amount,
+                });
+              }}
+            />
+          )}
         {buyDialogOpen &&
           selectedAssetId &&
           accounts &&
