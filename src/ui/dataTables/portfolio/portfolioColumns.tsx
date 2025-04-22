@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-import { cn, formatDate, formatDateTime } from '@/lib/utils';
+import { cn, formatDateTime } from '@/lib/utils';
 import { MaybePromise } from '@/types/MaybePromise';
 import { SecurityHoldingDto } from '@/api/response/securities';
 
@@ -51,7 +51,7 @@ export const portfolioColumns = ({
                 : cn('text-red-500')
           }
         >
-          {Math.abs(row.original.profit.amount).toLocaleString()}&nbsp;
+          {row.original.profit.amount.toLocaleString()}{' '}
           {row.original.profit.currency}
         </span>
       );
