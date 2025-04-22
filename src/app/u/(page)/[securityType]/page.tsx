@@ -66,9 +66,6 @@ export default function Page({
   return (
     <GuardBlock requiredPrivileges={['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE']}>
       <div className="justify-end flex flex-row gap-2 pb-4">
-        <Link href={'/u/create-order'}>
-          <Button>Create Order</Button>
-        </Link>
         <Button disabled={isLoading} onClick={refresh}>
           Refresh
         </Button>
