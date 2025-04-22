@@ -7,13 +7,13 @@ export default defineConfig({
     baseUrl: 'http://localhost:8080/',
     setupNodeEvents(on, config) {
       on('task', {
-	async resetDb() {
-	  await axios.get('/api/e2e/redo-data', {
-	    baseURL: config.baseUrl ?? undefined
-	  });
-	  return null;
-	}
-      })
+        async resetDb() {
+          await axios.get('/api/e2e/redo-data', {
+            baseURL: config.baseUrl ?? undefined,
+          });
+          return null;
+        },
+      });
     },
   },
 });

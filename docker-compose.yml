@@ -45,7 +45,7 @@ services:
       POSTGRES_DB: bank-service
       POSTGRES_USER: bank-service
     healthcheck:
-      test: "pg_isready -d bank-service -U bank-service"
+      test: 'pg_isready -d bank-service -U bank-service'
       interval: 3s
       start_period: 3s
 

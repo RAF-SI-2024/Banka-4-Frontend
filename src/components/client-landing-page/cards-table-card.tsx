@@ -170,6 +170,7 @@ export function CardsTableCard(props: CardsTableCardProps) {
             props.selectedAccount.accountType === 'FxBusiness' ? (
               <div className={'space-x-4'}>
                 <Button
+                  id={'card-myself'}
                   onClick={() => {
                     setCardRequestType('BusinessMyself');
                     setIs2FADialogOpen(true);

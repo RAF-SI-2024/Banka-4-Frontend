@@ -42,7 +42,11 @@ export default function LoginPage() {
             <TabsTrigger id="client-tab" className={'w-full'} value="client">
               Client
             </TabsTrigger>
-            <TabsTrigger id="employee-tab" className={'w-full'} value="employee">
+            <TabsTrigger
+              id="employee-tab"
+              className={'w-full'}
+              value="employee"
+            >
               Employee
             </TabsTrigger>
           </TabsList>

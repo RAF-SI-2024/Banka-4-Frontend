@@ -1,5 +1,4 @@
-const LOGIN_PAGE_PATH = '/auth/login';
-const EMPLOYEE_HOME_PATH = '/e';
+import { EMPLOYEE_HOME_PATH, LOGIN_PAGE_PATH } from '../../support/consts';
 
 describe('user-auth', () => {
   beforeEach(() => {
@@ -31,10 +30,10 @@ describe('user-auth', () => {
   it('employee requests a forgot password link', () => {
     cy.get('#employee-tab').click();
 
-    cy.get('span[aria-haspopup=\'dialog\']').click();
+    cy.get("span[aria-haspopup='dialog']").click();
     cy.fixture('valid-employee-admin').then((creds) => {
       cy.get('#forgot-password-input').type(`${creds.email}{enter}`);
-    })
+    });
     cy.contains('Reset password email sent.').should('exist');
   });
 });

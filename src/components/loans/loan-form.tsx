@@ -157,6 +157,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Select
+                  name={'loanType'}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -188,6 +189,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Select
+                  name={'interestType'}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -219,6 +221,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Input
+                  name={'amount'}
                   type="number"
                   step="100" // Increased step to 100
                   placeholder="Enter amount"
@@ -245,6 +248,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Select
+                  name={'currency'}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -316,6 +320,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Select
+                  name={'employmentStatus'}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
@@ -348,6 +353,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Input
+                  name={'employmentPeriod'}
                   type="number"
                   step="1"
                   min={0}
@@ -375,6 +381,7 @@ export default function LoanForm({
               </FormLabel>
               <FormControl>
                 <Select
+                  name={'repaymentPeriod'}
                   onValueChange={(val) => field.onChange(Number(val))}
                   value={String(field.value || '')}
                 >
@@ -422,7 +429,11 @@ export default function LoanForm({
                 Account Number <span className={'text-red-500'}>*</span>
               </FormLabel>
               <FormControl>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  name={'accountNumber'}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select account" />
                   </SelectTrigger>

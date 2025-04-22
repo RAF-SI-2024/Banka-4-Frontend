@@ -41,7 +41,11 @@ export const cardColumns = (
         <div className="flex space-x-2">
           <Button onClick={() => onInfo(card)}>Info</Button>
           {card.cardStatus === 'ACTIVATED' && (
-            <Button onClick={() => onBlock(card)} variant="destructive">
+            <Button
+              id={`block-${info.row.index}`}
+              onClick={() => onBlock(card)}
+              variant="destructive"
+            >
               Block
             </Button>
           )}

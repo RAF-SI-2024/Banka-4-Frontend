@@ -124,7 +124,10 @@ const OnboardingPage: React.FC = () => {
 
         <p className="text-center text-gray-600 dark:text-gray-200 mb-4">
           Or manually enter this secret:{' '}
-          <span className="font-semibold text-gray-900 dark:text-gray-100">
+          <span
+            id={'secret'}
+            className="font-semibold text-gray-900 dark:text-gray-100"
+          >
             {qrData.tokenSecret}
           </span>
         </p>
@@ -142,6 +145,7 @@ const OnboardingPage: React.FC = () => {
           </p>
           <div className="flex space-x-1 items-center mb-8">
             <Input
+              name={'otp'}
               type="text"
               value={otpCode}
               onChange={(e) => setOtpCode(e.target.value)}
@@ -149,7 +153,9 @@ const OnboardingPage: React.FC = () => {
               className="w-full"
             />
             <div className="flex justify-center">
-              <Button onClick={handleVerifyOTP}>Verify OTP</Button>
+              <Button id={'verify'} onClick={handleVerifyOTP}>
+                Verify OTP
+              </Button>
             </div>
           </div>
           {verifyError && (

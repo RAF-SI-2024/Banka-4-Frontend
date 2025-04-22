@@ -122,12 +122,14 @@ export default function ClientPage() {
           <Tabs defaultValue="transactions" className="w-[900px]">
             <TabsList className={'w-full'}>
               <TabsTrigger
+                id={'transactions-tab'}
                 value="transactions"
                 className="px-6 py-2 rounded-lg w-full"
               >
                 Transactions
               </TabsTrigger>
               <TabsTrigger
+                id={'cards-tab'}
                 value="cards"
                 className="px-6 py-2 rounded-lg w-full"
               >

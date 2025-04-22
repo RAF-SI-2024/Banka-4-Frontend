@@ -84,7 +84,11 @@ export default function ForgotPasswordDialog() {
                 <FormItem className="flex flex-col space-y-1.5">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input id="forgot-password-input" {...field} placeholder="john@example.com" />
+                    <Input
+                      id="forgot-password-input"
+                      {...field}
+                      placeholder="john@example.com"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

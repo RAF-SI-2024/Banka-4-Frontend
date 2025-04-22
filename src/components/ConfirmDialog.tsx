@@ -37,12 +37,21 @@ export const ConfirmDialog = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
-            <Button type="button" variant="secondary" onClick={onCancel}>
+            <Button
+              id={'confirm-dialog-cancel'}
+              type="button"
+              variant="secondary"
+              onClick={onCancel}
+            >
               Cancel
             </Button>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Button onClick={onConfirm} variant="destructive">
+            <Button
+              id={'confirm-dialog-confirm'}
+              onClick={onConfirm}
+              variant="destructive"
+            >
               {buttonText}
             </Button>
           </AlertDialogAction>

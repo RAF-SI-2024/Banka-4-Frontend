@@ -118,7 +118,11 @@ export default function NewTransactionForm({
         <h5 className="text-xl font-semibold">Saved recipients</h5>
         <div className="flex flex-wrap gap-4">
           <Select onValueChange={handleRecipientChange}>
-            <SelectTrigger className="min-w-[200px]">
+            <SelectTrigger
+              id={'savedRecipient'}
+              name={'savedRecipient'}
+              className="min-w-[200px]"
+            >
               <SelectValue placeholder="Select a recipient" />
             </SelectTrigger>
             <SelectContent>
@@ -162,7 +166,7 @@ export default function NewTransactionForm({
                   value={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger id={'payerAccount'}>
                       <SelectValue placeholder="Select your account" />
                     </SelectTrigger>
                   </FormControl>
@@ -173,7 +177,10 @@ export default function NewTransactionForm({
                           <span>
                             {formatAccountNumber(account.accountNumber)}
                           </span>
-                          <span className="text-muted-foreground">
+                          <span
+                            id={`account-${index}`}
+                            className="text-muted-foreground"
+                          >
                             ({account.currency.code})
                           </span>
                         </div>
