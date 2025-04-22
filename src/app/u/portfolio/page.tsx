@@ -11,12 +11,8 @@ import {
   CardHeader,
 } from '@/components/ui/card';
 import useTablePageParams from '@/hooks/useTablePageParams';
-import { cn, formatDateTime } from '@/lib/utils';
-import { Currency } from '@/types/currency';
-import { otcActiveOffersColumns } from '@/ui/dataTables/otc/otcActiveOffersColumns';
+import { cn } from '@/lib/utils';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import moment from 'moment';
-import { toast } from 'sonner';
 import { DataTable } from '@/components/dataTable/DataTable';
 import { portfolioColumns } from '@/ui/dataTables/portfolio/portfolioColumns';
 import { SecurityHoldingDto } from '@/api/response/securities';
@@ -48,12 +44,7 @@ import { ALL_STOCK_VISIBILITIES_ } from '@/types/securities';
 import { Input } from '@/components/ui/input';
 import { UseOptionRequest } from '@/api/request/options';
 import { useOption } from '@/api/options';
-import { getAccounts, getBankAccounts, getClientAccounts } from '@/api/account';
-import {
-  AccountDto,
-  BankAccountDto,
-  BaseAccountDto,
-} from '@/api/response/account';
+import { getBankAccounts, getClientAccounts } from '@/api/account';
 import {
   Select,
   SelectContent,
@@ -319,10 +310,13 @@ export default function Page() {
   const transferModal = useRef<ModalRef<string>>(null);
   const useModal = useRef<ModalRef<string>>(null);
 
-  const { page, pageSize, setPage, setPageSize } = useTablePageParams('otcs', {
-    pageSize: 8,
-    page: 0,
-  });
+  const { page, pageSize, setPage, setPageSize } = useTablePageParams(
+    'portfolio',
+    {
+      pageSize: 8,
+      page: 0,
+    }
+  );
 
   const { isLoading, data: portfolio } = useQuery({
     queryKey: ['portfolio', page, pageSize],
