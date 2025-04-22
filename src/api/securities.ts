@@ -8,7 +8,7 @@ export const getMyPortfolio = async (
   page: number,
   size: number
 ) =>
-  client.get<Pageable<SecurityHoldingDto>>('/stock/securities', {
+  client.get<Pageable<SecurityHoldingDto>>('/stock/securities/me', {
     params: { page, size },
   });
 

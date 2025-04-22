@@ -5,7 +5,7 @@ import { Pageable } from '@/types/pageable';
 import { AccountType } from '@/types/account';
 import { Currency } from '@/types/currency';
 
-export interface AccountDto {
+export interface AccountDto extends Omit<BaseAccountDto, 'currency'> {
   id: string;
   accountNumber: string;
   balance: number;
@@ -34,11 +34,6 @@ export interface CurrencyDto {
   code: Currency;
 }
 
-export interface BankAccountDto {
-  accountNumber: string;
-  currency: Currency;
-  balance: number;
-  availableBalance: number;
-}
+export interface BankAccountDto extends BaseAccountDto {}
 
 export type AccountOverviewResponseDto = Pageable<AccountDto>;

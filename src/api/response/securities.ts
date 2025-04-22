@@ -22,6 +22,7 @@ export type ForexPairDto = {
 } & ListingInfoDto;
 
 export interface SecurityHoldingDto {
+  id: string;
   assetType: AssetType;
   ticker: string;
   amount: number;
