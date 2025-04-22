@@ -43,7 +43,7 @@ import { z } from 'zod';
 import { ALL_STOCK_VISIBILITIES_ } from '@/types/securities';
 import { Input } from '@/components/ui/input';
 import { UseOptionRequest } from '@/api/request/options';
-import { useOption } from '@/api/options';
+import { apiUseOption } from '@/api/options';
 import { getBankAccounts, getClientAccounts } from '@/api/account';
 import {
   Select,
@@ -94,7 +94,7 @@ const TransferModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
 
   useEffect(() => {
     form.reset();
-  }, [open]);
+  }, [open, form]);
 
   return (
     <Dialog
@@ -200,7 +200,7 @@ const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (t: UseOptionRequest) => useOption(client, t),
+    mutationFn: async (t: UseOptionRequest) => apiUseOption(client, t),
     onSuccess: () => setIsOpen(false),
   });
 
