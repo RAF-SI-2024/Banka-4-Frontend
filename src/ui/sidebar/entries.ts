@@ -141,6 +141,14 @@ const ClientGroups: SidebarGroupType[] = [
       },
     ],
   },
+  {
+    title: 'Portfolio',
+    url: '/u/portfolio',
+    icon: BriefcaseBusiness,
+    isActive: false,
+    userType: 'client',
+    privileges: ['TRADE'],
+  },
 ];
 
 const EmployeeGroups: SidebarGroupType[] = [
@@ -312,6 +320,14 @@ const EmployeeGroups: SidebarGroupType[] = [
     isActive: false,
     userType: 'employee',
     privileges: ['ADMIN', 'SUPERVISOR'],
+  },
+  {
+    title: 'Portfolio',
+    url: '/u/portfolio',
+    icon: BriefcaseBusiness,
+    isActive: false,
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR', 'AGENT'],
   },
 ];
 
