@@ -62,9 +62,6 @@ const TaxesOverviewPage: React.FC = () => {
     onSuccess: () => {
       toast.success('Tax collected successfully!');
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const triggerTaxMutation = useMutation({
@@ -72,9 +69,6 @@ const TaxesOverviewPage: React.FC = () => {
     mutationFn: () => triggerMonthlyTax(client),
     onSuccess: () => {
       toast.success('Monthly tax triggered successfully!');
-    },
-    onError: (error) => {
-      toastRequestError(error);
     },
   });
 

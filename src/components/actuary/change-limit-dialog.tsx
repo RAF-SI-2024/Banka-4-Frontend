@@ -47,9 +47,6 @@ export function ChangeLimitDialog({
     onSuccess: () => {
       toast.success('Limit changed successfully');
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const handleSaveChanges = () => {

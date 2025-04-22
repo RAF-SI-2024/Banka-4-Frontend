@@ -73,9 +73,6 @@ export default function OtcOverviewPage() {
       setOfferDialogOpen(false);
       toast.success('Offer sent successfully!');
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const { dispatch } = useBreadcrumb();

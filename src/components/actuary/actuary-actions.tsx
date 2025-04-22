@@ -27,9 +27,6 @@ export function ActuaryActions({ item }: { item: ActuaryItem }) {
       toast.success('Used limit reset successfully');
       setConfirmDialogOpen(false);
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   return (

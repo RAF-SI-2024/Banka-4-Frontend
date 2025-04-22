@@ -64,9 +64,6 @@ const OrdersOverviewPage: React.FC = () => {
     onSuccess: () => {
       toast.success('Order approved!');
     },
-    onError: (error) => {
-      toastRequestError(error);
-    },
   });
 
   const declineMutation = useMutation({
@@ -74,9 +71,6 @@ const OrdersOverviewPage: React.FC = () => {
     mutationFn: (orderId: string) => declineOrder(client, orderId),
     onSuccess: () => {
       toast.success('Order declined!');
-    },
-    onError: (error) => {
-      toastRequestError(error);
     },
   });
 
