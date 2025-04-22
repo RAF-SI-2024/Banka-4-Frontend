@@ -131,6 +131,7 @@ export const OrderCreationDialog: React.FC<OrderCreationDialogProps> = ({
       allOrNothing: data.allOrNothing,
       margin: data.margin,
       ..._makeStopAndLimitValue(data, selectedAccount.currency),
+      accountNumber: data.accountNumber,
     };
 
     setLoading(true);

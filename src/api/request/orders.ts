@@ -9,6 +9,7 @@ export interface OrderPreviewRequest {
   stopValue?: MonetaryAmount;
   allOrNothing?: boolean;
   margin?: boolean;
+  accountNumber: string;
 }
 
 export interface CreateOrderRequest {
