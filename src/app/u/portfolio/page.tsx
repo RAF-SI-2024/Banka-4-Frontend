@@ -44,7 +44,7 @@ import { ALL_STOCK_VISIBILITIES_ } from '@/types/securities';
 import { Input } from '@/components/ui/input';
 import { UseOptionRequest } from '@/api/request/options';
 import { apiUseOption } from '@/api/options';
-import { getBankAccounts, getClientAccounts } from '@/api/account';
+import { getAccounts, getBankAccounts, getClientAccounts } from '@/api/account';
 import {
   Select,
   SelectContent,
@@ -53,6 +53,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useAuth } from '@/context/AuthContext';
+import { formatAccountNumber } from '@/lib/account-utils';
+import { BaseAccountDto } from '@/api/response/account';
+import { useMe } from '@/hooks/use-me';
+import OrderCreationDialog from '@/components/order/OrderCreationDialog';
+import * as React from 'react';
+import { CreateOrderRequest, OrderPreviewRequest } from '@/api/request/orders';
+import { calculateAveragePrice, createOrder } from '@/api/orders';
+import { toast } from 'sonner';
 
 type ModalRef<T> = {
   open: (t: T) => void;
@@ -77,7 +85,10 @@ const TransferModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (t: TransferStockDto) => transferStocks(client, t),
-    onSuccess: () => setIsOpen(false),
+    onSuccess: () => {
+      toast.success('Stock transfer successful.');
+      setIsOpen(false);
+    },
   });
 
   useImperativeHandle(
@@ -188,9 +199,14 @@ const useOptionSchema = z.object({
   accountNumber: z.string(),
 });
 
-const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
+const UseOptionModal = ({
+  ref,
+  accounts,
+}: {
+  ref: Ref<ModalRef<string>>;
+  accounts?: BaseAccountDto[];
+}) => {
   const client = useHttpClient();
-  const auth = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const form = useForm<UseOptionRequest>({
     resolver: zodResolver(useOptionSchema),
@@ -201,15 +217,9 @@ const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (t: UseOptionRequest) => apiUseOption(client, t),
-    onSuccess: () => setIsOpen(false),
-  });
-
-  const { data: accounts } = useQuery<{ accountNumber: string }[]>({
-    queryKey: ['accounts'],
-    queryFn: async () => {
-      if (auth.userType === 'client')
-        return (await getClientAccounts(client)).data;
-      return (await getBankAccounts(client)).data;
+    onSuccess: () => {
+      toast.success('Option used successfully');
+      setIsOpen(false);
     },
   });
 
@@ -278,7 +288,9 @@ const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
                             key={acc.accountNumber}
                             value={acc.accountNumber}
                           >
-                            {acc.accountNumber}
+                            {formatAccountNumber(acc.accountNumber)} -{' '}
+                            {acc.availableBalance.toLocaleString()}{' '}
+                            {acc.currency}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -292,11 +304,6 @@ const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
               <Button type="submit" disabled={isPending}>
                 Confirm
               </Button>
-              {/* <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Cancel
-                </Button>
-              </DialogClose> */}
             </div>
           </form>
         </Form>
@@ -307,8 +314,12 @@ const UseOptionModal = ({ ref }: { ref: Ref<ModalRef<string>> }) => {
 
 export default function Page() {
   const client = useHttpClient();
+  const me = useMe();
   const transferModal = useRef<ModalRef<string>>(null);
   const useModal = useRef<ModalRef<string>>(null);
+
+  const [isSellDialogOpen, setSellDialogOpen] = useState(false);
+  const [selectedAssetId, setSelectedAssetId] = useState<string>();
 
   const { page, pageSize, setPage, setPageSize } = useTablePageParams(
     'portfolio',
@@ -322,14 +333,55 @@ export default function Page() {
     queryKey: ['portfolio', page, pageSize],
     queryFn: async () => (await getMyPortfolio(client, page, pageSize)).data,
   });
-  const { isLoading: profitIsLoading, data: profit } = useQuery({
+  const { data: profit } = useQuery({
     queryKey: ['profit'],
     queryFn: async () => (await getMyProfit(client)).data,
   });
-  const { isLoading: taxIsLoading, data: tax } = useQuery({
+  const { data: tax } = useQuery({
     queryKey: ['tax'],
     queryFn: async () => (await getMyTax(client)).data,
   });
+  const previewMutation = useMutation({
+    mutationKey: ['order-preview'],
+    mutationFn: (request: OrderPreviewRequest) =>
+      calculateAveragePrice(client, request),
+  });
+
+  const orderMutation = useMutation({
+    mutationKey: ['create-order'],
+    mutationFn: (orderRequest: CreateOrderRequest) =>
+      createOrder(client, orderRequest),
+    onSuccess: () => {
+      toast.success('Order created successfully!');
+    },
+  });
+
+  const isEmployee = me.state === 'logged-in' && me.type === 'employee';
+  const { data: accounts } = useQuery({
+    queryKey: ['accounts', isEmployee ? 'employee' : 'client'],
+    queryFn: async () => {
+      if (isEmployee) {
+        return (await getBankAccounts(client)).data.map((acc) => {
+          return {
+            accountNumber: acc.accountNumber,
+            availableBalance: acc.availableBalance,
+            balance: acc.balance,
+            currency: acc.currency,
+          } satisfies BaseAccountDto;
+        });
+      } else {
+        return (await getAccounts(client)).data.map((acc) => {
+          return {
+            accountNumber: acc.accountNumber,
+            availableBalance: acc.availableBalance,
+            balance: acc.balance,
+            currency: acc.currency.code,
+          } satisfies BaseAccountDto;
+        });
+      }
+    },
+  });
+
   const { dispatch } = useBreadcrumb();
   useEffect(() => {
     dispatch({
@@ -339,7 +391,8 @@ export default function Page() {
   }, [dispatch]);
 
   const handleSell = (security: SecurityHoldingDto) => {
-    // TODO:
+    setSelectedAssetId(security.id);
+    setSellDialogOpen(true);
   };
 
   const handleUse = (security: SecurityHoldingDto) => {
@@ -353,7 +406,28 @@ export default function Page() {
   return (
     <GuardBlock requiredPrivileges={['ADMIN', 'SUPERVISOR', 'AGENT', 'TRADE']}>
       <TransferModal ref={transferModal} />
-      <UseOptionModal ref={useModal} />
+      <UseOptionModal ref={useModal} accounts={accounts} />
+      {isSellDialogOpen &&
+        selectedAssetId &&
+        accounts &&
+        accounts.length > 0 && (
+          <OrderCreationDialog
+            open={isSellDialogOpen}
+            direction="SELL"
+            assetId={selectedAssetId}
+            accounts={accounts}
+            onPreviewRequested={(request) =>
+              previewMutation.mutateAsync(request).then((res) => res.data)
+            }
+            onOrderConfirmed={(orderRequest) =>
+              orderMutation.mutateAsync(orderRequest).then(() => {})
+            }
+            onClose={() => {
+              setSellDialogOpen(false);
+              setSelectedAssetId(undefined);
+            }}
+          />
+        )}
       <div className={'p-8'}>
         {profit && tax && (
           <Card className="mb-4 min-w-[400px] w-fit">
