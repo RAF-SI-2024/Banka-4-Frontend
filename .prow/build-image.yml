@@ -31,7 +31,10 @@ postsubmits:
             - |
               set -uxe
               start-docker.sh
-              docker login -u "$HARBOR_USERNAME" -p "$HARBOR_PASSWORD" harbor.k8s.elab.rs
+              docker login \
+                     -u "${HARBOR_USERNAME}" \
+                     --password-stdin <<<"${HARBOR_PASSWORD}" \
+                     harbor.k8s.elab.rs
               version="$(git rev-parse HEAD)"
               docker build \
                      -t harbor.k8s.elab.rs/banka-4/frontend:"${version}" \
