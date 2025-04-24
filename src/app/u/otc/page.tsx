@@ -20,8 +20,8 @@ import { OfferFormAction, OfferFormValues } from '@/components/otc/offer-form';
 import { Currency } from '@/types/currency';
 import moment from 'moment';
 import { toast } from 'sonner';
-import { toastRequestError } from '@/api/errors';
 import { formatDateTime } from '@/lib/utils';
+import { ForeignBankId } from '@/types/otc';
 
 export default function OtcOverviewPage() {
   const { page, pageSize, setPage, setPageSize } = useTablePageParams('otcs', {
@@ -31,7 +31,7 @@ export default function OtcOverviewPage() {
 
   const client = useHttpClient();
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
-  const [userId, setUserId] = useState<string>();
+  const [userId, setUserId] = useState<ForeignBankId>();
   const [assetId, setAssetId] = useState<string>();
   const [currency, setCurrency] = useState<Currency>();
 
@@ -50,7 +50,7 @@ export default function OtcOverviewPage() {
       currency,
       data,
     }: {
-      userId: string;
+      userId: ForeignBankId;
       assetId: string;
       currency: Currency;
       data: OfferFormValues;

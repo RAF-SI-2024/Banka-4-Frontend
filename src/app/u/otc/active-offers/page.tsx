@@ -28,6 +28,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { toast } from 'sonner';
+import { ForeignBankId } from '@/types/otc';
 
 export default function Page() {
   const client = useHttpClient();
@@ -41,9 +42,10 @@ export default function Page() {
   });
 
   const unreadRequests = useQuery({
-    queryKey: ['active-offers', page, pageSize, 'unread'],
+    queryKey: ['active-offers', 'unread'],
     queryFn: async () =>
-      (await getMyRequestsUnread(client, page, pageSize)).data,
+      /* we do a little trolling. */
+      (await getMyRequestsUnread(client, 0, 99_999)).data,
     staleTime: 100,
     refetchInterval: 10_000,
   });
@@ -69,16 +71,24 @@ export default function Page() {
     refetchInterval: 10_000,
   });
   const { mutate: acceptMutation } = useMutation({
-    mutationFn: async (id: string) => acceptOtcRequest(client, id),
+    mutationFn: async (id: ForeignBankId) =>
+      acceptOtcRequest(client, id.id, id.routingNumber),
     mutationKey: ['active-offers'],
   });
   const { mutate: rejectMutation } = useMutation({
-    mutationFn: async (id: string) => rejectOtcRequest(client, id),
+    mutationFn: async (id: ForeignBankId) =>
+      rejectOtcRequest(client, id.id, id.routingNumber),
     mutationKey: ['active-offers'],
   });
   const { mutate: updateMutation } = useMutation({
     mutationFn: async (body: Partial<OtcRequestUpdateDto>) =>
-      selectedOffer && updateOtcRequest(client, selectedOffer.id, body),
+      selectedOffer &&
+      updateOtcRequest(
+        client,
+        selectedOffer.id.id,
+        selectedOffer.id.routingNumber,
+        body
+      ),
     mutationKey: ['active-offers'],
     onSuccess: () => {
       setOfferDialogOpen(false);

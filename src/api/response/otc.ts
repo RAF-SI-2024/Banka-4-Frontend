@@ -1,9 +1,10 @@
 import { SecurityType } from '@/types/securities';
 import { MonetaryAmount } from '@/api/response/listing';
+import { ForeignBankId } from '@/types/otc';
 
 export interface PublicStocksDto {
   securityType: SecurityType;
-  sellerId: string;
+  sellerId: ForeignBankId;
   stockId: string;
   ownerUsername: string;
   ticker: string;
@@ -14,7 +15,7 @@ export interface PublicStocksDto {
 }
 
 export interface OtcRequestDto {
-  id: string;
+  id: ForeignBankId;
   stock: StockInfoDto;
   pricePerStock: MonetaryAmount;
   premium: MonetaryAmount;

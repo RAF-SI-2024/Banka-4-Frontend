@@ -1,7 +1,8 @@
 import { MonetaryAmount } from '@/api/response/listing';
+import { ForeignBankId } from '@/types/otc';
 
 export interface OtcRequestCreateDto {
-  userId: string;
+  userId: ForeignBankId;
   assetId: string;
   pricePerStock: MonetaryAmount;
   premium: MonetaryAmount;

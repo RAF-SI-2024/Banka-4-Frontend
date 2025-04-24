@@ -1,11 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { PublicStocksDto } from '@/api/response/otc';
-import { formatDistanceToNow } from 'date-fns';
 import { Currency } from '@/types/currency';
+import { ForeignBankId } from '@/types/otc';
 
 export const otcOverviewColumns = (
-  makeAnOffer: (userId: string, assetId: string, currency: Currency) => void
+  makeAnOffer: (
+    userId: ForeignBankId,
+    assetId: string,
+    currency: Currency
+  ) => void
 ): ColumnDef<PublicStocksDto>[] => [
   {
     accessorKey: 'securityType',

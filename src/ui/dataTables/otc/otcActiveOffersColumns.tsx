@@ -8,14 +8,15 @@ import {
   formatDateTime,
 } from '@/lib/utils';
 import { MaybePromise } from '@/types/MaybePromise';
+import { ForeignBankId } from '@/types/otc';
 
 export const otcActiveOffersColumns = ({
   accept,
   reject,
   counterOffer,
 }: {
-  accept: (id: string) => MaybePromise<unknown>;
-  reject: (id: string) => MaybePromise<unknown>;
+  accept: (id: ForeignBankId) => MaybePromise<unknown>;
+  reject: (id: ForeignBankId) => MaybePromise<unknown>;
   counterOffer: (dto: OtcRequestDto) => MaybePromise<unknown>;
 }): ColumnDef<OtcRequestDto>[] => [
   {

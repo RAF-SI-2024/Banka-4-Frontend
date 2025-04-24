@@ -3,7 +3,6 @@ import { Pageable } from '@/types/pageable';
 import { OtcRequestDto, PublicStocksDto } from '@/api/response/otc';
 import { OtcRequestCreateDto, OtcRequestUpdateDto } from '@/api/request/otc';
 import { cleanObject } from '@/lib/request-utils';
-import { MonetaryAmount } from '@/api/response/listing';
 
 /* endpoints for OTC overview */
 
@@ -41,17 +40,25 @@ export const getMyRequestsUnread = async (
     params: { page, size },
   });
 
-export const rejectOtcRequest = async (client: Axios, requestId: string) =>
-  client.patch<void>(`/stock/otc/reject/${requestId}`);
+export const rejectOtcRequest = async (
+  client: Axios,
+  idId: string,
+  routingNumber: string
+) => client.patch<void>(`/stock/otc/reject/${idId}/${routingNumber}`);
 
-export const acceptOtcRequest = async (client: Axios, requestId: string) =>
-  client.patch<void>(`/stock/otc/accept/${requestId}`);
+export const acceptOtcRequest = async (
+  client: Axios,
+  idId: string,
+  routingNumber: string
+) => client.patch<void>(`/stock/otc/accept/${idId}/${routingNumber}`);
 
 export const updateOtcRequest = async (
   client: Axios,
-  requestId: string,
+  idId: string,
+  routingNumber: string,
   body: Partial<OtcRequestUpdateDto>
-) => client.patch<void>(`/stock/otc/update/${requestId}`, cleanObject(body));
-
-export const getLatestStockPrice = async (client: Axios, stockId: string) =>
-  client.get<MonetaryAmount>(`/stock/stocks/${stockId}/latestPrice`);
+) =>
+  client.patch<void>(
+    `/stock/otc/update/${idId}/${routingNumber}`,
+    cleanObject(body)
+  );
