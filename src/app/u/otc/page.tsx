@@ -10,7 +10,6 @@ import {
 import { DataTable } from '@/components/dataTable/DataTable';
 import React, { useEffect, useState } from 'react';
 import { otcOverviewColumns } from '@/ui/dataTables/otc/otcOverviewColumns';
-import useTablePageParams from '@/hooks/useTablePageParams';
 import { useHttpClient } from '@/context/HttpClientContext';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createOtcRequest, getPublicStocks } from '@/api/otc';
@@ -24,11 +23,6 @@ import { formatDateTime } from '@/lib/utils';
 import { ForeignBankId } from '@/types/otc';
 
 export default function OtcOverviewPage() {
-  const { page, pageSize, setPage, setPageSize } = useTablePageParams('otcs', {
-    pageSize: 10,
-    page: 0,
-  });
-
   const client = useHttpClient();
   const [offerDialogOpen, setOfferDialogOpen] = useState(false);
   const [userId, setUserId] = useState<ForeignBankId>();
@@ -36,8 +30,8 @@ export default function OtcOverviewPage() {
   const [currency, setCurrency] = useState<Currency>();
 
   const { data, isLoading, dataUpdatedAt } = useQuery({
-    queryKey: ['otcs', page, pageSize],
-    queryFn: async () => (await getPublicStocks(client, page, pageSize)).data,
+    queryKey: ['otcs'],
+    queryFn: async () => (await getPublicStocks(client)).data,
     staleTime: 100,
     refetchInterval: 10_000,
   });
@@ -116,14 +110,11 @@ export default function OtcOverviewPage() {
                 setAssetId(assetId);
                 setCurrency(currency);
               })}
-              data={data?.content ?? []}
+              data={data ?? []}
               isLoading={isLoading}
-              pageCount={data?.page.totalPages ?? 0}
-              pagination={{ page, pageSize }}
-              onPaginationChange={(newPagination) => {
-                setPage(newPagination.page);
-                setPageSize(newPagination.pageSize);
-              }}
+              pageCount={1}
+              pagination={{ page: 0, pageSize: 8 }}
+              onPaginationChange={() => {}}
             />
 
             <div className="flex w-full justify-end mt-6">

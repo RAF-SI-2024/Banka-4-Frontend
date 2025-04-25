@@ -6,14 +6,8 @@ import { cleanObject } from '@/lib/request-utils';
 
 /* endpoints for OTC overview */
 
-export const getPublicStocks = async (
-  client: Axios,
-  page: number,
-  size: number
-) =>
-  client.get<Pageable<PublicStocksDto>>('/stock/stocks/public', {
-    params: { size, page },
-  });
+export const getPublicStocks = async (client: Axios) =>
+  client.get<PublicStocksDto[]>('/stock/stocks/public');
 
 export const createOtcRequest = async (
   client: Axios,
