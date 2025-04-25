@@ -1,4 +1,4 @@
 export interface ForeignBankId {
   routingNumber: string;
-  id: number;
+  id: string;
 }
