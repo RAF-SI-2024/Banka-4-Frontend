@@ -178,8 +178,8 @@ export default function Page() {
               shouldHighlightRow={(row) =>
                 unreadRequests.data !== undefined &&
                 unreadRequests.data.content
-                  .map((r) => r.id)
-                  .includes(row.original.id)
+                  .map((r) => r.id.routingNumber + r.id.id)
+                  .includes(row.original.id.routingNumber + row.original.id.id)
               }
             />
 
