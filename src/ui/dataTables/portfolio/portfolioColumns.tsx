@@ -68,15 +68,19 @@ export const portfolioColumns = ({
     cell: ({ row }) => {
       return (
         <div className="flex flex-row gap-2">
-          <Button variant={'default'} onClick={async () => sell(row.original)}>
-            Sell
-          </Button>
-          {row.original.assetType === 'OPTION' && (
+          {row.original.assetType === 'OPTION' ? (
             <Button
               variant={'outline'}
               onClick={async () => use?.(row.original)}
             >
               Use
+            </Button>
+          ) : (
+            <Button
+              variant={'default'}
+              onClick={async () => sell(row.original)}
+            >
+              Sell
             </Button>
           )}
           {row.original.assetType === 'STOCK' && (
