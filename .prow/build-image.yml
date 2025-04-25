@@ -19,6 +19,8 @@ postsubmits:
     always_run: true
     decorate: true
     max_concurrency: 1
+    branches:
+      - ^main$
     labels:
       preset-harbor-robot-push: 'true'
       preset-k8s-banka-4: 'true'
