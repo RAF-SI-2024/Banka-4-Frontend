@@ -34,7 +34,7 @@ export const otcOverviewColumns = (
   },
   {
     id: 'activePrice',
-    header: 'Amount',
+    header: 'Active Price',
     cell: ({ row }) => {
       const { amount, currency } = row.original.activePrice;
       return `${amount.toLocaleString()} ${currency}`;
