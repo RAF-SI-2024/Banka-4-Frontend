@@ -47,7 +47,7 @@ export const portfolioColumns = ({
             row.original.profit.amount > 0
               ? cn('text-green-500')
               : row.original.profit.amount == 0
-                ? cn('text-black')
+                ? cn('text-black dark:text-white')
                 : cn('text-red-500')
           }
         >

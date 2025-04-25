@@ -438,7 +438,15 @@ export default function Page() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Profit</span>
-                  <span className="font-medium">
+                  <span
+                    className={
+                      profit.amount > 0
+                        ? cn('text-green-500', 'font-medium')
+                        : profit.amount == 0
+                          ? cn('text-black dark:text-white', 'font-medium')
+                          : cn('text-red-500', 'font-medium')
+                    }
+                  >
                     {profit.amount.toLocaleString()} {profit.currency}
                   </span>
                 </div>
