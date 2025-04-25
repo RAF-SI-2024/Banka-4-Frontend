@@ -134,7 +134,7 @@ const ClientGroups: SidebarGroupType[] = [
         privileges: ['TRADE'],
       },
       {
-        title: 'Overview',
+        title: 'Active Offers',
         url: '/u/otc/active-offers',
         icon: Activity,
         privileges: ['TRADE'],
