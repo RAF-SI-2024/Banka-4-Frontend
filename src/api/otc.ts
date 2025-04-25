@@ -36,19 +36,19 @@ export const getMyRequestsUnread = async (
 
 export const rejectOtcRequest = async (
   client: Axios,
-  idId: string,
+  idId: number,
   routingNumber: string
 ) => client.patch<void>(`/stock/otc/reject/${idId}/${routingNumber}`);
 
 export const acceptOtcRequest = async (
   client: Axios,
-  idId: string,
+  idId: number,
   routingNumber: string
 ) => client.patch<void>(`/stock/otc/accept/${idId}/${routingNumber}`);
 
 export const updateOtcRequest = async (
   client: Axios,
-  idId: string,
+  idId: number,
   routingNumber: string,
   body: Partial<OtcRequestUpdateDto>
 ) =>
