@@ -18,6 +18,7 @@ import {
   Users,
   WalletCards,
   Activity,
+  PiggyBank,
 } from 'lucide-react';
 
 const ClientGroups: SidebarGroupType[] = [
@@ -317,6 +318,14 @@ const EmployeeGroups: SidebarGroupType[] = [
     title: 'Taxes',
     url: '/e/taxes',
     icon: HandCoins,
+    isActive: false,
+    userType: 'employee',
+    privileges: ['ADMIN', 'SUPERVISOR'],
+  },
+  {
+    title: 'Bank Profit',
+    url: '/e/profit',
+    icon: PiggyBank,
     isActive: false,
     userType: 'employee',
     privileges: ['ADMIN', 'SUPERVISOR'],
