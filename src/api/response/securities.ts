@@ -1,4 +1,9 @@
-import { AssetType, ForexLiquidity, UnitName } from '@/types/securities';
+import {
+  AssetType,
+  ForexLiquidity,
+  OptionType,
+  UnitName,
+} from '@/types/securities';
 import { Currency } from '@/types/currency';
 import { ListingInfoDto, MonetaryAmount } from '@/api/response/listing';
 
@@ -24,6 +29,7 @@ export type ForexPairDto = {
 export interface SecurityHoldingDto {
   id: string;
   assetType: AssetType;
+  optionType: OptionType | null;
   ticker: string;
   amount: number;
   price: MonetaryAmount;

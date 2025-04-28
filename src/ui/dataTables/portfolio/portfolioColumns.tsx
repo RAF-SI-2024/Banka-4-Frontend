@@ -18,8 +18,18 @@ export const portfolioColumns = ({
     header: 'Ticker',
   },
   {
-    accessorKey: 'assetType',
+    id: 'assetType',
     header: 'Asset Type',
+    cell: ({ row }) => {
+      if (
+        row.original.assetType === 'OPTION' &&
+        row.original.optionType !== null
+      ) {
+        return `${row.original.assetType} - ${row.original.optionType}`;
+      } else {
+        return row.original.assetType;
+      }
+    },
   },
   {
     accessorKey: 'amount',

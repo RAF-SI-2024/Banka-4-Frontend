@@ -20,6 +20,10 @@ export const ALL_STOCK_VISIBILITIES: StockVisibility[] = [
   ...ALL_STOCK_VISIBILITIES_,
 ];
 
+export const ALL_OPTION_TYPES_ = ['CALL', 'PUT'] as const;
+export type OptionType = (typeof ALL_OPTION_TYPES_)[number];
+export const ALL_OPTION_TYPES: OptionType[] = [...ALL_OPTION_TYPES_];
+
 export const ALL_UNIT_NAMES_ = [
   'BUSHEL',
   'POUND',
