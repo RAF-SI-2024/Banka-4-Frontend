@@ -31,11 +31,15 @@ services:
       - --alphavantage.api-key=${ALPHAVANTAGE_API_KEY}
       - --listings.refetch-min=20000000
       - --services.exchange=http://exchange_office:8000/
+      - --rafeisen.cache.valkey.host=valkey
+      - --rafeisen.cache.valkey.port=6379
     depends_on:
       bank_service_db:
         condition: service_healthy
       broker:
         condition: service_started
+      valkey:
+        condition: service_healthy
   bank_service_db:
     image: postgres:17
     restart: unless-stopped
@@ -48,6 +52,13 @@ services:
       test: 'pg_isready -d bank-service -U bank-service'
       interval: 3s
       start_period: 3s
+
+  # Dictionary server.
+  valkey:
+    image: valkey/valkey:8.1
+    # No persistence yet.
+    healthcheck:
+      test: ['CMD', '/usr/local/bin/valkey-cli', 'ping']
 
   notification_service:
     image: harbor.k8s.elab.rs/banka-4/notification-service
