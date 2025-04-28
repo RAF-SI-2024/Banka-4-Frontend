@@ -43,3 +43,10 @@ export interface UserTaxInfoDto {
   unpaidTaxThisMonth: number;
   currency: Currency;
 }
+
+export interface ActuaryProfitDto {
+  profit: MonetaryAmount;
+  name: string;
+  surname: string;
+  position: string;
+}
