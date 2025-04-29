@@ -148,7 +148,7 @@ export const apiErrorMessages: Readonly<Record<KnownBackendErrors, string>> = {
   ExchangeNotFound: 'Exchange not found.',
   ExpiredJwt: 'Your session has expired. Please log in again.',
   IllegalArgumentJwt: 'Invalid token provided.',
-  IncorrectCredentials: 'Incorrect username or password.',
+  IncorrectCredentials: 'Incorrect credentials',
   InsufficientFunds: 'You don’t have enough funds.',
   InsufficientVolume: 'Insufficient volume to complete the operation.',
   InterbankError: 'An error occurred with the interbank transfer.',
