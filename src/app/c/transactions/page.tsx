@@ -18,6 +18,8 @@ import { transactionColumns } from '@/ui/dataTables/transactions/transactionColu
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { AccountDto } from '@/api/response/account';
+import { getClientAccounts } from '@/api/account';
 
 export default function TransactionsPage() {
   const params = useSearchParams();
@@ -28,6 +30,13 @@ export default function TransactionsPage() {
   const client = useHttpClient();
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionDto>();
+
+  const { data: accounts } = useQuery<AccountDto[]>({
+    queryKey: ['accounts'],
+    queryFn: async () => {
+      return (await getClientAccounts(client)).data;
+    },
+  });
 
   // Initial filter values
   const [paymentFilters, setPaymentFilters] = useState<TransactionFilters>({
@@ -131,7 +140,11 @@ export default function TransactionsPage() {
               onRowClick={(row) => {
                 setSelectedTransaction(row.original);
               }}
-              columns={transactionColumns}
+              columns={transactionColumns(
+                (tx) =>
+                  accounts !== undefined &&
+                  accounts.map((a) => a.accountNumber).includes(tx.fromAccount)
+              )}
               data={data?.content ?? []}
               isLoading={isLoading}
               pageCount={data?.page.totalPages ?? 0}

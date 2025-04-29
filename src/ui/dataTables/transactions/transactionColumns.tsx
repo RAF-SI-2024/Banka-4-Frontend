@@ -7,7 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { formatDateTime } from '@/lib/utils';
 import { formatAccountNumber } from '@/lib/account-utils';
 
-export const transactionColumns: ColumnDef<TransactionDto>[] = [
+export const transactionColumns = (
+  isOutgoingTransaction: (tx: TransactionDto) => boolean
+): ColumnDef<TransactionDto>[] => [
   {
     accessorKey: 'transactionNumber',
     header: 'Transaction Number',
@@ -26,7 +28,15 @@ export const transactionColumns: ColumnDef<TransactionDto>[] = [
     header: 'Amount',
     cell: ({ row }) => (
       <p>
-        {row.original.fromAmount} {row.original.fromCurrency}
+        {isOutgoingTransaction(row.original) ? (
+          <span className={'text-red-500'}>
+            -{Math.abs(row.original.fromAmount)} {row.original.fromCurrency}
+          </span>
+        ) : (
+          <span className={'text-green-500'}>
+            {Math.abs(row.original.fromAmount)} {row.original.fromCurrency}
+          </span>
+        )}
       </p>
     ),
   },

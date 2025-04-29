@@ -64,7 +64,9 @@ export default function TransactionsCard(props: TransactionsCardProps) {
       <CardContent>
         <DataTable<TransactionDto>
           onRowClick={(row) => setSelectedTransaction(row.original)}
-          columns={transactionColumns}
+          columns={transactionColumns(
+            (tx) => tx.fromAccount === props.selectedAccount.accountNumber
+          )}
           data={transactions?.content ?? []}
           isLoading={isLoadingTransactions}
           pageCount={transactions?.page.totalPages ?? 0}
