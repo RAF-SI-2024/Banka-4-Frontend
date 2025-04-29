@@ -30,11 +30,13 @@ export const transactionColumns = (
       <p>
         {isOutgoingTransaction(row.original) ? (
           <span className={'text-red-500'}>
-            -{Math.abs(row.original.fromAmount)} {row.original.fromCurrency}
+            -{Math.abs(row.original.fromAmount).toLocaleString()}{' '}
+            {row.original.fromCurrency}
           </span>
         ) : (
           <span className={'text-green-500'}>
-            {Math.abs(row.original.fromAmount)} {row.original.fromCurrency}
+            {Math.abs(row.original.toAmount).toLocaleString()}{' '}
+            {row.original.toCurrency}
           </span>
         )}
       </p>
