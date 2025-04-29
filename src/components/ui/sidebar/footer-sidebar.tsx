@@ -1,6 +1,13 @@
 'use client';
 
-import { ChevronsUpDown, LogOut, Monitor, Moon, Sun } from 'lucide-react';
+import {
+  ChevronsUpDown,
+  LogOut,
+  Monitor,
+  Moon,
+  Shuffle,
+  Sun,
+} from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -17,6 +24,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useTheme } from 'next-themes';
+import { ALL_PALETTE_TYPES, usePalette } from '@/hooks/use-palette';
+import { cn } from '@/lib/utils';
 
 export function FooterSidebar({
   user,
@@ -33,6 +42,7 @@ export function FooterSidebar({
 }) {
   const { isMobile } = useSidebar();
   const theme = useTheme();
+  const { palette, setPalette } = usePalette();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -79,6 +89,24 @@ export function FooterSidebar({
                 </div>
               </div>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <div className={'overflow-y-auto h-96'}>
+              {ALL_PALETTE_TYPES.map((p) => (
+                <DropdownMenuItem
+                  className={cn(
+                    'cursor-pointer',
+                    palette === p ? 'bg-background' : ''
+                  )}
+                  key={p}
+                  onClick={() => setPalette(p)}
+                >
+                  {p === 'random' && <Shuffle />}
+                  {p
+                    .replaceAll('-', ' ')
+                    .replace(/\b\w/g, (c) => c.toUpperCase())}
+                </DropdownMenuItem>
+              ))}
+            </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className={'cursor-pointer'}
