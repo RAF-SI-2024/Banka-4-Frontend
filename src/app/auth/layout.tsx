@@ -1,10 +1,13 @@
+'use client';
 import { AppNavigationMenu } from '@/components/ui/navbar';
+import { usePalette } from '@/hooks/use-palette';
 
 export default function SidebarLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  usePalette();
   return (
     <>
       <AppNavigationMenu />

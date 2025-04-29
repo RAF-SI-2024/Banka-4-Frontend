@@ -1,4 +1,6 @@
-import { useLayoutEffect, useState } from 'react';
+'use client';
+
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 const ALL_PALETTE_TYPES_ = [
   'default',
@@ -45,12 +47,16 @@ export type Palette = (typeof ALL_PALETTE_TYPES_)[number];
 export const ALL_PALETTE_TYPES: Palette[] = [...ALL_PALETTE_TYPES_];
 
 export function usePalette() {
-  const [palette, setPalette] = useState<Palette>(
-    () => (localStorage.getItem('palette') as Palette) || 'default'
-  );
+  const [palette, setPalette] = useState<Palette>();
+
+  useEffect(() => {
+    setPalette((localStorage.getItem('palette') as Palette) || 'default');
+  }, []);
 
   useLayoutEffect(() => {
     const html = document.documentElement;
+    if (palette === undefined) return;
+
     if (palette === 'random') {
       html.setAttribute(
         'data-theme',

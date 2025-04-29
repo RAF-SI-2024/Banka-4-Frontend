@@ -6,10 +6,11 @@ import Image from 'next/image';
 import bankimgdark from './public/bankimgdark.png';
 import bankimglight from './public/bankimglight.png';
 import LoginBlock from '@/components/LoginBlock';
-import { ALL_PALETTE_TYPES, usePalette } from '@/hooks/use-palette';
+import { usePalette } from '@/hooks/use-palette';
 
 export default function Home() {
   const { resolvedTheme } = useTheme();
+  usePalette();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
